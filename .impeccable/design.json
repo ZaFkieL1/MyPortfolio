@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-14T22:18:08.4037685-06:00",
+  "title": "Design System: Henry Gonzalez Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "signal-lime": {
+        "role": "primary",
+        "displayName": "Signal Lime",
+        "canonical": "#c6f63d",
+        "tonalRamp": ["oklch(18% 0.06 123)", "oklch(28% 0.09 123)", "oklch(40% 0.12 123)", "oklch(52% 0.15 123)", "oklch(65% 0.17 123)", "oklch(76% 0.17 123)", "oklch(86% 0.12 123)", "oklch(95% 0.05 123)"]
+      },
+      "warm-canvas": {
+        "role": "neutral",
+        "displayName": "Warm Canvas",
+        "canonical": "#f3f3f0",
+        "tonalRamp": ["oklch(15% 0.004 100)", "oklch(27% 0.004 100)", "oklch(39% 0.004 100)", "oklch(51% 0.004 100)", "oklch(63% 0.004 100)", "oklch(75% 0.004 100)", "oklch(86% 0.004 100)", "oklch(96% 0.004 100)"]
+      },
+      "primary-ink": {
+        "role": "neutral",
+        "displayName": "Primary Ink",
+        "canonical": "#0a0a0a",
+        "tonalRamp": ["oklch(15% 0 0)", "oklch(26% 0 0)", "oklch(38% 0 0)", "oklch(50% 0 0)", "oklch(62% 0 0)", "oklch(74% 0 0)", "oklch(86% 0 0)", "oklch(95% 0 0)"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Editorial Display", "purpose": "Hero statements and case-study names only." },
+      "headline": { "displayName": "Section Headline", "purpose": "Major chapter openings and conversion moments." },
+      "body": { "displayName": "Body", "purpose": "Commercial and technical explanation." },
+      "label": { "displayName": "Operational Label", "purpose": "Indices, facts, and interface metadata." }
+    },
+    "shadows": [
+      {
+        "name": "subtle-float",
+        "value": "0 1px 2px rgba(10, 10, 10, 0.04), 0 14px 34px rgba(10, 10, 10, 0.05)",
+        "purpose": "Floating navigation and product frames only."
+      }
+    ],
+    "motion": [
+      { "name": "duration-fast", "value": "160ms", "purpose": "Direct hover and pressed-state feedback." },
+      { "name": "duration-default", "value": "320ms", "purpose": "Layout-adjacent transitions and menu reveal." },
+      { "name": "duration-slow", "value": "600ms", "purpose": "The single opening editorial reveal." },
+      { "name": "ease-standard", "value": "cubic-bezier(0.2, 0, 0, 1)", "purpose": "State changes." },
+      { "name": "ease-enter", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Elements entering or settling into place." },
+      { "name": "ease-exit", "value": "cubic-bezier(0.4, 0, 1, 1)", "purpose": "Elements leaving the interface." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "768px" },
+      { "name": "small-desktop", "value": "1088px" },
+      { "name": "container-max", "value": "1440px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main page action on light surfaces.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">View selected work</a>",
+      "css": ".ds-btn-primary { min-height: 3.25rem; padding: .7rem 1.25rem; display: inline-flex; align-items: center; justify-content: center; border: 1px solid transparent; border-radius: 999px; background: var(--color-dark, #0a0a0a); color: var(--color-dark-text, #f3f3f0); font: 650 .95rem/1 Geist, Arial, sans-serif; transition: color 160ms, background 160ms, transform 160ms; } .ds-btn-primary:hover { background: var(--color-accent, #c6f63d); color: var(--color-dark, #0a0a0a); } .ds-btn-primary:active { transform: scale(.98); } .ds-btn-primary:focus-visible { outline: 2px solid #fff; outline-offset: 4px; box-shadow: 0 0 0 5px var(--color-text-primary, #0a0a0a); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Secondary action with equal touch affordance and lower initial emphasis.",
+      "html": "<a class=\"ds-btn-secondary\" href=\"#\">Start a conversation</a>",
+      "css": ".ds-btn-secondary { min-height: 3.25rem; padding: .7rem 1.25rem; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--color-border-strong, #8a8a84); border-radius: 999px; background: transparent; color: var(--color-text-primary, #0a0a0a); font: 650 .95rem/1 Geist, Arial, sans-serif; transition: color 160ms, background 160ms, border-color 160ms, transform 160ms; } .ds-btn-secondary:hover { border-color: var(--color-dark, #0a0a0a); background: var(--color-dark, #0a0a0a); color: var(--color-dark-text, #f3f3f0); } .ds-btn-secondary:active { transform: scale(.98); } .ds-btn-secondary:focus-visible { outline: 2px solid #fff; outline-offset: 4px; box-shadow: 0 0 0 5px var(--color-text-primary, #0a0a0a); }"
+    },
+    {
+      "name": "Availability Badge",
+      "kind": "chip",
+      "description": "Compact availability signal above the hero statement.",
+      "html": "<span class=\"ds-availability\"><i aria-hidden=\"true\"></i>Available for select freelance projects</span>",
+      "css": ".ds-availability { display: inline-flex; align-items: center; gap: .65rem; color: var(--color-text-secondary, #4f4f4b); font: 590 .84rem/1.2 Geist, Arial, sans-serif; } .ds-availability i { width: .62rem; height: .62rem; border-radius: 999px; background: var(--color-accent, #c6f63d); box-shadow: 0 0 0 .35rem var(--color-accent-soft, #ecf9c9); }"
+    },
+    {
+      "name": "Floating Navigation",
+      "kind": "nav",
+      "description": "Sticky, translucent navigation that remains stable while the page scrolls.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-mark\" href=\"#\">HG</a><a href=\"#work\">Work</a><a href=\"#services\">Services</a><a class=\"ds-nav-cta\" href=\"#contact\">Start a project</a></nav>",
+      "css": ".ds-nav { min-height: 3.75rem; padding: .45rem .45rem .45rem .8rem; display: flex; align-items: center; gap: 1.5rem; border: 1px solid var(--color-border, #dadad5); border-radius: 1rem; background: color-mix(in srgb, var(--color-surface, #fff) 93%, transparent); box-shadow: 0 1px 2px rgba(10,10,10,.04), 0 12px 32px rgba(10,10,10,.06); backdrop-filter: blur(12px); font: 550 .9rem/1 Geist, Arial, sans-serif; } .ds-nav a { color: var(--color-text-secondary, #4f4f4b); text-decoration: none; } .ds-nav a:hover { color: var(--color-text-primary, #0a0a0a); } .ds-mark { width: 2.6rem; height: 2.6rem; display: grid; place-items: center; border: 1px solid #0a0a0a; border-radius: .55rem; font-weight: 750; } .ds-nav-cta { margin-left: auto; padding: .9rem 1.1rem; border-radius: 999px; background: #0a0a0a; color: #f3f3f0 !important; } .ds-nav-cta:hover { background: #c6f63d; color: #0a0a0a !important; } .ds-nav a:focus-visible { outline: 2px solid #fff; outline-offset: 4px; box-shadow: 0 0 0 5px #0a0a0a; }"
+    },
+    {
+      "name": "Product Frame",
+      "kind": "card",
+      "refersTo": "product-frame",
+      "description": "Primary visual proof surface for real screenshots or clearly labeled provisional UI.",
+      "html": "<figure class=\"ds-product-frame\"><div class=\"ds-product-chrome\"><i></i><i></i><i></i><span>Product interface</span></div><div class=\"ds-product-body\">Approved product evidence</div></figure>",
+      "css": ".ds-product-frame { aspect-ratio: 16/10; overflow: hidden; margin: 0; border: 1px solid #dadad5; border-radius: 1.5rem; background: #f7f7f4; box-shadow: 0 1px 2px rgba(10,10,10,.04), 0 12px 32px rgba(10,10,10,.06); color: #0a0a0a; font-family: Geist, Arial, sans-serif; } .ds-product-chrome { height: 2.6rem; padding: 0 .8rem; display: flex; align-items: center; gap: .35rem; border-bottom: 1px solid #deded8; background: #fff; } .ds-product-chrome i { width: .42rem; height: .42rem; border-radius: 50%; background: #d2d2cb; } .ds-product-chrome span { margin-left: .5rem; font-size: .66rem; font-weight: 660; } .ds-product-body { height: calc(100% - 2.6rem); display: grid; place-items: center; color: #4f4f4b; } .ds-product-frame:hover { transform: scale(1.012); transition: transform 320ms cubic-bezier(.16,1,.3,1); } .ds-product-frame:focus-within { outline: 2px solid #fff; outline-offset: 4px; box-shadow: 0 0 0 5px #0a0a0a; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Product Dossier",
+    "overview": "The system combines the editorial confidence of a considered publication with the clarity of a focused software studio. Large type establishes the proposition; thin rules, operational diagrams, and authored product views provide evidence. The atmosphere is warm, exact, spacious, and grounded in real product work. The visitor path is proposition to product proof to case studies to capability to person to contact.",
+    "keyCharacteristics": ["Warm editorial canvas with near-black ink.", "One scarce lime signal color.", "Oversized, compact headlines paired with calm body copy.", "Flat surfaces organized by borders, rhythm, and contrast.", "Product interfaces shown as evidence, never decorative devices."],
+    "rules": [
+      { "name": "The One Signal Rule", "body": "Lime occupies a small portion of each viewport and always appears with dark text.", "section": "colors" },
+      { "name": "The Proof, Not Decoration Rule", "body": "Product-specific orange appears only inside the CEM interface illustration; it is not a second site accent.", "section": "colors" },
+      { "name": "The One Family Rule", "body": "Do not introduce display serif or monospace styling to simulate editorial or technical credibility.", "section": "typography" },
+      { "name": "The Scale Carries Hierarchy Rule", "body": "Weight changes remain narrow; size, placement, and whitespace do most of the work.", "section": "typography" },
+      { "name": "The Border Before Shadow Rule", "body": "Add structure with tone or a one-pixel rule before considering elevation.", "section": "elevation" }
+    ],
+    "dos": ["Do lead with concrete product work and operational detail.", "Do use large type, whitespace, and thin rules to establish hierarchy.", "Do label illustrative UI and withhold metrics or testimonials until evidence is approved.", "Do keep motion at or under 600 ms, with the longest duration reserved for the opening reveal.", "Do preserve visible focus, reduced motion, and 44 px touch targets."],
+    "donts": ["Don't turn every content group into a floating card or bento tile.", "Don't add gradients, glassmorphism, 3D device renders, terminal motifs, or decorative tech logos.", "Don't introduce parallax, scroll hijacking, autoplay carousels, pointer tilt, or cursor replacement.", "Don't use unverified metrics, endorsements, screenshots, clients, or production links.", "Don't let the personal profile appear before the product evidence."]
+  }
+}

@@ -1,0 +1,146 @@
+.figure {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.dark {
+  border-color: #41413c;
+  background: var(--color-dark-surface);
+  color: var(--color-dark-text);
+}
+
+.scrollRegion {
+  display: none;
+}
+
+.scrollRegion.rendered {
+  display: block;
+  overflow-x: auto;
+  scrollbar-gutter: stable;
+}
+
+.canvas {
+  min-height: 22rem;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  display: grid;
+  place-items: center;
+}
+
+.canvas svg {
+  width: 100%;
+  max-width: 100%;
+  max-height: 36rem;
+}
+
+.fallback {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  list-style: none;
+}
+
+.fallback li {
+  min-height: 10rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-right: 1px solid var(--color-border);
+}
+
+.fallback li:last-child {
+  border-right: 0;
+}
+
+.dark .fallback li {
+  border-color: #41413c;
+}
+
+.fallback span {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.dark .fallback span {
+  color: var(--color-accent);
+}
+
+.fallback p {
+  margin-top: auto;
+  font-size: 0.9rem;
+}
+
+.figure figcaption {
+  padding: 1rem 1.25rem;
+  display: grid;
+  grid-template-columns: minmax(12rem, 4fr) minmax(0, 8fr);
+  gap: 1rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 0.82rem;
+}
+
+.dark figcaption {
+  border-color: #41413c;
+  color: #b6b6ae;
+}
+
+.figure figcaption strong {
+  color: var(--color-text-primary);
+}
+
+.dark figcaption strong {
+  color: var(--color-dark-text);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 48rem) {
+  .canvas {
+    min-height: 18rem;
+    justify-content: start;
+  }
+
+  .canvas svg {
+    min-width: 38rem;
+  }
+
+  .fallback {
+    grid-template-columns: 1fr;
+  }
+
+  .fallback li {
+    min-height: auto;
+    flex-direction: row;
+    gap: 1rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .fallback li:last-child {
+    border-bottom: 0;
+  }
+
+  .fallback p {
+    margin-top: 0;
+  }
+
+  .figure figcaption {
+    grid-template-columns: 1fr;
+  }
+}

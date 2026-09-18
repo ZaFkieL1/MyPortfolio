@@ -22,8 +22,19 @@ describe.each([
   [
     "CEM Digital",
     CemPage,
-    "CEM Digital",
-    [/overview/i, /the challenge/i, /the solution/i, /key features/i, /engineering challenges/i, /system architecture/i, /results/i, /technology/i],
+    /one app for a medical course that ran on five platforms/i,
+    [
+      /a course spread across five apps/i,
+      /four tools retired, one kept/i,
+      /one app, two sides of the course/i,
+      /the daily question, kept and automated/i,
+      /exams that open on their own/i,
+      /the technical work behind a punctual course/i,
+      /a phone app on a small, dependable stack/i,
+      /what changed for cem/i,
+      /a course is easier to follow from one place/i,
+      /technology/i,
+    ],
   ],
 ])("%s case study", (name, Page, heading, sectionHeadings) => {
   it("renders the full evidence-led narrative without invented proof", () => {
@@ -114,5 +125,43 @@ describe("MediSapience case-study narrative", () => {
     expect(screen.getByRole("figure", { name: /medisapience system architecture/i })).toBeVisible();
     expect(screen.getByText(/filter by bank, access and curriculum/i)).toBeVisible();
     expect(screen.getAllByText(/woocommerce sends completed orders/i).length).toBeGreaterThan(0);
+  });
+});
+
+describe("CEM Digital case-study narrative", () => {
+  it("maps each retired tool to what replaced it, keeping Zoom", () => {
+    render(<CemPage />);
+
+    const tools = screen.getByRole("list", { name: /tools replaced by cem digital/i });
+    for (const tool of ["Google Classroom", "WhatsApp", "Microsoft Forms", "Google Drive", "Zoom"]) {
+      expect(within(tools).getByText(tool)).toBeVisible();
+    }
+    expect(within(tools).getByText(/join class button/i)).toBeVisible();
+    expect(screen.getByRole("heading", { name: /the answer releases itself/i })).toBeVisible();
+    expect(screen.getByRole("link", { name: /cemnicaragua\.com/i })).toHaveAttribute(
+      "href",
+      "https://www.cemnicaragua.com",
+    );
+  });
+
+  it("labels every pending result instead of inventing one", () => {
+    render(<CemPage />);
+
+    const evidence = screen.getByLabelText("Evidence and content status");
+    expect(within(evidence).getByText("Students and usage in the app").nextElementSibling).toHaveTextContent(
+      "Pending client approval",
+    );
+    expect(within(evidence).getByText(/published on cemnicaragua\.com/i)).toBeVisible();
+    expect(screen.queryByLabelText("Published results")).toBeNull();
+    expect(screen.getByText(/placeholder text/i)).toBeVisible();
+    expect(screen.queryAllByText(/\d+%/)).toHaveLength(0);
+  });
+
+  it("presents the release flow and architecture with accessible descriptions", () => {
+    render(<CemPage />);
+
+    expect(screen.getByRole("figure", { name: /scheduled answer release/i })).toBeVisible();
+    expect(screen.getByRole("figure", { name: /cem digital system architecture/i })).toBeVisible();
+    expect(screen.getByRole("img", { name: /question of the day/i })).toBeVisible();
   });
 });

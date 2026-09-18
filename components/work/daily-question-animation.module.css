@@ -1,0 +1,836 @@
+/*
+ * Question of the day loop — a simplified recreation of CEM Digital, a mobile-first PWA.
+ *
+ * Everything the finger touches is absolutely positioned in % of `.screen`, so the touch
+ * keyframes target the same coordinates at any size. Type inside the phone uses container
+ * units of `.phone`, which lets the device scale like an image. Colours follow the app:
+ * navy #172554, blue #2563eb / #3b82f6, gray-50 canvas, green / amber status strips.
+ *
+ * One 14s timeline drives every element:
+ *   0–15%    announcements feed; the Join class button pulses
+ *   15–38%   tap Questions, pick the first option, tap Vote
+ *   38–49%   "Your result unlocks in 6h 14m"
+ *   49–70%   the clock jumps to 6:00, a push arrives, the answer is released
+ *   70–93%   hold the released state
+ *   93–100%  reset to the announcements feed
+ */
+
+.figure {
+  margin: 0;
+  container-type: inline-size;
+  --loop: 14s;
+  --navy: #172554;
+  --blue: #2563eb;
+  --blue-bright: #3b82f6;
+  --blue-soft: #eff6ff;
+  --app-bg: #f9fafb;
+  --line: #e5e7eb;
+  --gray: #6b7280;
+  --green: #16a34a;
+  --green-soft: #f0fdf4;
+  /* Text tones darker than the ring colours, so small labels keep AA contrast. */
+  --green-text: #15803d;
+  --gray-strong: #4b5563;
+  --amber: #b45309;
+  --amber-soft: #fffbeb;
+}
+
+.figure figcaption {
+  margin-top: 0.75rem;
+  padding-inline: 0.25rem;
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+}
+
+.stage {
+  position: relative;
+  overflow: hidden;
+  padding: 5cqw 8cqw;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 27cqw;
+  align-items: center;
+  gap: 6cqw;
+  border-radius: 1rem;
+  background:
+    radial-gradient(120% 90% at 78% 30%, #22367a 0%, transparent 60%),
+    var(--navy);
+  color: #fff;
+}
+
+/* Step labels beside the phone, lit in sync with the loop. */
+
+.steps {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.1cqw;
+  list-style: none;
+}
+
+.steps li {
+  padding: 1.4cqw 1.6cqw;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.3cqw;
+  border-radius: 1.2cqw;
+  opacity: 0.45;
+}
+
+.steps i {
+  width: 2.3cqw;
+  height: 2.3cqw;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.14);
+  font-size: 1.15cqw;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.steps strong {
+  display: block;
+  font-size: 1.75cqw;
+  font-weight: 620;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.steps span {
+  display: block;
+  margin-top: 0.4cqw;
+  color: #c7d2fe;
+  font-size: 1.3cqw;
+  line-height: 1.35;
+}
+
+.step1 { animation: step-1 var(--loop) infinite; }
+.step2 { animation: step-2 var(--loop) infinite; }
+.step3 { animation: step-3 var(--loop) infinite; }
+
+/* The device */
+
+.phone {
+  container-type: inline-size;
+  padding: 2.4%;
+  border-radius: 13% / 6%;
+  background: #0b1020;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    0 3cqw 6cqw rgb(0 0 0 / 0.35);
+}
+
+.screen {
+  position: relative;
+  aspect-ratio: 9 / 19;
+  overflow: hidden;
+  border-radius: 11% / 5.2%;
+  background: var(--app-bg);
+  color: var(--navy);
+  font-size: 3.7cqw;
+  line-height: 1.3;
+  text-align: left;
+}
+
+/* `.screen` prefix: outrank host-page rules like `.card p` so the mock keeps its own type. */
+.screen p {
+  margin: 0;
+  max-width: none;
+  color: inherit;
+  font-size: inherit;
+  line-height: 1.3;
+}
+
+.screen svg {
+  flex: none;
+}
+
+.statusBar {
+  position: absolute;
+  top: 1.6%;
+  left: 8%;
+  right: 8%;
+  height: 3%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.95em;
+  font-weight: 700;
+}
+
+.clock {
+  position: relative;
+  width: 3em;
+  height: 1.3em;
+}
+
+.clock b {
+  position: absolute;
+  inset: 0;
+}
+
+.timeMorning { animation: time-morning var(--loop) infinite; }
+.timeEvening { opacity: 0; animation: time-evening var(--loop) infinite; }
+
+.notch {
+  width: 30%;
+  height: 100%;
+  border-radius: 999px;
+  background: #0b1020;
+}
+
+.signal {
+  width: 3em;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 0.2em;
+}
+
+.signal i {
+  width: 0.3em;
+  border-radius: 1px;
+  background: var(--navy);
+}
+
+.signal i:nth-child(1) { height: 0.45em; }
+.signal i:nth-child(2) { height: 0.7em; }
+.signal i:nth-child(3) { height: 0.95em; }
+
+/* Header */
+
+.header {
+  position: absolute;
+  top: 6.2%;
+  left: 5.5%;
+  right: 5.5%;
+  height: 6.5%;
+}
+
+.welcome {
+  display: block;
+  color: var(--gray);
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: 0.15em;
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  font-size: 1.75em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.title svg {
+  width: 0.85em;
+  height: 0.85em;
+}
+
+.logo {
+  position: absolute;
+  top: 8%;
+  right: 0;
+  padding: 0.35em 0.55em;
+  border: 2px solid var(--navy);
+  border-radius: 0.5em;
+  font-size: 0.85em;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+/* Tabs */
+
+.tab,
+.filter {
+  position: absolute;
+  top: 14.5%;
+  height: 4.2%;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--navy);
+  font-size: 0.82em;
+  font-weight: 700;
+}
+
+.tabAnnouncements {
+  left: 5%;
+  width: 42%;
+  animation: tab-announcements var(--loop) infinite;
+}
+
+.tabQuestions {
+  left: 49%;
+  width: 29%;
+  animation: tab-questions var(--loop) infinite;
+}
+
+.filter {
+  right: 5%;
+  width: 15%;
+  border-color: transparent;
+  background: transparent;
+  color: var(--gray);
+}
+
+/* Scene A: announcements */
+
+.feedAnnouncements,
+.feedQuestions {
+  position: absolute;
+  inset: 0;
+}
+
+.feedAnnouncements { animation: feed-announcements var(--loop) infinite; }
+.feedQuestions { opacity: 0; animation: feed-questions var(--loop) infinite; }
+
+.card {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  padding: 4.5% 5%;
+  border: 1px solid #f3f4f6;
+  border-radius: 1.4em;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+}
+
+.classCard {
+  top: 21%;
+  height: 24.5%;
+}
+
+.fileCard {
+  top: 47.5%;
+  height: 20%;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  color: var(--gray);
+  font-size: 0.78em;
+  font-weight: 600;
+}
+
+.pill {
+  padding: 0.25em 0.7em;
+  border-radius: 999px;
+  background: var(--blue-soft);
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.cardTitle {
+  display: block;
+  margin-top: 0.6em;
+  font-size: 1.12em;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.screen .cardBody {
+  margin-top: 0.35em;
+  color: #1d4ed8;
+  font-size: 0.9em;
+}
+
+.join {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  bottom: 8%;
+  height: 16%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+  border-radius: 0.8em;
+  background: var(--blue);
+  color: #fff;
+  font-size: 0.95em;
+  font-weight: 700;
+  animation: join-pulse var(--loop) infinite;
+}
+
+.join svg {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.attachment {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  bottom: 10%;
+  height: 32%;
+  padding: 0 4%;
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  border: 1px solid var(--line);
+  border-radius: 0.8em;
+  background: var(--app-bg);
+  font-size: 0.85em;
+  font-weight: 700;
+}
+
+.attachment b {
+  width: 2.2em;
+  height: 2.2em;
+  display: grid;
+  place-items: center;
+  border-radius: 0.6em;
+  background: #f3e8ff;
+  color: #7e22ce;
+}
+
+.attachment b svg {
+  width: 1.1em;
+  height: 1.1em;
+}
+
+.attachment small {
+  display: block;
+  color: var(--gray);
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+/* Scene B: the question of the day */
+
+.questionCard {
+  position: absolute;
+  top: 21%;
+  left: 4%;
+  right: 4%;
+  bottom: 14.5%;
+  border: 1px solid #f3f4f6;
+  border-radius: 1.4em;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+}
+
+.questionMeta {
+  position: absolute;
+  top: 23.6%;
+  left: 9%;
+}
+
+.voted {
+  position: absolute;
+  top: 23.6%;
+  right: 9%;
+  color: var(--green-text);
+  font-size: 0.78em;
+  font-weight: 700;
+  line-height: 1.9;
+  opacity: 0;
+  animation: after-vote var(--loop) infinite;
+}
+
+.questionTitle {
+  position: absolute;
+  top: 28%;
+  left: 9%;
+  font-size: 1.12em;
+  font-weight: 800;
+}
+
+.screen .questionText {
+  position: absolute;
+  top: 32.2%;
+  left: 9%;
+  right: 9%;
+  color: #1d4ed8;
+  font-size: 0.95em;
+  font-weight: 600;
+}
+
+.poll {
+  position: absolute;
+  top: 39.5%;
+  left: 7%;
+  right: 7%;
+  height: 31%;
+  padding: 3% 4.5%;
+  border-radius: 1em;
+  background: #f3f4f6;
+  color: var(--gray-strong);
+  font-size: 0.78em;
+  font-weight: 700;
+}
+
+.option {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  height: 5%;
+  padding: 0 4%;
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  border: 1px solid var(--line);
+  border-radius: 0.75em;
+  background: #fff;
+  font-size: 0.82em;
+  font-weight: 600;
+}
+
+.option1 { top: 43.6%; animation: option-chosen var(--loop) infinite; }
+.option2 { top: 49.6%; }
+.option3 { top: 55.6%; }
+
+.radio {
+  position: relative;
+  width: 1.1em;
+  height: 1.1em;
+  flex: none;
+  border: 2px solid #d1d5db;
+  border-radius: 50%;
+}
+
+.option1 .radio { animation: radio-chosen var(--loop) infinite; }
+
+.selection {
+  position: absolute;
+  top: 63.9%;
+  left: 11%;
+  color: var(--gray);
+  font-size: 0.75em;
+  font-weight: 600;
+  animation: before-vote var(--loop) infinite;
+}
+
+.vote {
+  position: absolute;
+  top: 62.8%;
+  right: 10%;
+  width: 22%;
+  height: 4.4%;
+  display: grid;
+  place-items: center;
+  border-radius: 0.75em;
+  background: var(--navy);
+  color: #fff;
+  font-size: 0.88em;
+  font-weight: 700;
+  animation: vote-button var(--loop) infinite;
+}
+
+.pending,
+.released {
+  position: absolute;
+  top: 73.2%;
+  left: 7%;
+  right: 7%;
+  height: 7%;
+  padding: 0 5%;
+  display: flex;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 0.9em;
+  font-size: 0.82em;
+  font-weight: 700;
+  opacity: 0;
+}
+
+.pending {
+  border-color: #fde68a;
+  background: var(--amber-soft);
+  color: var(--amber);
+  animation: pending var(--loop) infinite;
+}
+
+.released {
+  border-color: #bbf7d0;
+  background: var(--green-soft);
+  color: var(--green-text);
+  animation: released var(--loop) infinite;
+}
+
+/* Push notification */
+
+.push {
+  position: absolute;
+  top: 5.2%;
+  left: 4%;
+  right: 4%;
+  padding: 3.2% 4%;
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  border-radius: 1.2em;
+  background: rgb(255 255 255 / 0.96);
+  box-shadow: 0 0.6em 1.6em rgb(15 23 42 / 0.22);
+  color: #374151;
+  font-size: 0.78em;
+  line-height: 1.3;
+  opacity: 0;
+  transform: translateY(-160%);
+  animation: push var(--loop) infinite;
+}
+
+.push b {
+  display: block;
+  color: #111827;
+  font-weight: 700;
+}
+
+.pushIcon {
+  width: 2.6em;
+  height: 2.6em;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 0.7em;
+  background: var(--navy);
+  color: #fff;
+  font-size: 0.8em;
+  font-weight: 800;
+}
+
+/* Floating bottom navigation */
+
+.nav {
+  position: absolute;
+  top: 88%;
+  left: 6%;
+  right: 6%;
+  height: 7.4%;
+  padding: 0 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 999px;
+  background: var(--navy);
+  box-shadow: 0 0.8em 1.6em rgb(23 37 84 / 0.35);
+  color: #9ca3af;
+}
+
+.nav svg {
+  position: relative;
+  width: 1.45em;
+  height: 1.45em;
+}
+
+.nav svg:first-of-type {
+  color: #fff;
+}
+
+.navBubble {
+  position: absolute;
+  top: 50%;
+  left: 3%;
+  width: 3.1em;
+  height: 3.1em;
+  border-radius: 50%;
+  background: var(--blue-bright);
+  transform: translateY(-50%);
+}
+
+/* Touch */
+
+.touch {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  animation: touch-path var(--loop) infinite;
+}
+
+.touch span {
+  display: block;
+  width: 9cqw;
+  height: 9cqw;
+  margin: -4.5cqw 0 0 -4.5cqw;
+  border: 2px solid rgb(255 255 255 / 0.9);
+  border-radius: 50%;
+  background: rgb(23 37 84 / 0.28);
+  box-shadow: 0 0.4em 1em rgb(0 0 0 / 0.2);
+  animation: touch-tap var(--loop) infinite;
+}
+
+/* Narrow cards (phones): the device alone, centred; the step labels would be too small. */
+@container (max-width: 40rem) {
+  .stage {
+    padding: 7cqw 0;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+
+  .steps {
+    display: none;
+  }
+
+  .phone {
+    width: min(74cqw, 20rem);
+  }
+}
+
+/* Keyframes */
+
+@keyframes step-1 {
+  0%, 15%, 96%, 100% { opacity: 1; background: rgb(255 255 255 / 0.08); }
+  16%, 95% { opacity: 0.45; background: transparent; }
+}
+
+@keyframes step-2 {
+  0%, 15%, 50%, 100% { opacity: 0.45; background: transparent; }
+  16%, 49% { opacity: 1; background: rgb(255 255 255 / 0.08); }
+}
+
+@keyframes step-3 {
+  0%, 49%, 95%, 100% { opacity: 0.45; background: transparent; }
+  50%, 94% { opacity: 1; background: rgb(255 255 255 / 0.08); }
+}
+
+@keyframes touch-path {
+  0% { transform: translate(74%, 80%); opacity: 0; }
+  5% { transform: translate(68%, 58%); opacity: 1; }
+  12%, 16% { transform: translate(63.5%, 16.6%); }
+  24%, 28.5% { transform: translate(40%, 46.2%); }
+  34%, 38.5% { transform: translate(79%, 65%); opacity: 1; }
+  44%, 100% { transform: translate(86%, 80%); opacity: 0; }
+}
+
+@keyframes touch-tap {
+  0%, 14.2%, 15.6%, 26.7%, 28.1%, 36.7%, 38.1%, 100% { transform: scale(1); }
+  14.9%, 27.4%, 37.4% { transform: scale(0.72); background: rgb(23 37 84 / 0.45); }
+}
+
+@keyframes join-pulse {
+  0%, 2%, 13%, 100% { box-shadow: 0 0 0 0 rgb(37 99 235 / 0); }
+  6% { box-shadow: 0 0 0 0.5em rgb(37 99 235 / 0.25); }
+  10% { box-shadow: 0 0 0 0.9em rgb(37 99 235 / 0); }
+}
+
+@keyframes tab-announcements {
+  0%, 15%, 94%, 100% { background: var(--navy); border-color: var(--navy); color: #fff; }
+  15.6%, 93.4% { background: #fff; border-color: var(--line); color: var(--navy); }
+}
+
+@keyframes tab-questions {
+  0%, 15%, 94%, 100% { background: #fff; border-color: var(--line); color: var(--navy); }
+  15.6%, 93.4% { background: var(--navy); border-color: var(--navy); color: #fff; }
+}
+
+@keyframes feed-announcements {
+  0%, 15.2%, 95.5%, 100% { opacity: 1; transform: translateX(0); }
+  17%, 93.5% { opacity: 0; transform: translateX(-6%); }
+}
+
+@keyframes feed-questions {
+  0%, 15.6%, 94.5%, 100% { opacity: 0; transform: translateX(6%); }
+  17.4%, 93% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes option-chosen {
+  0%, 27.6%, 94%, 100% { border-color: var(--line); background: #fff; box-shadow: none; }
+  28.2%, 54.6% { border-color: var(--blue-bright); background: var(--blue-soft); box-shadow: 0 0 0 1px var(--blue-bright); }
+  55.4%, 93.4% { border-color: #86efac; background: var(--green-soft); box-shadow: 0 0 0 1px var(--green); }
+}
+
+@keyframes radio-chosen {
+  0%, 27.6%, 94%, 100% { border-color: #d1d5db; background: transparent; box-shadow: none; }
+  28.2%, 54.6% { border-color: var(--blue-bright); background: var(--blue-bright); box-shadow: inset 0 0 0 0.18em #fff; }
+  55.4%, 93.4% { border-color: var(--green); background: var(--green); box-shadow: inset 0 0 0 0.18em #fff; }
+}
+
+@keyframes vote-button {
+  0%, 27.6%, 94.5%, 100% { opacity: 0.45; transform: scale(1); }
+  28.2%, 37%, 37.8% { opacity: 1; transform: scale(1); }
+  37.4% { opacity: 1; transform: scale(0.94); }
+  38.4%, 94% { opacity: 0; transform: scale(1); }
+}
+
+@keyframes before-vote {
+  0%, 37.8%, 94.5%, 100% { opacity: 1; }
+  38.4%, 94% { opacity: 0; }
+}
+
+@keyframes after-vote {
+  0%, 38%, 94%, 100% { opacity: 0; }
+  38.8%, 93.4% { opacity: 1; }
+}
+
+@keyframes pending {
+  0%, 38%, 55.4%, 100% { opacity: 0; transform: translateY(0.4em); }
+  39%, 54.6% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes released {
+  0%, 54.6%, 94%, 100% { opacity: 0; transform: translateY(0.4em); }
+  55.8%, 93.4% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes time-morning {
+  0%, 48.6%, 94%, 100% { opacity: 1; }
+  49.4%, 93.4% { opacity: 0; }
+}
+
+@keyframes time-evening {
+  0%, 48.6%, 94%, 100% { opacity: 0; }
+  49.4%, 93.4% { opacity: 1; }
+}
+
+@keyframes push {
+  0%, 51%, 71%, 100% { opacity: 0; transform: translateY(-160%); }
+  53%, 68% { opacity: 1; transform: translateY(0); }
+}
+
+/* Reduced motion: show the finished loop, answer released; no finger, no notification. */
+@media (prefers-reduced-motion: reduce) {
+  .stage *,
+  .touch {
+    animation: none !important;
+  }
+
+  .touch,
+  .feedAnnouncements,
+  .timeMorning,
+  .vote,
+  .selection,
+  .pending {
+    opacity: 0;
+  }
+
+  .feedQuestions,
+  .timeEvening,
+  .voted,
+  .released {
+    opacity: 1;
+  }
+
+  .tabQuestions {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+  }
+
+  .option1 {
+    border-color: #86efac;
+    background: var(--green-soft);
+    box-shadow: 0 0 0 1px var(--green);
+  }
+
+  .option1 .radio {
+    border-color: var(--green);
+    background: var(--green);
+    box-shadow: inset 0 0 0 0.18em #fff;
+  }
+
+  .step3 {
+    opacity: 1;
+    background: rgb(255 255 255 / 0.08);
+  }
+}

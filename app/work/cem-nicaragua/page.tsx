@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CaseStudy } from "@/components/work/case-study";
+import { CemCaseStudy } from "@/components/work/cem-case-study";
 import { getProject } from "@/content/portfolio";
 
 const project = getProject("cem-nicaragua");
@@ -20,5 +20,5 @@ export const metadata: Metadata = {
 };
 
 export default function CemPage() {
-  return <CaseStudy project={project} />;
+  return <CemCaseStudy />;
 }

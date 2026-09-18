@@ -134,82 +134,77 @@ const projects: Project[] = [
     index: "02",
     name: "CEM Digital",
     shortName: "CEM",
-    category: "Education and operations platform",
+    category: "Medical education app",
     status: "In production",
-    platform: "Institutional site + web application",
+    platform: "Mobile-first web app (PWA)",
     role: "Full-stack product engineering",
-    year: "Preview",
+    year: "2026",
     summary:
-      "An institutional and operational platform for CEM Nicaragua, connecting public information with the workflows behind its education programs.",
+      "A mobile-first app that brought CEM Nicaragua's announcements, daily questions, timed exams and class recordings into one place.",
     overview:
-      "CEM Digital combines an outward-facing institutional presence with a working application for courses, announcements, schedules, resources, assessments, and administration.",
+      "CEM Digital is the app students of CEM Nicaragua install on their phones to follow a course: announcements with the live-class link, a question of the day, timed simulators, and a repository of files and recordings.",
     clientContext:
-      "CEM Nicaragua is a real organization with educational and administrative needs. Exact engagement details, audiences, and ownership boundaries remain provisional until the final content review.",
+      "CEM Nicaragua (Cursos Especializados de Medicina) runs online courses for doctors, taught live over Zoom.",
     challenge:
-      "Information and operational tasks lived across different touchpoints. The platform needed to make public communication easier while giving the organization one dependable place for recurring education workflows.",
+      "Each course was spread across Google Classroom, Microsoft Forms, Google Drive, Zoom and WhatsApp, with separate logins, separate costs and five places to check.",
     solution:
-      "The provisional narrative presents one connected digital service: a clear institutional front door backed by an application that organizes courses, notices, schedules, resources, evaluations, and administration.",
+      "One installable app replaced four of those tools. Announcements, daily questions with a scheduled answer, simulators that open at a set time, and course files share one feed and one set of notifications; Zoom stays one tap away.",
     features: [
       {
-        title: "Course management",
+        title: "Announcement feed",
         description:
-          "Organized program information and the operational tools needed to keep courses current.",
+          "Course announcements with push notifications, attachments and a Join class button for the live session.",
       },
       {
-        title: "Announcements and schedules",
+        title: "Question of the day",
         description:
-          "Timely updates and shared calendars designed around the organization’s recurring communication.",
+          "A poll with a correct answer that unlocks at the hour the teacher chooses, with a push to everyone who voted.",
       },
       {
-        title: "Learning resources",
+        title: "Timed simulators",
         description:
-          "A structured home for materials that people can find without navigating disconnected channels.",
+          "Exams that open at a scheduled time, run on a server-owned clock and autosave on the phone.",
       },
       {
-        title: "Assessments and administration",
+        title: "Course repository",
         description:
-          "Evaluation workflows and the controls required to operate them as part of the wider platform.",
+          "Files and recorded classes uploaded straight to Cloudflare R2 and previewed in the app.",
       },
     ],
     engineering: [
       {
-        title: "One product, two contexts",
+        title: "Time rules on every request",
         description:
-          "Balance a public institutional experience with authenticated operational workflows in a coherent system.",
+          "Answer releases and exam openings are checked against stored timestamps, so they happen on time even if a job runs late.",
       },
       {
-        title: "Information that stays usable",
+        title: "A durable notification queue",
         description:
-          "Structure changing schedules, announcements, course data, and resources so each remains easy to maintain.",
+          "Publishing writes a push job that is sent after the save commits and retried by a sweep.",
       },
       {
-        title: "Sustainable administration",
+        title: "Direct uploads",
         description:
-          "Turn recurring organizational work into manageable product flows with clear permissions and ownership.",
+          "Large recordings go from the browser to object storage in parts, never through the API.",
       },
     ],
     architecture: [
-      { label: "Public experience", detail: "Institutional information and discovery" },
-      { label: "Member application", detail: "Education and operational workflows" },
-      { label: "Administration", detail: "Content, access, schedules, and evaluation controls" },
-      { label: "Shared foundation", detail: "Application services, data, files, and delivery" },
+      { label: "Phone app", detail: "Next.js PWA with a service worker for offline and push" },
+      { label: "API", detail: "Django REST Framework on Railway" },
+      { label: "Data and files", detail: "PostgreSQL and Cloudflare R2" },
+      { label: "Scheduler", detail: "Class reminders, released answers and exam openings" },
     ],
     results:
-      "Verified adoption and operational outcomes are intentionally withheld until the client approves the evidence. This preview states only the confirmed facts: a real organization and a production platform.",
-    technologies: ["Next.js", "React", "TypeScript", "Django", "PostgreSQL", "Cloud infrastructure"],
+      "Classroom, Microsoft Forms, Google Drive and WhatsApp were retired; only Zoom remains. Usage figures are pending client approval.",
+    technologies: ["Next.js", "React", "TypeScript", "Django", "PostgreSQL", "Cloudflare R2"],
     metrics: [],
     testimonial: null,
     liveUrl: null,
     media: [
       {
         kind: "illustration",
-        label: "Program operations",
-        caption: "Illustrative product UI — replace with an approved CEM capture.",
-      },
-      {
-        kind: "illustration",
-        label: "Institutional experience",
-        caption: "Illustrative product UI — not a production screenshot.",
+        label: "Question of the day",
+        caption: "Illustrative product UI — a simplified recreation of the CEM Digital mobile app.",
       },
     ],
   },

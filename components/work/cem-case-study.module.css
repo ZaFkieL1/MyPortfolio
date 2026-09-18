@@ -1,0 +1,141 @@
+/*
+ * CEM-only blocks. Everything shared (cards, sections, grids, hero, motion) lives in
+ * the case-study bento kit: components/case-study/bento.module.css.
+ */
+
+/* Tool map: each retired tool, the job it did, and what replaced it in the app. */
+
+.toolMap {
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.toolRows {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  list-style: none;
+}
+
+.toolRows li {
+  padding: 1rem clamp(0.5rem, 1.5vw, 1rem);
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) auto minmax(0, 6fr);
+  align-items: center;
+  gap: 0.5rem clamp(1rem, 3vw, 2rem);
+}
+
+.toolRows li + li {
+  border-top: 1px solid var(--cs-hairline);
+}
+
+.before {
+  display: grid;
+  gap: 0.15rem;
+  color: var(--cs-quiet);
+  font-size: 1.0625rem;
+  font-weight: 550;
+}
+
+.before s {
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: rgb(0 0 0 / 0.35);
+}
+
+.before small {
+  color: var(--cs-meta);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.arrow {
+  color: var(--cs-meta);
+  font-size: 1.25rem;
+}
+
+.toolRows strong {
+  font-size: 1.0625rem;
+  font-weight: 580;
+  letter-spacing: -0.01em;
+}
+
+/* Zoom is the one tool kept: it reads as a highlight, not a strike-through. */
+.toolRows .kept {
+  margin-top: 0.5rem;
+  border-top: 0;
+  border-radius: var(--cs-radius-inner);
+  background: var(--cs-sky);
+}
+
+.kept .before {
+  color: var(--cs-ink);
+}
+
+/* Daily question: why the release is punctual, beside an example day. */
+
+.releaseCard {
+  margin-top: var(--cs-gap);
+  padding: clamp(1.5rem, 3vw, 2rem);
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  align-items: center;
+  gap: 1.5rem 3rem;
+}
+
+.releaseCard p {
+  max-width: 50ch;
+  margin-top: 0.5rem;
+}
+
+.releaseTimeline {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.releaseTimeline li {
+  padding: 0.75rem 1rem;
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 1rem;
+  border-radius: var(--cs-radius-inner);
+  background: rgb(255 255 255 / 0.8);
+  font-size: 0.9375rem;
+}
+
+.releaseTimeline strong {
+  font-weight: 620;
+  font-variant-numeric: tabular-nums;
+}
+
+.releaseTimeline li:last-child {
+  background: var(--color-dark);
+  color: var(--color-dark-text);
+}
+
+/* The release flow is vertical and narrow enough to fit a phone without scrolling. */
+.flowCard svg {
+  min-width: 0 !important;
+  max-height: 36rem;
+}
+
+.flowCard [role="region"] > div {
+  justify-content: center;
+}
+
+@media (max-width: 48rem) {
+  .releaseCard {
+    grid-template-columns: 1fr;
+  }
+
+  .toolRows li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.35rem;
+  }
+
+  .arrow {
+    display: none;
+  }
+}

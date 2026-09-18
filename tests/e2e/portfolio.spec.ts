@@ -6,7 +6,7 @@ import { expect, test } from "@playwright/test";
 const routes = [
   { path: "/", heading: "I build digital products businesses can depend on." },
   { path: "/work/medisapience", heading: /one platform for medical question banks and the team behind them/i },
-  { path: "/work/cem-nicaragua", heading: "CEM Digital" },
+  { path: "/work/cem-nicaragua", heading: /one app for a medical course that ran on five platforms/i },
 ];
 
 for (const route of routes) {

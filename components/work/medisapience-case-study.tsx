@@ -1,63 +1,171 @@
-import Link from "next/link";
-import { ArrowUpRightIcon, CheckIcon } from "@/components/icons";
 import { MermaidDiagram } from "@/components/content/mermaid-diagram";
-import { Footer } from "@/components/layout/footer";
-import { PreviewBanner } from "@/components/layout/preview-banner";
-import { Navbar } from "@/components/navigation/navbar";
-import { ProductVisual } from "@/components/product/product-visual";
+import { ArrowUpRightIcon } from "@/components/icons";
+import {
+  AsideGrid,
+  BandCard,
+  Card,
+  CardGrid,
+  CaseCta,
+  CaseHero,
+  CaseSection,
+  CaseStudyShell,
+  ChipList,
+  DiagramCard,
+  GhostLink,
+  ListCard,
+  OutcomeGrid,
+  PairGrid,
+  Screenshot,
+  StatementCard,
+  StatementLead,
+  StatGrid,
+  StepList,
+  Testimonial,
+  Timeline,
+  VisualCard,
+  bento,
+  type GridItem,
+} from "@/components/case-study/bento";
 import { ButtonLink } from "@/components/ui/button-link";
+import Image from "next/image";
+import practiceFeedback from "./media/practice-feedback.webp";
+import whatToStudyToday from "./media/what-to-study-today.webp";
 import styles from "./medisapience-case-study.module.css";
+import { SessionSetupAnimation } from "./session-setup-animation";
 
-const productFlows = [
+const loop = [
   {
-    title: "Practice with feedback that teaches",
-    body: "Students filter a bank by specialty, subject or topic, answer questions and see explanations while they practise. Feedback can include rich content, option-specific explanations, images, links and references.",
-    detail:
-      "A limited free preview reveals full explanations during a session so students can understand the value of Practice before upgrading.",
+    label: "Purchase",
+    title: "Start with the right bank",
+    body: "A completed order becomes the right account, bank and access period.",
   },
   {
-    title: "Exams with a different rhythm",
-    body: "Exam Mode holds feedback until the session finishes. Students can navigate or skip questions, work against a visible timer and review their results afterward.",
-    detail:
-      "Question order, answers and timing persist in the browser across a refresh so an interruption does not immediately erase the attempt.",
+    label: "Study",
+    title: "Practice and Exam are not the same experience",
+    body: "Practice shows feedback as you go. Exam Mode holds it until the end.",
   },
   {
-    title: "A next step after the score",
-    body: "Performance by subject and topic, trends and error patterns help students understand their history. “What to study today” turns errors, attempts and time spent into an explainable topic priority.",
-    detail:
-      "When there is too little history, the product shows progress toward eligibility instead of presenting a fabricated recommendation.",
-  },
-  {
-    title: "An admin experience for the actual work",
-    body: "The team can create and edit content, import questions from Excel, manage versions, review reports, organise library resources and handle users, plans and access.",
-    detail:
-      "Routine publishing and operational changes happen through a dedicated product surface rather than direct database edits.",
+    label: "Review",
+    title: "Make the result useful",
+    body: "Scores by subject and topic point to what to study next.",
   },
 ];
 
-const engineeringDecisions = [
+const decisions: GridItem[] = [
   {
     title: "Keep the history of a changing question bank",
-    body: "Each question has a stable editorial key. Successive content versions are recorded, and every answer keeps the version the student saw. Deleted questions remain recoverable; restoring an earlier version creates a new version instead of rewriting history.",
-    impact:
-      "The team can correct live content while attempts and reports remain tied to their original context.",
+    details: [
+      { label: "Problem", value: "Questions get corrected after students have already answered them." },
+      { label: "Approach", value: "Stable question keys, versioned content, and answers that record the version seen." },
+    ],
   },
   {
-    title: "Assemble study sessions on the server",
-    body: "The normal session path filters by bank, access and curriculum on the server, guarantees selected-topic coverage and sends only the assembled questions to the browser. Research measurement items can be inserted without exposing their markers.",
-    impact:
-      "Selection rules sit close to the data, and the regular study path no longer downloads an entire question bank before filtering.",
+    title: "Assemble sessions close to the data",
+    details: [
+      { label: "Problem", value: "The first version downloaded a whole bank to pick a few questions." },
+      { label: "Approach", value: "The server filters by access and curriculum and sends only the session." },
+    ],
   },
   {
-    title: "Translate a purchase into the right access",
-    body: "WooCommerce owns checkout while MediSapience owns question-bank entitlements. A completed mapped order can find or create an account and extend access to the purchased bank without discarding unused renewal time.",
-    impact:
-      "Commerce and authorisation remain separate systems without losing which bank and access period the student purchased.",
+    title: "Make a purchase mean the right access",
+    details: [
+      { label: "Problem", value: "WooCommerce knows what was paid, not what it unlocks." },
+      { label: "Approach", value: "Orders map to a plan, and each plan to one bank. Unmapped products wait for review." },
+    ],
   },
+];
+
+const bankLevels = ["Bank", "Specialty", "Subject", "Topic", "Question"];
+
+const bankScoped = ["Plans", "Premium access", "Exam sessions", "Study library", "Payments", "Learning stats"];
+
+const bankMechanics = [
+  {
+    title: "Every request knows its bank",
+    body: "One client-side interceptor adds the active bank to every API call. The server checks it and falls back to the base bank.",
+  },
+  {
+    title: "Premium is per bank",
+    body: "Buying one bank never unlocks another. Each store product maps to a plan, and each plan belongs to one bank.",
+  },
+  {
+    title: "Private banks open by link",
+    body: "Unlisted banks stay hidden until someone arrives with an opaque invite code. Typing a hidden bank's name into a request does nothing: the server only honours banks that were unlocked.",
+  },
+];
+
+const studySignals = [
+  ["Error rate", "45%"],
+  ["Mistakes", "20%"],
+  ["Time", "20%"],
+  ["Attempts", "15%"],
+];
+
+const operations = [
+  {
+    title: "Bank transfers, checked by OCR",
+    body: "A separate worker reads each receipt and checks amount, currency, date, account and reference. Staff make the final call, and a reference can only be credited once.",
+  },
+  {
+    title: "See the app as a free student",
+    body: "One switch lets an admin preview the product exactly as a free user sees it, without touching their own access.",
+  },
+  {
+    title: "Support with the full account story",
+    body: "Each user has a timeline of purchases, access grants and changes, and staff can grant access bank by bank.",
+  },
+];
+
+const performance = [
+  { value: "1.16 → 0.22 MB", label: "A 400-question payload after GZip compression" },
+  { value: "1 year", label: "Immutable cache on question images served through Cloudflare" },
+];
+
+const goals = [
+  { title: "Practise under exam conditions", body: "Timed Exam Mode that holds feedback until the end, like the real test." },
+  { title: "Know what to study next", body: "Results by specialty, subject and topic instead of a single score." },
+  { title: "Keep the content right", body: "A bank the team can correct and grow without losing past attempts." },
+];
+
+const milestones = [
+  { date: "Oct 2025", title: "First data model", body: "Questions, answers and exam sessions." },
+  { date: "7 Jan 2026", title: "MVP launch", body: "Purchase, study and administration working end to end." },
+  { date: "Jun 2026", title: "Multi-bank", body: "One migration turned a single bank into many." },
+  { date: "Sep 2026", title: "Where it stands", body: "67 database migrations and 74 versioned frontend releases later." },
+];
+
+const afterLaunch = [
+  "Question versioning", "Library per bank", "Transfers with OCR", "Per-bank Premium",
+  "Support CRM", "Statistics", "What to study today", "Research study", "Server-side sessions",
+  "Peer comparison", "Error capture and push alerts",
+];
+
+const testedAreas = [
+  "Payments", "Store webhook", "Premium expiry", "Session assembly", "Bank invites",
+  "Statistics", "Research study", "Support tools", "Auth and permissions",
+];
+
+const method = [
+  { title: "A changelog for every release", body: "Each version records what changed and why, so the client can follow the product without reading code." },
+  { title: "Testing before production", body: "A separate testing environment mirrors production; changes land there first." },
+  { title: "Comments that explain the why", body: "The code records the reasoning behind each decision, so the next person can change it safely." },
+];
+
+// Published by MediSapience on medisapience.com and approved for this case study.
+const results = [
+  { value: "20,641+", label: "Answer attempts" },
+  { value: "310+", label: "Subscribers" },
+  { value: "41%", label: "Premium subscribers who passed" },
+  { value: "1 year", label: "In service" },
+];
+
+const technology = [
+  "Next.js 15", "React 19", "TypeScript", "Django 5", "Django REST Framework",
+  "PostgreSQL", "WooCommerce", "PDF.js", "Vercel", "Railway", "Cloudflare Worker",
 ];
 
 const sessionChart = String.raw`
-flowchart LR
+flowchart TB
   A[Session request] --> B[Authenticate and resolve bank]
   B --> C[Filter by access and curriculum]
   C --> D[Guarantee topic coverage]
@@ -87,7 +195,7 @@ flowchart LR
   MAIL[Email + Web Push]
 
   VERCEL --> UI
-  UI <--> API
+  UI <-->|X-Bank-Slug| API
   UI --> PDF
   AUTH --> API
   API <--> DB
@@ -101,277 +209,241 @@ flowchart LR
 
 export function MedisapienceCaseStudy() {
   return (
-    <>
-      <Navbar />
-      <PreviewBanner />
-      <main id="main-content" className={`case-study ${styles.page}`}>
-        <header className={`case-hero container ${styles.hero}`}>
-          <Link className="back-link" href="/#work">← All work</Link>
-          <div className={styles.heroGrid}>
-            <p className={styles.projectName}>MediSapience · Medical education</p>
-            <div className={styles.heroCopy}>
-              <h1>From a medical QBank MVP to a platform students can study with and its team can run</h1>
-              <p>
-                MediSapience brings medical question banks, practice sessions, timed exams,
-                feedback and study resources into one product. I built the student experience
-                and the tools behind it, then developed the platform further as the client
-                learned from real use.
-              </p>
-              <ButtonLink href="/#contact" variant="primary">
-                Discuss a similar product <ArrowUpRightIcon />
-              </ButtonLink>
-            </div>
-          </div>
-          <dl className="case-facts">
-            <div><dt>Client</dt><dd>MediSapience</dd></div>
-            <div><dt>Role</dt><dd>Product development, frontend, backend and deployment</dd></div>
-            <div><dt>Timeline</dt><dd>2025–2026</dd></div>
-            <div><dt>Status</dt><dd>Live product</dd></div>
-          </dl>
-        </header>
-
-        <div className="container case-lead-visual">
-          <ProductVisual
-            project="medisapience"
-            caption="Illustrative product UI — not a production screenshot."
-          />
-        </div>
-
-        <section className={`case-section container ${styles.glance}`} aria-labelledby="product-glance">
-          <div className="case-section__heading">
-            <h2 id="product-glance">The product at a glance</h2>
-            <p>One product connects the study experience to the work required to operate it.</p>
-          </div>
-          <div className={styles.audienceGrid}>
-            <article>
-              <h3>For students</h3>
-              <p>
-                Choose a question bank, configure a Practice or Exam session, review answers,
-                track performance and continue with relevant study material.
-              </p>
-            </article>
-            <article>
-              <h3>For the team behind MediSapience</h3>
-              <p>
-                Create and revise questions, import content, manage access and plans, review
-                payments and support users through a dedicated admin portal.
-              </p>
-            </article>
-          </div>
-          <p className={styles.distinction}>
-            <strong>Practice reveals feedback as students work.</strong> Exam Mode holds feedback
-            until the session ends.
-          </p>
-        </section>
-
-        <section className={`case-section container case-section--split ${styles.context}`} aria-labelledby="medisapience-overview">
-          <h2 id="medisapience-overview">Overview</h2>
-          <div className="case-section__body">
-            <p className="lead-copy">
-              The client wanted to turn a medical question bank into a usable paid product.
-            </p>
-            <p>
-              Students needed to practise by subject, take exams and receive educational
-              feedback. The team needed to publish questions and manage customers without
-              routing every content or access change through a developer.
-            </p>
-            <p>
-              Checkout lived in WooCommerce while studying and access lived in MediSapience.
-              We prioritised the essential loop for the MVP: purchase access, enter the product,
-              study and manage the content that makes studying useful.
-            </p>
-          </div>
-        </section>
-
-        <section className={`case-section container ${styles.challengeRole}`} aria-label="Challenge and role">
-          <article>
-            <h2>The challenge</h2>
-            <p>This was more than a quiz interface. The platform needed to:</p>
-            <ul>
-              <li>Scope each student’s access to the bank they purchased.</li>
-              <li>Give Practice and Exam distinct feedback and result behaviour.</li>
-              <li>Let live content change without making historic answers ambiguous.</li>
-              <li>Convert commerce events into access while keeping exceptions reviewable.</li>
-              <li>Offer useful performance data without turning one score into a study plan.</li>
-            </ul>
-          </article>
-          <article>
-            <h2>My role</h2>
-            <p>
-              I developed the student frontend, Django API, data model, administrative tools
-              and deployment configuration. I also worked with the client on feature priorities
-              and subsequent changes as the product moved beyond its first release.
-            </p>
-          </article>
-        </section>
-
-        <section className={`case-section ${styles.solution}`} aria-labelledby="medisapience-solution">
-          <div className="container">
-            <div className="case-section__heading">
-              <h2 id="medisapience-solution">The solution</h2>
-              <p>A connected study and operations platform, built to evolve after launch.</p>
-            </div>
-            <p className={styles.solutionLead}>
-              Students can configure sessions, receive mode-specific feedback, review previous
-              attempts and use performance data to choose what to study next. The team can manage
-              questions, users, plans, access, resources and payments from its own portal.
-            </p>
-            <ProductVisual
-              project="medisapience"
-              caption="Illustrative product UI — not a production screenshot."
-            />
-          </div>
-        </section>
-
-        <section className={`case-section container ${styles.productWorks}`} aria-labelledby="product-works">
-          <div className="case-section__heading">
-            <h2 id="product-works">How the product works</h2>
-            <p>Four connected surfaces shape the day-to-day experience.</p>
-          </div>
-          <div className={styles.flowList}>
-            {productFlows.map((flow, index) => (
-              <article key={flow.title}>
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                <div>
-                  <h3>{flow.title}</h3>
-                  <p>{flow.body}</p>
-                  <p className={styles.flowDetail}>{flow.detail}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="case-section case-engineering" aria-labelledby="medisapience-engineering">
-          <div className="container">
-            <div className="case-section__heading">
-              <h2 id="medisapience-engineering">Engineering challenges</h2>
-              <p>Three decisions kept product behaviour understandable as the system grew.</p>
-            </div>
-            <div className={styles.decisionList}>
-              {engineeringDecisions.map((decision, index) => (
-                <article key={decision.title}>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <h3>{decision.title}</h3>
-                  <div>
-                    <p>{decision.body}</p>
-                    <p className={styles.impact}><strong>Why it mattered:</strong> {decision.impact}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-            <div className={styles.sessionDiagram}>
-              <MermaidDiagram
-                title="Server-side session assembly"
-                description="A request becomes a scoped, persisted session before the selected questions reach the browser."
-                chart={sessionChart}
-                steps={[
-                  "Authenticate the student and resolve the selected bank.",
-                  "Filter by bank, access and curriculum.",
-                  "Guarantee coverage for the selected topics.",
-                  "Reserve due research probes without exposing their markers.",
-                  "Persist the ExamSession and return only the selected questions.",
-                ]}
-              />
-            </div>
-          </div>
-        </section>
-
-        <section className="case-section architecture-section" aria-labelledby="medisapience-architecture">
-          <div className="container">
-            <div className="case-section__heading">
-              <h2 id="medisapience-architecture">System architecture</h2>
-              <p>
-                The student and admin surfaces share an API while commerce, files and background
-                payment work retain clear boundaries.
-              </p>
-            </div>
-            <p className={styles.architectureLead}>
-              Next.js and React run the browser experience. Django REST Framework owns product
-              rules and persists study history, content, accounts and access in PostgreSQL.
-              WooCommerce sends completed orders to the API; managed storage, an image CDN and a
-              separate payment worker support files and transfer receipts.
-            </p>
-            <MermaidDiagram
-              title="MediSapience system architecture"
-              description="Verified production boundaries based on the audited frontend, backend, storage and deployment configuration."
-              chart={architectureChart}
-              tone="dark"
-              steps={[
-                "Vercel delivers the Next.js and React student and admin interface to the browser.",
-                "PDF.js reads external study resources, and Firebase verifies identity before Django creates the application session.",
-                "The interface communicates with the Django REST API on Railway, which stores product and study data in PostgreSQL.",
-                "WooCommerce sends completed orders to the API through a webhook.",
-                "Google Cloud Storage holds question images and private receipts; a Cloudflare Worker CDN serves question imagery.",
-                "A separate Railway worker reads payment records, processes transfer receipts with OCR assistance and uses managed storage.",
-                "The API sends transactional email and web push notifications.",
-              ]}
-            />
-          </div>
-        </section>
-
-        <section className={`case-section container case-section--split ${styles.reliability}`} aria-labelledby="medisapience-reliability">
-          <h2 id="medisapience-reliability">Reliability and testing</h2>
-          <div className="case-section__body">
-            <p className="lead-copy">The product protects context where a live study flow can easily lose it.</p>
-            <ul>
-              <li><CheckIcon /> Question versions preserve the content attached to past answers.</li>
-              <li><CheckIcon /> Excel imports validate a complete batch before applying it.</li>
-              <li><CheckIcon /> Access renewals extend the current period instead of replacing unused days.</li>
-              <li><CheckIcon /> The baseline research flow can resume from server-side progress.</li>
-              <li><CheckIcon /> Django and Playwright tests cover core study and operational workflows.</li>
-            </ul>
-          </div>
-        </section>
-
-        <section className={`case-section container case-section--split ${styles.results}`} aria-labelledby="medisapience-results">
-          <h2 id="medisapience-results">Results</h2>
-          <div className="case-section__body">
-            <p className="lead-copy">A launchable MVP became a broader live product.</p>
-            <p>
-              The client launched the initial product on 7 January 2026 and later confirmed that
-              students had paid for Premium access. After the MVP, the platform expanded into
-              multiple banks, richer feedback, reporting and administration, study recommendations
-              and infrastructure for a research study.
-            </p>
-            <p>
-              The result is a live student journey paired with the tools its team uses to operate
-              the bank, with further work commissioned after the first release.
-            </p>
-          </div>
-        </section>
-
-        <section className="case-section container case-section--split" aria-labelledby="medisapience-technology">
-          <h2 id="medisapience-technology">Technology</h2>
-          <div className="tag-list">
-            {[
-              "Next.js 15", "React 19", "TypeScript", "Django 5", "Django REST Framework",
-              "PostgreSQL", "WooCommerce", "PDF.js", "Vercel", "Railway", "Cloudflare Worker",
-            ].map((technology) => <span key={technology}>{technology}</span>)}
-          </div>
-        </section>
-
-        <section className="case-contact" aria-labelledby="medisapience-contact">
-          <div className="container case-contact__inner">
-            <div>
-              <h2 id="medisapience-contact">Building a product that must work for users and the people running it?</h2>
-              <p>I develop web applications that connect the customer experience to the operations behind it.</p>
-            </div>
-            <ButtonLink href="/#contact" variant="inverse">
-              Let&apos;s talk about your project <ArrowUpRightIcon />
+    <CaseStudyShell>
+      <CaseHero
+        status="Live product"
+        kicker="MediSapience case study"
+        title="One platform for medical question banks and the team behind them."
+        lead={
+          <>
+            Students practise, sit timed exams and see what to study next. The team publishes
+            content, manages access and reviews payments — without calling a developer.
+          </>
+        }
+        actions={
+          <>
+            <ButtonLink href="/#contact" variant="primary">
+              Discuss a similar product <ArrowUpRightIcon />
             </ButtonLink>
-          </div>
-        </section>
+            <GhostLink href="#medisapience-architecture">See the architecture</GhostLink>
+          </>
+        }
+        facts={[
+          { label: "Client", value: "MediSapience" },
+          { label: "Timeline", value: "2025–2026" },
+          { label: "Role", value: "Full-stack product engineering" },
+          {
+            label: "Website",
+            value: <a href="https://medisapience.com" target="_blank" rel="noopener noreferrer">medisapience.com ↗</a>,
+          },
+        ]}
+        highlight={{ label: "Launched", value: "7 Jan 2026" }}
+        note={{ label: "Built with", value: "Next.js, Django, PostgreSQL, WooCommerce" }}
+      />
 
-        <section className="next-project" aria-labelledby="medisapience-next">
-          <Link href="/work/cem-nicaragua" className="container next-project__link">
-            <span>Next case study</span>
-            <h2 id="medisapience-next">CEM Digital</h2>
-            <ArrowUpRightIcon />
-          </Link>
-        </section>
-      </main>
-      <Footer />
-    </>
+      <VisualCard>
+        <SessionSetupAnimation caption="Illustrative product UI — a simplified, animated recreation of the session setup, not a production screenshot." />
+      </VisualCard>
+
+      <CaseSection id="medisapience-brief">
+        <StatementCard id="medisapience-brief" title="A question bank is only useful when students can return to it">
+          <StatementLead>
+            MediSapience is a study platform for doctors in Nicaragua preparing for the
+            entrance exam to medical and surgical specialty programmes.
+          </StatementLead>
+          <p>
+            The idea: turn a bank of exam questions into a product students buy, study with and
+            come back to — and one the team can run without calling a developer.
+          </p>
+        </StatementCard>
+        <CardGrid items={goals} />
+      </CaseSection>
+
+      <CaseSection id="medisapience-sides" title="One product, two operating realities">
+        <PairGrid
+          items={[
+            { title: "For students", tint: "sky", chips: ["Choose a bank", "Practice or Exam", "Review answers", "Track progress", "Keep studying"] },
+            { title: "For the team behind MediSapience", tint: "peach", chips: ["Write and revise", "Import from Excel", "Manage plans", "Review payments", "Support users"] },
+          ]}
+        />
+      </CaseSection>
+
+      <CaseSection id="medisapience-loop" title="The smallest useful loop" lead="The MVP made one path work end to end.">
+        <StepList items={loop} />
+        <Screenshot
+          src={practiceFeedback}
+          width={1648}
+          height={890}
+          alt="MediSapience in Practice mode: the student chose a wrong option, the correct answer is highlighted, and the feedback panel explains why with a bibliographic source and a link to the exact page to read."
+          caption="Practice mode: instant feedback, the reasoning behind it, and a link to the page that covers it."
+        />
+        <Card tint="sky" className={styles.studyToday}>
+          <div>
+            <h3>What to study today</h3>
+            <p>
+              A transparent score ranks each topic by four signals, then links the weakest ones
+              straight to the pages to read. It starts after 50 answers or a baseline exam.
+            </p>
+          </div>
+          <dl className={styles.signals} aria-label="Recommendation weights">
+            {studySignals.map(([label, weight]) => (
+              <div key={label}>
+                <dt>{label}</dt>
+                <dd>
+                  <span className={styles.track} aria-hidden="true">
+                    <span style={{ width: `${(parseInt(weight, 10) / 45) * 100}%` }} />
+                  </span>
+                  {weight}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <figure className={styles.studyShot}>
+            <Image
+              src={whatToStudyToday}
+              width={1904}
+              height={890}
+              quality={90}
+              sizes="(max-width: 75rem) 100vw, 72rem"
+              alt="The What to study today screen: five priority topics ranked by performance, each with questions to review, recommended bibliography and buttons to read or practise."
+            />
+          </figure>
+        </Card>
+        <BandCard title="The operating surface keeps the bank moving" tint="peach">
+          Questions, imports, versions, reports, users, plans and payments — all without touching the database.
+        </BandCard>
+      </CaseSection>
+
+      <CaseSection id="medisapience-banks" title="One engine, many question banks" lead="A new bank is a row of configuration, not a new deployment.">
+        <Card className={styles.bankMap}>
+          <div>
+            <h3 className={bento.label}>Content hierarchy</h3>
+            <ol className={styles.bankTree}>
+              {bankLevels.map((level) => <li key={level}>{level}</li>)}
+            </ol>
+          </div>
+          <div>
+            <h3 className={bento.label}>Scoped to each bank</h3>
+            <ChipList items={bankScoped} />
+            <p>
+              The single-bank product became multi-bank through one migration: existing content
+              moved into a base bank, and old premium flags became per-bank access.
+            </p>
+          </div>
+        </Card>
+        <CardGrid items={bankMechanics} />
+      </CaseSection>
+
+      <CaseSection id="medisapience-decisions" title="The technical work behind a credible study session" lead="Three decisions shaped the data model, sessions and checkout.">
+        <CardGrid items={decisions} />
+        <DiagramCard className={styles.sessionCard}>
+          <MermaidDiagram
+            title="Server-side session assembly"
+            description="A request becomes a scoped, persisted session before questions reach the browser."
+            chart={sessionChart}
+            steps={[
+              "Authenticate the student and resolve the selected bank.",
+              "Filter by bank, access and curriculum.",
+              "Guarantee coverage for the selected topics.",
+              "Reserve due research probes without exposing their markers.",
+              "Persist the ExamSession and return only the selected questions.",
+            ]}
+          />
+        </DiagramCard>
+      </CaseSection>
+
+      <CaseSection id="medisapience-operations" title="Tools for the team that runs it" lead="Routine payments and support stay out of the database and out of my inbox.">
+        <CardGrid items={operations} tint="peach" />
+      </CaseSection>
+
+      <CaseSection id="medisapience-architecture" title="Boundaries that keep the system reliable" lead="Study, checkout and background work stay separate, so each does one job.">
+        <DiagramCard>
+          <MermaidDiagram
+            title="MediSapience system architecture"
+            description="Production boundaries from the audited frontend, backend, storage and deployment setup."
+            chart={architectureChart}
+            steps={[
+              "Vercel delivers the Next.js and React student and admin interface to the browser.",
+              "PDF.js reads external study resources, and Firebase verifies identity before Django creates the application session.",
+              "Every request carries the active bank; the Django REST API on Railway scopes product and study data in PostgreSQL to it.",
+              "WooCommerce sends completed orders to the API through a webhook.",
+              "Google Cloud Storage holds question images and private receipts; a Cloudflare Worker CDN serves question imagery.",
+              "A separate Railway worker reads payment records, processes transfer receipts with OCR assistance and uses managed storage.",
+              "The API sends transactional email and web push notifications.",
+            ]}
+          />
+        </DiagramCard>
+        <StatGrid items={performance} />
+      </CaseSection>
+
+      <CaseSection id="medisapience-evolution" title="How the product grew" lead="The launch was the start. Most of the product was built after it, in production.">
+        <Timeline items={milestones} />
+        <ListCard title="Added after launch, in order" items={afterLaunch} ordered />
+      </CaseSection>
+
+      <CaseSection id="medisapience-quality" title="How it's tested" lead="The parts that move money or access have their own test suites.">
+        <AsideGrid>
+          <StatGrid
+            items={[
+              { value: "23", label: "Backend test modules, one per area" },
+              { value: "20", label: "End-to-end browser specs with Playwright" },
+            ]}
+          />
+          <ListCard title="Covered areas" items={testedAreas} />
+        </AsideGrid>
+      </CaseSection>
+
+      <CaseSection id="medisapience-method" title="How I worked">
+        <CardGrid items={method} />
+      </CaseSection>
+
+      <CaseSection id="medisapience-outcome" title="What changed after launch">
+        <OutcomeGrid
+          lead="41% of Premium subscribers passed the specialty entrance exam."
+          body="Since the MVP, the platform added more banks, richer feedback, reporting, study recommendations and support for a research study."
+          source="Figures published by MediSapience on medisapience.com."
+          stats={results}
+        />
+      </CaseSection>
+
+      <Testimonial
+        id="medisapience-testimonial"
+        title="From the client."
+        intro="What it was like to build MediSapience together, from the first release to the platform it is today."
+        quote="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        name="Dr. Yasser Silva Morales"
+        role="Founder, MediSapience"
+        initials="YS"
+        profile={{
+          href: "https://www.linkedin.com/in/doctoryassersilvamorales/",
+          label: "View Dr. Yasser Silva Morales on LinkedIn",
+        }}
+        note="Placeholder text — the client's quote is pending approval."
+      />
+
+      <CaseSection id="medisapience-closing">
+        <StatementCard
+          id="medisapience-closing"
+          title="A product has to work for the people running it"
+          intro={
+            <p>
+              Versioning, per-bank access, imports and payment review let each bank keep
+              changing without breaking past attempts.
+            </p>
+          }
+        >
+          <h3 className={bento.label}>Technology</h3>
+          <ChipList items={technology} muted />
+        </StatementCard>
+      </CaseSection>
+
+      <CaseCta
+        id="medisapience-contact"
+        title="Building a product like this?"
+        body="I build web apps that connect what customers see to the operations behind it."
+        action={{ label: "Let's talk about your project", href: "/#contact" }}
+        next={{ title: "CEM Digital", href: "/work/cem-nicaragua" }}
+      />
+    </CaseStudyShell>
   );
 }

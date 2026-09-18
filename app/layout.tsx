@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import { portfolioContent } from "@/content/portfolio";
 import "./globals.css";
 
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <a className="skip-link" href="#main-content">Skip to content</a>
         {children}
+        <ScrollReveal />
       </body>
     </html>
   );

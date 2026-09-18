@@ -5,12 +5,15 @@ import { expect, test } from "@playwright/test";
 
 const routes = [
   { path: "/", heading: "I build digital products businesses can depend on." },
-  { path: "/work/medisapience", heading: /from a medical qbank mvp/i },
+  { path: "/work/medisapience", heading: /one platform for medical question banks and the team behind them/i },
   { path: "/work/cem-nicaragua", heading: "CEM Digital" },
 ];
 
 for (const route of routes) {
   test(`${route.path} is accessible and does not overflow`, async ({ page }) => {
+    // Audit the resting state. Scroll reveals fade content in as it enters the viewport, and a
+    // block caught mid-reveal at the fold would be measured at partial opacity.
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto(route.path);
     await expect(page.getByRole("heading", { level: 1, name: route.heading })).toBeVisible();
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);

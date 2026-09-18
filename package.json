@@ -16,6 +16,8 @@
     "check": "eslint && tsc --noEmit && vitest run && next build"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "gsap": "^3.15.0",
     "mermaid": "^11.12.2",
     "next": "16.3.4",
     "react": "19.2.8",

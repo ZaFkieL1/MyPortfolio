@@ -24,7 +24,7 @@ export function Navbar() {
   useEffect(() => {
     document.body.dataset.menuOpen = open ? "true" : "false";
     const background = document.querySelectorAll<HTMLElement>(
-      ".navbar, .preview-banner, main, .site-footer",
+      ".navbar, main, .site-footer",
     );
     background.forEach((element) => {
       if (open) {

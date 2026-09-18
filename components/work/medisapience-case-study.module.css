@@ -1,333 +1,138 @@
-.page :global(.case-section__heading h2) {
-  max-width: 10ch;
-}
+/*
+ * MediSapience-only blocks. Everything shared (cards, sections, grids, hero, motion) lives in
+ * the case-study bento kit: components/case-study/bento.module.css.
+ */
 
-.hero {
-  padding-top: clamp(3rem, 7vw, 6rem);
-}
+/* What to study today: explanation, recommendation weights, then the real screen. */
 
-.heroGrid {
-  margin-top: clamp(3rem, 6vw, 5rem);
+.studyToday {
+  margin-top: var(--cs-gap);
+  padding: 1.5rem clamp(1.5rem, 3vw, 2rem);
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 2rem;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  align-items: center;
+  gap: 1.5rem 3rem;
 }
 
-.projectName {
-  grid-column: 1 / 3;
-  color: var(--color-text-muted);
-  font-size: 0.76rem;
-  font-weight: 650;
+.studyToday p {
+  max-width: 50ch;
+  margin-top: 0.5rem;
 }
 
-.heroCopy {
-  grid-column: 3 / 13;
-}
-
-.heroCopy h1 {
-  max-width: 13ch;
-  font-size: clamp(3.4rem, 7.2vw, 6rem);
-  font-weight: 620;
-  line-height: 0.92;
-  letter-spacing: -0.04em;
-}
-
-.heroCopy > p {
-  max-width: 62ch;
-  margin-top: 2rem;
-  color: var(--color-text-secondary);
-  font-size: clamp(1rem, 1.55vw, 1.2rem);
-}
-
-.heroCopy :global(.button) {
-  margin-top: 2rem;
-}
-
-.glance {
-  border-bottom: 1px solid var(--color-border);
-}
-
-.audienceGrid {
+.signals {
+  margin: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-block: 1px solid var(--color-border-strong);
+  gap: 0.6rem;
 }
 
-.audienceGrid article {
-  min-height: 17rem;
-  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 4vw, 4rem) clamp(1.5rem, 3vw, 2.5rem) 0;
+.signals div {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+}
+
+.signals dt {
+  font-size: 0.875rem;
+  font-weight: 550;
+}
+
+.signals dd {
+  min-width: 0;
+  margin: 0;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 3rem;
-}
-
-.audienceGrid article + article {
-  padding-right: 0;
-  padding-left: clamp(1.5rem, 4vw, 4rem);
-  border-left: 1px solid var(--color-border-strong);
-}
-
-.audienceGrid h3 {
-  max-width: 16ch;
-  font-size: clamp(1.8rem, 3vw, 3rem);
-  font-weight: 590;
-  line-height: 1;
-  letter-spacing: -0.035em;
-}
-
-.audienceGrid p {
-  max-width: 55ch;
-  color: var(--color-text-secondary);
-}
-
-.distinction {
-  padding: 1.25rem 0;
-  color: var(--color-text-secondary);
-}
-
-.distinction strong {
-  color: var(--color-text-primary);
-}
-
-.context :global(.case-section__body > p + p) {
-  margin-top: 1.35rem;
-}
-
-.challengeRole {
-  display: grid;
-  grid-template-columns: minmax(0, 8fr) minmax(18rem, 4fr);
-  gap: clamp(3rem, 8vw, 8rem);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.challengeRole article {
-  padding-top: 2rem;
-  border-top: 1px solid var(--color-text-primary);
-}
-
-.challengeRole h2 {
-  font-size: clamp(2.4rem, 4.5vw, 4.2rem);
-}
-
-.challengeRole p,
-.challengeRole li {
-  color: var(--color-text-secondary);
-}
-
-.challengeRole article > p {
-  max-width: 59ch;
-  margin-top: 2rem;
-}
-
-.challengeRole ul {
-  max-width: 65ch;
-  margin: 1.5rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.challengeRole li {
-  padding: 0.85rem 0;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.solution {
-  background: var(--color-bg-secondary);
-}
-
-.solutionLead {
-  max-width: 74ch;
-  margin: 0 0 clamp(3rem, 6vw, 5rem) auto;
-  color: var(--color-text-secondary);
-  font-size: clamp(1.15rem, 2vw, 1.5rem);
-}
-
-.solution :global(.product-visual figcaption) {
-  color: var(--color-text-secondary);
-}
-
-.productWorks {
-  border-bottom: 1px solid var(--color-border);
-}
-
-.flowList {
-  border-top: 1px solid var(--color-border-strong);
-}
-
-.flowList article {
-  padding: clamp(1.75rem, 4vw, 3.5rem) 0;
-  display: grid;
-  grid-template-columns: 5rem minmax(0, 1fr);
-  gap: 2rem;
-  border-bottom: 1px solid var(--color-border-strong);
-}
-
-.flowList article > span,
-.decisionList article > span {
-  color: var(--color-text-muted);
-  font-size: 0.72rem;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--cs-ink);
+  font-size: 0.875rem;
   font-variant-numeric: tabular-nums;
 }
 
-.decisionList article > span {
-  color: var(--color-text-secondary);
+/* Bar length is relative to the heaviest signal (error rate), so the ranking reads at a glance. */
+.track {
+  flex: 1;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.8);
 }
 
-.flowList h3 {
-  max-width: 18ch;
-  font-size: clamp(2rem, 4vw, 4rem);
-  font-weight: 590;
-  line-height: 1;
-  letter-spacing: -0.035em;
+.track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-dark);
 }
 
-.flowList div > p {
-  max-width: 68ch;
-  margin-top: 1.5rem;
-  color: var(--color-text-secondary);
+.studyShot {
+  grid-column: 1 / -1;
+  margin: 0.5rem 0 0;
+  padding: clamp(0.5rem, 1.5vw, 0.75rem);
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 0.7);
 }
 
-.flowList .flowDetail {
-  max-width: 62ch;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--color-border);
-  font-size: 0.9rem;
+.studyShot img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--cs-radius-inner);
 }
 
-.decisionList {
-  border-top: 1px solid var(--color-border-strong);
-}
+/* Multi-bank map: the content hierarchy beside what each bank scopes. */
 
-.decisionList article {
-  padding: 2rem 0;
+.bankMap {
+  padding: clamp(1.5rem, 3vw, 2.5rem);
   display: grid;
-  grid-template-columns: 5rem minmax(15rem, 4fr) minmax(20rem, 7fr);
-  gap: 2rem;
-  border-bottom: 1px solid var(--color-border-strong);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 2rem clamp(2rem, 5vw, 4rem);
 }
 
-.decisionList h3 {
-  max-width: 18ch;
-  font-size: clamp(1.5rem, 2.8vw, 2.5rem);
-  font-weight: 580;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+.bankMap p {
+  max-width: 48ch;
+  margin-top: 1.5rem;
 }
 
-.decisionList p {
-  max-width: 66ch;
-  color: var(--color-text-secondary);
-}
-
-.decisionList .impact {
-  margin-top: 1.25rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--color-border);
-  color: var(--color-text-primary);
-  font-size: 0.9rem;
-}
-
-.sessionDiagram {
-  margin-top: clamp(3rem, 6vw, 5rem);
-}
-
-.architectureLead {
-  max-width: 73ch;
-  margin: 0 0 clamp(3rem, 6vw, 5rem) auto;
-  color: #c9c9c1;
-  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
-}
-
-.reliability ul {
-  margin: 2.5rem 0 0;
+/* Each level indents one step: the hierarchy reads as nesting, not as a list. */
+.bankTree {
+  margin: 0;
   padding: 0;
+  display: grid;
+  gap: 0.4rem;
   list-style: none;
 }
 
-.reliability li {
-  padding: 1rem 0;
-  display: grid;
-  grid-template-columns: 1.25rem 1fr;
-  gap: 0.8rem;
-  border-bottom: 1px solid var(--color-border);
-  color: var(--color-text-secondary);
+.bankTree li {
+  width: fit-content;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  background: var(--cs-canvas);
+  font-size: 0.9375rem;
+  font-weight: 550;
 }
 
-.reliability li svg {
-  width: 1.1rem;
-  height: 1.1rem;
-  margin-top: 0.2rem;
+.bankTree li:first-child {
+  background: var(--color-dark);
+  color: var(--color-dark-text);
 }
 
-.results :global(.case-section__body > p + p) {
-  margin-top: 1.35rem;
+.bankTree li:nth-child(2) { margin-left: 1.25rem; }
+.bankTree li:nth-child(3) { margin-left: 2.5rem; }
+.bankTree li:nth-child(4) { margin-left: 3.75rem; }
+.bankTree li:nth-child(5) { margin-left: 5rem; }
+
+/* The vertical session flow is narrow enough to fit a phone without scrolling. */
+.sessionCard svg {
+  min-width: 0 !important;
+  max-height: 34rem;
 }
 
-.page :global(.case-contact__inner) {
-  min-height: 30rem;
-}
-
-.page :global(.case-contact h2) {
-  max-width: 14ch;
-  font-size: clamp(2.8rem, 5.4vw, 5rem);
-}
-
-@media (max-width: 64rem) {
-  .heroGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .projectName,
-  .heroCopy {
-    grid-column: 1;
-  }
-
-  .heroCopy h1 {
-    max-width: 15ch;
-  }
-
-  .decisionList article {
-    grid-template-columns: 3rem minmax(14rem, 4fr) minmax(18rem, 7fr);
-  }
+.sessionCard [role="region"] > div {
+  justify-content: center;
 }
 
 @media (max-width: 48rem) {
-  .heroCopy h1 {
-    font-size: clamp(2.7rem, 13vw, 4.5rem);
-  }
-
-  .audienceGrid,
-  .challengeRole {
+  .studyToday,
+  .bankMap {
     grid-template-columns: 1fr;
-  }
-
-  .audienceGrid article {
-    min-height: 14rem;
-    padding-right: 0;
-  }
-
-  .audienceGrid article + article {
-    padding-left: 0;
-    border-top: 1px solid var(--color-border-strong);
-    border-left: 0;
-  }
-
-  .flowList article {
-    grid-template-columns: 2rem 1fr;
-    gap: 1rem;
-  }
-
-  .decisionList article {
-    grid-template-columns: 2rem 1fr;
-    gap: 1rem;
-  }
-
-  .decisionList article > div {
-    grid-column: 2;
-  }
-
-  .page :global(.case-contact__inner) {
-    min-height: 32rem;
   }
 }

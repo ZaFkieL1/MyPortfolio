@@ -1,0 +1,807 @@
+/*
+ * Home page. Shares the case-study bento system (warm canvas, white cards, one lime signal);
+ * the hero is the one place the page turns dark, so the proposition lands before anything else.
+ */
+
+/*
+ * Hero: a dark stage with the statement on the left and real product screens on the right.
+ * The canvas cuts into its lower-left corner (inverted radii on both sides) to hold the
+ * published MediSapience figures, so the proof is part of the first screen.
+ */
+
+/* Full-bleed: edge to edge and the whole first viewport, running under the navigation. */
+.hero {
+  --stage: #0d0e0d;
+  --stage-ink: #f3f3f0;
+  --stage-muted: #a9a9a1;
+  --notch-h: 8.5rem;
+  --notch-r: 2rem;
+  /* Left edge of the site frame, so the notch content lines up with the copy above it. */
+  --frame-offset: calc(max(0px, (100% - 75rem - var(--gutter) * 2) / 2) + var(--gutter));
+
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--stage);
+  color: var(--stage-ink);
+}
+
+/* Content keeps the site frame's width and gutters inside the full-bleed stage. */
+.heroInner {
+  width: min(100%, calc(75rem + var(--gutter) * 2));
+  margin-inline: auto;
+  padding: calc(var(--chrome-height, 8rem) + clamp(1.5rem, 4vw, 3rem)) var(--gutter) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(2rem, 4vw, 4rem);
+}
+
+/* A soft lime spotlight low on the right, where the product cards sit. */
+.glow {
+  position: absolute;
+  z-index: -1;
+  right: -15%;
+  bottom: -35%;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(198 246 61 / 0.22), rgb(198 246 61 / 0.06) 55%, transparent);
+  pointer-events: none;
+}
+
+/* Badge → title → text → actions, centred in the space above the notch. */
+.heroCopy {
+  position: relative;
+  z-index: 2;
+  padding-bottom: calc(var(--notch-h) + clamp(2.5rem, 5vw, 4rem));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.75rem;
+}
+
+/* Two-part pill: availability on the left, a link to the flagship case study on the right. */
+.status {
+  padding: 0.25rem;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid rgb(243 243 240 / 0.12);
+  border-radius: 999px;
+  background: rgb(243 243 240 / 0.05);
+  font-size: 0.8125rem;
+  font-weight: 550;
+}
+
+.statusTag {
+  padding: 0.4rem 0.8rem 0.4rem 0.65rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  background: rgb(243 243 240 / 0.1);
+  color: var(--stage-ink);
+}
+
+.statusTag i {
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 0.25rem rgb(198 246 61 / 0.18);
+}
+
+.status a {
+  min-height: 2rem;
+  padding: 0 0.75rem 0 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  color: var(--stage-ink);
+  transition: color var(--duration-fast);
+}
+
+.status a svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  transition: transform var(--duration-fast);
+}
+
+.status a:hover {
+  color: var(--color-accent);
+}
+
+.status a:hover svg {
+  transform: translateX(0.2rem);
+}
+
+.heroTitle {
+  max-width: 16ch;
+  font-size: clamp(2.5rem, 4.6vw, 4.5rem);
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+
+.heroFoot {
+  display: grid;
+  gap: 2.25rem;
+}
+
+.heroFoot > p {
+  max-width: 44ch;
+  color: var(--stage-muted);
+  font-size: 1.125rem;
+  line-height: 1.55;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.heroGhost {
+  min-height: 3.25rem;
+  padding: 0.7rem 1.35rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid rgb(243 243 240 / 0.28);
+  border-radius: 999px;
+  color: var(--stage-ink);
+  font-size: 0.95rem;
+  font-weight: 650;
+  transition: border-color var(--duration-fast), background var(--duration-fast);
+}
+
+.heroGhost svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.heroGhost:hover {
+  border-color: var(--stage-ink);
+  background: rgb(243 243 240 / 0.08);
+}
+
+/* The notch: canvas-coloured, flush with the stage's left and bottom edges. */
+.notch {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  bottom: 0;
+  height: var(--notch-h);
+  padding: 1.75rem clamp(2rem, 4vw, 3.5rem) 0 var(--frame-offset);
+  border-top-right-radius: var(--notch-r);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+/* Inverted corners: the stage curves into the notch above it and beside it. */
+.notch::before,
+.notch::after {
+  content: "";
+  position: absolute;
+  width: var(--notch-r);
+  height: var(--notch-r);
+  background: radial-gradient(
+    circle at 100% 0,
+    transparent calc(var(--notch-r) - 0.5px),
+    var(--color-bg-primary) var(--notch-r)
+  );
+  pointer-events: none;
+}
+
+.notch::before {
+  left: 0;
+  bottom: 100%;
+}
+
+.notch::after {
+  left: 100%;
+  bottom: 0;
+}
+
+.figures {
+  margin: 0;
+  display: flex;
+  gap: clamp(1.75rem, 3.5vw, 3rem);
+}
+
+.figures div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 0.35rem;
+}
+
+.figures dd {
+  margin: 0;
+  font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+}
+
+.figures dt {
+  color: var(--cs-quiet);
+  font-size: 0.8125rem;
+}
+
+.figuresSource {
+  margin-top: 0.85rem;
+  color: var(--cs-quiet);
+  font-size: 0.75rem;
+}
+
+/* Fan of product cards: two real screenshots behind, the animated setup in front. It runs
+   the full height of the stage, past the notch line, like a subject cut out of the frame. */
+
+.fan {
+  position: relative;
+  z-index: 1;
+  min-height: 28rem;
+}
+
+.fanCard {
+  position: absolute;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 1.1rem;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 30px 60px -20px rgb(0 0 0 / 0.6);
+}
+
+.fanCard img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.backLeft {
+  top: 6%;
+  left: -14%;
+  width: 80%;
+  transform: rotate(-8deg);
+  opacity: 0.9;
+}
+
+.backRight {
+  top: 19%;
+  right: -12%;
+  width: 74%;
+  transform: rotate(7deg);
+  opacity: 0.9;
+}
+
+.front {
+  bottom: clamp(2rem, 4vw, 3.5rem);
+  left: -2%;
+  width: 108%;
+  padding: 0.6rem 0.6rem 0.2rem;
+  background: #16181a;
+}
+
+.front figcaption {
+  margin-top: 0.45rem !important;
+  color: var(--stage-muted) !important;
+  font-size: 0.75rem !important;
+}
+
+/* Marquee: the kinds of work, sliding past between sections. */
+
+.marquee {
+  margin-top: clamp(4rem, 8vw, 5rem);
+  padding-block: 1.25rem;
+  overflow: hidden;
+  border-block: 1px solid var(--color-border);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.marqueeTrack {
+  width: max-content;
+  display: flex;
+  animation: marquee 38s linear infinite;
+}
+
+.marqueeGroup {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+.marqueeGroup span {
+  font-size: clamp(1.75rem, 3.6vw, 3rem);
+  font-weight: 560;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+.marqueeGroup i {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* Project cards */
+
+.projects {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2rem);
+}
+
+.project {
+  padding: clamp(1rem, 2vw, 1.25rem);
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 1rem;
+}
+
+.projectCopy {
+  padding: clamp(0.75rem, 2.5vw, 1.75rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.projectMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--cs-meta);
+  font-size: 0.8125rem;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+}
+
+.projectCopy h3 {
+  margin-top: 1rem;
+  font-size: clamp(2.25rem, 4.4vw, 3.75rem) !important;
+  font-weight: 600 !important;
+  line-height: 0.95 !important;
+  letter-spacing: -0.05em !important;
+}
+
+.projectCopy > p {
+  max-width: 40ch;
+}
+
+.projectLink {
+  width: fit-content;
+  margin-top: auto;
+  padding-top: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 650;
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-strong);
+  text-underline-offset: 0.3em;
+}
+
+.projectLink svg {
+  width: 1rem;
+  height: 1rem;
+  transition: transform var(--duration-fast);
+}
+
+.projectLink:hover {
+  text-decoration-color: currentColor;
+}
+
+.projectLink:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* The media window crops a slightly oversized image that drifts as the card scrolls by. */
+.projectMedia {
+  position: relative;
+  min-height: 24rem;
+  overflow: hidden;
+  border-radius: var(--cs-radius-inner);
+  background: #0d0e0d;
+}
+
+.projectMedia > div {
+  position: absolute;
+  inset: -12% 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.projectMedia img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0.75rem;
+  box-shadow: 0 24px 48px -16px rgb(0 0 0 / 0.55);
+}
+
+.projectMediaLight {
+  background: var(--cs-canvas);
+}
+
+.projectMediaLight :global(.product-visual) {
+  width: 100%;
+}
+
+/* Generous rhythm between home sections, and a larger section head. */
+
+.spacious {
+  margin-top: clamp(6rem, 12vw, 10rem);
+}
+
+.spacious h2 {
+  font-size: clamp(2.4rem, 4.8vw, 4rem) !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.05em !important;
+}
+
+.spacious > div:first-child:not(.portrait):not(.contact) {
+  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+/* Services: an open two-column list; hairlines separate, no cards. */
+
+.lineGrid {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: clamp(2rem, 6vw, 6rem);
+  list-style: none;
+}
+
+.lineGrid li {
+  padding-block: 2rem 2.5rem;
+  display: grid;
+  gap: 0.75rem;
+  border-top: 1px solid var(--color-border-strong);
+}
+
+.lineGrid h3,
+.steps h3 {
+  font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+  font-weight: 580;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.lineGrid p,
+.steps p {
+  max-width: 44ch;
+  color: var(--cs-quiet);
+  line-height: 1.55;
+}
+
+/* Process: a real sequence — numbers on a shared rule. */
+
+.steps {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  list-style: none;
+}
+
+.steps li {
+  padding-top: 1.5rem;
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  border-top: 1px solid var(--color-text-primary);
+}
+
+.stepNumber {
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-bottom: 1.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-dark);
+  color: var(--color-dark-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tools: label on the left, the stack on the right, one hairline per row. */
+
+.rows {
+  margin: 0;
+}
+
+.rows > div {
+  padding-block: 1.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+  align-items: baseline;
+  gap: 1rem 2rem;
+  border-top: 1px solid var(--color-border-strong);
+}
+
+.rows > div:last-child {
+  border-bottom: 1px solid var(--color-border-strong);
+}
+
+.rows dt {
+  font-size: 1.125rem;
+  font-weight: 580;
+  letter-spacing: -0.02em;
+}
+
+.rows dd {
+  margin: 0;
+}
+
+.rows ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  list-style: none;
+  color: var(--cs-quiet);
+  font-size: 1.0625rem;
+}
+
+/* About: the monogram card beside open text. */
+
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  align-items: start;
+  gap: 2.5rem clamp(2rem, 6vw, 6rem);
+}
+
+.portrait {
+  min-height: 24rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: var(--cs-radius-card);
+  background: var(--color-dark);
+  color: var(--color-dark-text);
+}
+
+.portrait span,
+.portrait p {
+  color: #b7b7b0;
+  font-size: 0.8125rem;
+}
+
+.portrait strong {
+  font-size: clamp(4rem, 9vw, 7rem);
+  font-weight: 600;
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+}
+
+.aboutCopy {
+  padding-top: 0.5rem;
+  display: grid;
+  gap: 1.25rem;
+  align-content: start;
+}
+
+.aboutCopy p {
+  max-width: 58ch;
+  color: var(--cs-quiet);
+  line-height: 1.6;
+}
+
+.aboutCopy .aboutLead {
+  color: var(--cs-ink);
+  font-size: clamp(1.2rem, 1.8vw, 1.45rem);
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+}
+
+.aboutFacts {
+  margin: 1.5rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.aboutFacts div {
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-strong);
+}
+
+.aboutFacts dt {
+  color: var(--cs-meta);
+  font-size: 0.8125rem;
+  font-weight: 550;
+}
+
+.aboutFacts dd {
+  margin: 0.35rem 0 0;
+  font-weight: 550;
+}
+
+/* Contact: the page ends on the dark stage again. */
+
+.contact {
+  position: relative;
+  padding: clamp(2rem, 6vw, 5rem);
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 2rem;
+  background: #0d0e0d;
+  color: #f3f3f0;
+}
+
+.contact .glow {
+  right: auto;
+  left: -20%;
+  bottom: -60%;
+}
+
+.contact h2 {
+  max-width: 14ch;
+  font-size: clamp(2.75rem, 7vw, 6.5rem);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+}
+
+.contact h2 span {
+  display: block;
+  color: #a9a9a1;
+}
+
+.contactBottom {
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.5rem 3rem;
+}
+
+.contactBottom p {
+  max-width: 44ch;
+  color: #a9a9a1;
+  font-size: 1.0625rem;
+}
+
+.contactNote {
+  margin-top: 2rem;
+  color: #8f8f88;
+  font-size: 0.8125rem;
+}
+
+/* Responsive */
+
+@media (max-width: 64rem) {
+  /* Stacked: copy, screens, then the notch in flow, with a strip of stage beside it. */
+  .hero {
+    min-height: auto;
+    flex-direction: column;
+  }
+
+  .heroInner {
+    grid-template-columns: 1fr;
+  }
+
+  .heroCopy {
+    padding-bottom: 0;
+  }
+
+  .fan {
+    min-height: 0;
+  }
+
+  .backLeft,
+  .backRight {
+    display: none;
+  }
+
+  .front {
+    position: relative;
+    inset: auto;
+    width: 100%;
+  }
+
+  .notch {
+    position: relative;
+    height: auto;
+    margin: clamp(2.5rem, 6vw, 3.5rem) 3.5rem 0 0;
+    padding-bottom: 1.5rem;
+  }
+
+  .project,
+  .about {
+    grid-template-columns: 1fr;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 2.5rem;
+  }
+
+  .projectMedia {
+    min-height: 18rem;
+  }
+}
+
+@media (max-width: 48rem) {
+  .contact {
+    border-radius: 1.5rem;
+  }
+
+  .aboutFacts,
+  .lineGrid,
+  .steps,
+  .rows > div {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    --notch-r: 1.5rem;
+  }
+
+  .notch {
+    margin-right: 2rem;
+    padding: 1.5rem 1.25rem 1.5rem var(--gutter);
+  }
+
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .figures dt {
+    font-size: 0.75rem;
+  }
+
+  .portrait {
+    min-height: 14rem;
+  }
+}
+
+@media (max-width: 30rem) {
+  /* The badge would wrap to two lines; the case study is one scroll away in Selected work. */
+  .status a {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marqueeTrack {
+    animation: none;
+  }
+
+  .heroGhost,
+  .status a,
+  .status a svg,
+  .projectLink svg {
+    transition: none;
+  }
+}

@@ -1,0 +1,389 @@
+/*
+ * Home page. Shares the case-study bento system (warm canvas, white cards, one lime signal).
+ * The hero has its own module (home-hero.module.css).
+ */
+
+/* Marquee: the kinds of work, sliding past between sections. */
+
+.marquee {
+  margin-top: clamp(4rem, 8vw, 5rem);
+  padding-block: 1.25rem;
+  overflow: hidden;
+  border-block: 1px solid var(--color-border);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.marqueeTrack {
+  width: max-content;
+  display: flex;
+  animation: marquee 38s linear infinite;
+}
+
+.marqueeGroup {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+.marqueeGroup span {
+  font-size: clamp(1.75rem, 3.6vw, 3rem);
+  font-weight: 560;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+.marqueeGroup i {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* Project cards */
+
+.projects {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2rem);
+}
+
+.project {
+  padding: clamp(1rem, 2vw, 1.25rem);
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 1rem;
+}
+
+.projectCopy {
+  padding: clamp(0.75rem, 2.5vw, 1.75rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.projectMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--cs-meta);
+  font-size: 0.8125rem;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+}
+
+.projectCopy h3 {
+  margin-top: 1rem;
+  font-size: clamp(2.25rem, 4.4vw, 3.75rem) !important;
+  font-weight: 600 !important;
+  line-height: 0.95 !important;
+  letter-spacing: -0.05em !important;
+}
+
+.projectCopy > p {
+  max-width: 40ch;
+}
+
+.projectLink {
+  width: fit-content;
+  margin-top: auto;
+  padding-top: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 650;
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-strong);
+  text-underline-offset: 0.3em;
+}
+
+.projectLink svg {
+  width: 1rem;
+  height: 1rem;
+  transition: transform var(--duration-fast);
+}
+
+.projectLink:hover {
+  text-decoration-color: currentColor;
+}
+
+.projectLink:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* The media window crops a slightly oversized image that drifts as the card scrolls by. */
+.projectMedia {
+  position: relative;
+  min-height: 24rem;
+  overflow: hidden;
+  border-radius: var(--cs-radius-inner);
+  background: #0d0e0d;
+}
+
+.projectMedia > div {
+  position: absolute;
+  inset: -12% 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.projectMedia img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0.75rem;
+  box-shadow: 0 24px 48px -16px rgb(0 0 0 / 0.55);
+}
+
+.projectMediaLight {
+  background: var(--cs-canvas);
+}
+
+.projectMediaLight :global(.product-visual) {
+  width: 100%;
+}
+
+/* Generous rhythm between home sections, and a larger section head. */
+
+.spacious {
+  margin-top: clamp(6rem, 12vw, 10rem);
+}
+
+.spacious h2 {
+  font-size: clamp(2.4rem, 4.8vw, 4rem) !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.05em !important;
+}
+
+.spacious > div:first-child:not(.portrait) {
+  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+/* Services: an open two-column list; hairlines separate, no cards. */
+
+.lineGrid {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: clamp(2rem, 6vw, 6rem);
+  list-style: none;
+}
+
+.lineGrid li {
+  padding-block: 2rem 2.5rem;
+  display: grid;
+  gap: 0.75rem;
+  border-top: 1px solid var(--color-border-strong);
+}
+
+.lineGrid h3,
+.steps h3 {
+  font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+  font-weight: 580;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.lineGrid p,
+.steps p {
+  max-width: 44ch;
+  color: var(--cs-quiet);
+  line-height: 1.55;
+}
+
+/* Process: a real sequence — numbers on a shared rule. */
+
+.steps {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  list-style: none;
+}
+
+.steps li {
+  padding-top: 1.5rem;
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  border-top: 1px solid var(--color-text-primary);
+}
+
+.stepNumber {
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-bottom: 1.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-dark);
+  color: var(--color-dark-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tools: label on the left, the stack on the right, one hairline per row. */
+
+.rows {
+  margin: 0;
+}
+
+.rows > div {
+  padding-block: 1.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+  align-items: baseline;
+  gap: 1rem 2rem;
+  border-top: 1px solid var(--color-border-strong);
+}
+
+.rows > div:last-child {
+  border-bottom: 1px solid var(--color-border-strong);
+}
+
+.rows dt {
+  font-size: 1.125rem;
+  font-weight: 580;
+  letter-spacing: -0.02em;
+}
+
+.rows dd {
+  margin: 0;
+}
+
+.rows ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  list-style: none;
+  color: var(--cs-quiet);
+  font-size: 1.0625rem;
+}
+
+/* About: the monogram card beside open text. */
+
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  align-items: start;
+  gap: 2.5rem clamp(2rem, 6vw, 6rem);
+}
+
+.portrait {
+  min-height: 24rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: var(--cs-radius-card);
+  background: var(--color-dark);
+  color: var(--color-dark-text);
+}
+
+.portrait span,
+.portrait p {
+  color: #b7b7b0;
+  font-size: 0.8125rem;
+}
+
+.portrait strong {
+  font-size: clamp(4rem, 9vw, 7rem);
+  font-weight: 600;
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+}
+
+.aboutCopy {
+  padding-top: 0.5rem;
+  display: grid;
+  gap: 1.25rem;
+  align-content: start;
+}
+
+.aboutCopy p {
+  max-width: 58ch;
+  color: var(--cs-quiet);
+  line-height: 1.6;
+}
+
+.aboutCopy .aboutLead {
+  color: var(--cs-ink);
+  font-size: clamp(1.2rem, 1.8vw, 1.45rem);
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+}
+
+.aboutFacts {
+  margin: 1.5rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.aboutFacts div {
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-strong);
+}
+
+.aboutFacts dt {
+  color: var(--cs-meta);
+  font-size: 0.8125rem;
+  font-weight: 550;
+}
+
+.aboutFacts dd {
+  margin: 0.35rem 0 0;
+  font-weight: 550;
+}
+
+/* Responsive */
+
+@media (max-width: 64rem) {
+  .project,
+  .about {
+    grid-template-columns: 1fr;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 2.5rem;
+  }
+
+  .projectMedia {
+    min-height: 18rem;
+  }
+}
+
+@media (max-width: 48rem) {
+  .aboutFacts,
+  .lineGrid,
+  .steps,
+  .rows > div {
+    grid-template-columns: 1fr;
+  }
+
+  .portrait {
+    min-height: 14rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marqueeTrack {
+    animation: none;
+  }
+
+  .projectLink svg {
+    transition: none;
+  }
+}

@@ -1,0 +1,334 @@
+/*
+ * Site footer with the closing call to action. Same language as the home hero, turned down:
+ * light canvas, dashed frame guides, neutral ink, and a single line of steps.
+ */
+
+.footer {
+  --footer-line: rgb(10 10 10 / 0.1);
+  --footer-wire: rgb(10 10 10 / 0.22);
+
+  position: relative;
+  isolation: isolate;
+  border-top: 1px solid var(--color-border);
+  background: linear-gradient(180deg, var(--color-bg-primary) 0%, #fafaf8 100%);
+  color: var(--color-text-primary);
+  scroll-margin-top: var(--chrome-height, 5rem);
+}
+
+/* Dashed guides at the edges of the site frame, as in the hero. */
+.guides {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  width: min(100%, calc(75rem + var(--gutter) * 2));
+  margin-inline: auto;
+  pointer-events: none;
+}
+
+.guides::before,
+.guides::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: repeating-linear-gradient(180deg, var(--footer-line) 0 6px, transparent 6px 12px);
+}
+
+.guides::before {
+  left: calc(var(--gutter) / 2);
+}
+
+.guides::after {
+  right: calc(var(--gutter) / 2);
+}
+
+.inner {
+  width: min(100%, calc(75rem + var(--gutter) * 2));
+  margin-inline: auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gutter) clamp(1.5rem, 3vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3rem, 6vw, 4.5rem);
+}
+
+/* Call to action: statement left, a short column of support and actions right. */
+
+.cta {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  align-items: end;
+  gap: 2rem clamp(2rem, 5vw, 5rem);
+}
+
+.lead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.status {
+  padding: 0.3rem 0.75rem 0.3rem 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 550;
+}
+
+.status i {
+  width: 0.45rem;
+  height: 0.45rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--color-success);
+  box-shadow: 0 0 0 0.2rem rgb(40 122 67 / 0.14);
+}
+
+.lead h2 {
+  max-width: 18ch;
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.lead h2 span {
+  color: var(--color-text-muted);
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.aside > p {
+  max-width: 38ch;
+  color: var(--color-text-secondary);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.ghost {
+  min-height: 3.25rem;
+  padding: 0.7rem 1.35rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text-primary);
+  font-size: 0.95rem;
+  font-weight: 650;
+  transition: border-color var(--duration-fast);
+}
+
+.ghost svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.ghost:hover {
+  border-color: var(--color-border-strong);
+}
+
+/* Steps: three numbered stops on one dashed line. */
+
+.flow {
+  position: relative;
+}
+
+.flow ol {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  list-style: none;
+}
+
+/* Runs through the centre of the number badges (2rem tall). */
+.flowLine {
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, var(--footer-wire) 0 4px, transparent 4px 9px);
+}
+
+.flowLine i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0.45rem;
+  height: 0.45rem;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--color-text-primary);
+  box-shadow: 0 0 6px rgb(10 10 10 / 0.3);
+  opacity: 0;
+}
+
+.flow li {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.flowIndex {
+  width: fit-content;
+  height: 2rem;
+  margin-bottom: 0.85rem;
+  padding-inline: 0.7rem;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.flow strong {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.flow li > span:last-child {
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+}
+
+/* Bottom bar: identity, place, links. */
+
+.bar {
+  padding-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+}
+
+.identity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.identity strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.mark {
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.6rem;
+  background: var(--color-dark);
+  color: var(--color-dark-text);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.links {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  list-style: none;
+}
+
+.links a {
+  color: var(--color-text-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+}
+
+.base {
+  display: grid;
+  gap: 1rem;
+}
+
+.note {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+
+@media (max-width: 64rem) {
+  .cta {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+}
+
+@media (max-width: 48rem) {
+  .flow ol {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  /* Vertical line down the left, through the number badges. */
+  .flowLine {
+    top: 1rem;
+    bottom: 2.5rem;
+    left: 1.2rem;
+    right: auto;
+    width: 1px;
+    height: auto;
+    background: repeating-linear-gradient(180deg, var(--footer-wire) 0 4px, transparent 4px 9px);
+  }
+
+  .flowLine i {
+    display: none;
+  }
+
+  .flow li {
+    grid-template-columns: auto 1fr;
+    column-gap: 1rem;
+  }
+
+  .flowIndex {
+    grid-row: span 2;
+    margin-bottom: 0;
+  }
+
+  .bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ghost {
+    transition: none;
+  }
+}

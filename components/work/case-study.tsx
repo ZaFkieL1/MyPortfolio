@@ -3,7 +3,6 @@ import type { Project } from "@/content/portfolio";
 import { portfolioContent } from "@/content/portfolio";
 import { ArrowUpRightIcon, CheckIcon } from "@/components/icons";
 import { ProductVisual } from "@/components/product/product-visual";
-import { PreviewBanner } from "@/components/layout/preview-banner";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/navigation/navbar";
 import { MetricGroup } from "@/components/content/metric-group";
@@ -16,7 +15,6 @@ export function CaseStudy({ project }: { project: Project }) {
   return (
     <>
       <Navbar />
-      <PreviewBanner />
       <main id="main-content" className="case-study">
         <header className="case-hero container">
           <Link className="back-link" href="/#work">← All work</Link>

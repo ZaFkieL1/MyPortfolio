@@ -1,0 +1,1023 @@
+/*
+ * Case-study bento kit.
+ *
+ * One continuous canvas; every block of content lives on a white card. Tints encode audience,
+ * never decoration: sky = end users (students, customers), peach = the operating team,
+ * lime = outcomes. See DESIGN.md → "Case study (bento)" for the section recipe.
+ */
+
+.page {
+  --cs-canvas: var(--color-bg-primary);
+  --cs-card: #ffffff;
+  --cs-ink: var(--color-text-primary);
+  --cs-quiet: #5c5c57;
+  --cs-meta: #62625c;
+  --cs-hairline: rgb(0 0 0 / 0.06);
+  --cs-sky: #e8f1ff;
+  --cs-peach: #ffebd6;
+  --cs-lime: var(--color-accent-soft, #ecf9c9);
+  --cs-radius-card: 1.5rem;
+  --cs-radius-inner: 1rem;
+  --cs-shadow:
+    0 0 0 1px var(--cs-hairline),
+    0 1px 1px -0.5px rgb(0 0 0 / 0.03),
+    0 3px 3px -1.5px rgb(0 0 0 / 0.03),
+    0 8px 8px -4px rgb(0 0 0 / 0.03),
+    0 16px 16px -8px rgb(0 0 0 / 0.03);
+  --cs-gap: 1rem;
+
+  padding-top: 0;
+  overflow: clip;
+  background: var(--cs-canvas);
+  color: var(--cs-ink);
+}
+
+/* A full-bleed hero starts at the very top of the viewport, under the navigation and notice. */
+.pageWithHero {
+  margin-top: calc(-1 * var(--chrome-height, 8rem));
+}
+
+.frame {
+  width: min(100%, calc(75rem + var(--gutter) * 2));
+  margin-inline: auto;
+  padding: clamp(1.5rem, 3vw, 2.5rem) var(--gutter) clamp(4rem, 8vw, 6rem);
+}
+
+/* Card + shared card typography */
+
+.card {
+  position: relative;
+  border-radius: var(--cs-radius-card);
+  background: var(--cs-card);
+  box-shadow: var(--cs-shadow);
+}
+
+.card h3 {
+  font-size: 1.25rem;
+  font-weight: 580;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.card p,
+.card dd {
+  color: var(--cs-quiet);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.tintSky { background: var(--cs-sky); }
+.tintPeach { background: var(--cs-peach); }
+.tintLime { background: var(--cs-lime); }
+
+.meta {
+  color: var(--cs-meta);
+  font-size: 0.8125rem;
+  font-weight: 550;
+}
+
+/* Small grey heading used inside cards ("Covered areas", "Technology"). */
+.label {
+  margin-bottom: 1rem;
+  color: var(--cs-meta);
+  font-size: 0.875rem !important;
+  font-weight: 550 !important;
+  letter-spacing: 0 !important;
+}
+
+/* Hero: sits directly on the canvas and fills the first viewport (minus nav + preview bar). */
+
+.hero {
+  min-height: calc(100svh - 10rem);
+  padding-block: clamp(1rem, 3vw, 2.5rem) clamp(2rem, 5vw, 4rem);
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(17rem, 5fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 5rem);
+}
+
+.status {
+  width: fit-content;
+  padding: 0.3rem 0.75rem 0.3rem 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  background: var(--cs-lime);
+  color: #3a4a0c;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.status span {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #5c8a00;
+}
+
+.kicker {
+  margin-top: 1.5rem;
+  color: var(--cs-meta);
+  font-size: 1.0625rem;
+  font-weight: 550;
+}
+
+.heroCopy h1 {
+  max-width: 17ch;
+  margin-top: 0.5rem;
+  font-size: clamp(2.3rem, 4.4vw, 4rem);
+  font-weight: 560;
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.heroLead {
+  max-width: 48ch;
+  margin-top: 1.5rem;
+  color: var(--cs-quiet);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+
+.heroActions {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+}
+
+.ghostLink {
+  font-size: 0.95rem;
+  font-weight: 550;
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-strong);
+  text-underline-offset: 0.3em;
+}
+
+.ghostLink:hover {
+  text-decoration-color: currentColor;
+}
+
+.heroBento {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.factsCard {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 1.25rem 1.5rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.factsCard div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.factsCard div + div {
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--cs-hairline);
+}
+
+.factsCard dt {
+  color: var(--cs-meta);
+  font-size: 0.875rem;
+}
+
+.factsCard dd {
+  margin: 0;
+  color: var(--cs-ink);
+  font-size: 0.9375rem;
+  font-weight: 550;
+  text-align: right;
+}
+
+.highlightCard,
+.noteCard {
+  min-height: 9rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.highlightCard span,
+.noteCard span {
+  font-size: 0.8125rem;
+  font-weight: 550;
+}
+
+.highlightCard {
+  background: var(--color-dark);
+  color: var(--color-dark-text);
+}
+
+.highlightCard span {
+  color: #b7b7b0;
+}
+
+.highlightCard strong {
+  font-size: 1.75rem;
+  font-weight: 560;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.noteCard {
+  background: var(--cs-sky);
+}
+
+.noteCard span {
+  color: var(--cs-meta);
+}
+
+.noteCard p {
+  color: var(--cs-ink) !important;
+  font-size: 0.9375rem !important;
+  font-weight: 550;
+  line-height: 1.35 !important;
+}
+
+.visual {
+  margin-top: var(--cs-gap);
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+/* Sections: head + card grid, one rhythm throughout */
+
+.section {
+  margin-top: clamp(4rem, 8vw, 5rem);
+}
+
+.sectionHead {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 0.75rem 3rem;
+}
+
+.sectionHead h2,
+.statement h2 {
+  max-width: 18ch;
+  font-size: clamp(2rem, 3.6vw, 2.75rem);
+  font-weight: 560;
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.sectionHead p {
+  max-width: 36ch;
+  color: var(--cs-quiet);
+  font-size: 1.0625rem;
+  line-height: 1.45;
+}
+
+/* Whatever follows a section head starts right under it; the head carries the spacing. */
+.sectionHead + :is(.cardGrid, .stepList, .timeline, .stats, .listCard, .band, .diagram, .shot, .visual) {
+  margin-top: 0;
+}
+
+/* Statement card: section heading on the left, its argument on the right. */
+
+.statement {
+  padding: clamp(2rem, 5vw, 3.5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 2.5rem clamp(2rem, 5vw, 4rem);
+}
+
+.statement p {
+  max-width: 42ch;
+}
+
+.statementIntro p {
+  margin-top: 1.25rem;
+}
+
+.statementBody p {
+  font-size: 1.1875rem;
+}
+
+.statementBody p + p {
+  margin-top: 1rem;
+}
+
+.statementLead {
+  color: var(--cs-ink) !important;
+  font-weight: 500;
+}
+
+/* Card grids */
+
+.cardGrid,
+.stepList,
+.timeline {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--cs-gap);
+  list-style: none;
+}
+
+* + .cardGrid,
+* + .stepList,
+* + .timeline {
+  margin-top: var(--cs-gap);
+}
+
+.cardGrid > li {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.details {
+  margin: 1rem 0 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.details div {
+  padding-top: 1rem;
+  border-top: 1px solid var(--cs-hairline);
+}
+
+.details dt {
+  margin-bottom: 0.25rem;
+  color: var(--cs-meta);
+  font-size: 0.8125rem;
+  font-weight: 550;
+}
+
+.details dd {
+  margin: 0;
+}
+
+.pairGrid {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--cs-gap);
+  list-style: none;
+}
+
+.pairGrid > li {
+  min-height: 15rem;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.pairGrid h3 {
+  max-width: 16ch;
+  font-size: clamp(1.5rem, 2.4vw, 1.875rem);
+  letter-spacing: -0.035em;
+}
+
+/* Steps: number beside the step name and title; the explanation follows below. */
+
+.stepList > li {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stepHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+}
+
+.stepHead .meta {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.stepIndex {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-dark);
+  color: var(--color-dark-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Timeline: dated milestones; the last one is "now" and inverts. */
+
+.timeline {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.timeline > li {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.timeline > li .meta {
+  margin-bottom: 1.5rem;
+  color: var(--cs-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline > li:last-child {
+  background: var(--color-dark);
+  color: var(--color-dark-text);
+}
+
+.timeline > li:last-child .meta,
+.timeline > li:last-child p {
+  color: #c4c4bd;
+}
+
+/* Column overrides for grids (CardGrid, StepList, StatGrid). */
+.cardGrid.cols2,
+.stepList.cols2,
+.stats.cols2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.cardGrid.cols4,
+.stepList.cols4,
+.stats.cols4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Band: one full-width row, title left and explanation right. */
+
+.band {
+  margin-top: var(--cs-gap);
+  padding: 1.5rem clamp(1.5rem, 3vw, 2rem);
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: center;
+  gap: 1rem 3rem;
+}
+
+.band p {
+  max-width: 52ch;
+}
+
+/* Chips */
+
+.chips {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.chips li {
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.75);
+  box-shadow: 0 0 0 1px var(--cs-hairline);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* On a white card, chips sit on the canvas colour instead of a white pill. */
+.chipsMuted li {
+  background: var(--cs-canvas);
+  box-shadow: none;
+}
+
+.listCard {
+  padding: 1.5rem clamp(1.5rem, 3vw, 2rem);
+}
+
+* + .listCard {
+  margin-top: var(--cs-gap);
+}
+
+/* Media */
+
+.diagram {
+  margin-top: var(--cs-gap);
+  overflow: hidden;
+}
+
+.diagram figure {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.diagram figcaption {
+  padding: 1rem 1.5rem 1.25rem;
+  border-color: var(--cs-hairline);
+}
+
+.shot {
+  margin: var(--cs-gap) 0 0;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.shot img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--cs-radius-inner);
+}
+
+.shot figcaption {
+  margin-top: 0.75rem;
+  padding-inline: 0.25rem;
+  color: var(--cs-quiet);
+  font-size: 0.8125rem;
+}
+
+/* Stats: a measured value with its context. */
+
+.stats {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--cs-gap);
+}
+
+* + .stats {
+  margin-top: var(--cs-gap);
+}
+
+.stats > div {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.stats dd {
+  margin: 0;
+  color: var(--cs-ink);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 560;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats dt {
+  color: var(--cs-quiet);
+  font-size: 0.9375rem;
+}
+
+/* Aside grid: a narrow column (stats) beside a wider one (details). */
+
+.asideGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: var(--cs-gap);
+}
+
+.asideGrid > .stats {
+  margin: 0;
+}
+
+.asideGrid > .listCard {
+  margin: 0;
+}
+
+/* Outcome: the verified result, beside the evidence still pending. */
+
+.outcome {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: var(--cs-gap);
+}
+
+.outcomeCard {
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.outcomeCard .outcomeLead {
+  max-width: 22ch;
+  color: var(--cs-ink);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 560;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.outcomeCard > div p {
+  max-width: 48ch;
+  color: #44503a;
+}
+
+.outcomeCard .outcomeSource {
+  margin-top: 0.75rem;
+  color: #55623f;
+  font-size: 0.8125rem;
+}
+
+/* Two-by-two figures beside the outcome card; stays two-up even on phones. */
+.outcomeStats,
+.outcome > .outcomeStats {
+  margin: 0;
+  grid-template-columns: 1fr 1fr !important;
+}
+
+.evidence {
+  margin: 0;
+  padding: 0.5rem 1.5rem;
+}
+
+.evidence div {
+  padding-block: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.evidence div + div {
+  border-top: 1px solid var(--cs-hairline);
+}
+
+.evidence dt {
+  font-size: 0.9375rem;
+  font-weight: 550;
+}
+
+.evidence dd {
+  margin: 0;
+  color: var(--cs-meta);
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+/* Testimonial: context on the left, the quote and the person on the right. */
+
+.testimonial {
+  padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 6vw, 5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: center;
+  gap: 2.5rem clamp(2rem, 6vw, 6rem);
+}
+
+.testimonialIntro h2 {
+  max-width: 12ch;
+  font-size: clamp(2.25rem, 4.4vw, 3.5rem);
+  font-weight: 560;
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.testimonialIntro p {
+  max-width: 34ch;
+  margin-top: 1.25rem;
+}
+
+.testimonialQuote {
+  margin: 0;
+}
+
+.quoteMark {
+  display: block;
+  height: 2.75rem;
+  color: var(--cs-ink);
+  font-size: 5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.testimonialQuote blockquote {
+  margin: 0;
+}
+
+.testimonialQuote blockquote p {
+  max-width: 26ch;
+  color: var(--cs-ink);
+  font-size: clamp(1.5rem, 2.6vw, 2.125rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  text-wrap: pretty;
+}
+
+.person {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.avatar {
+  width: 3rem;
+  height: 3rem;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-dark);
+  color: var(--color-dark-text);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.personText {
+  display: grid;
+  gap: 0.125rem;
+}
+
+.personText strong {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.personText span {
+  color: var(--cs-meta);
+  font-size: 0.875rem;
+}
+
+.profileLink {
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-left: 0.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--cs-canvas);
+  color: #0a66c2;
+  transition: background var(--duration-fast), color var(--duration-fast);
+}
+
+.profileLink svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.profileLink:hover {
+  background: #0a66c2;
+  color: #fff;
+}
+
+.quoteNote {
+  margin-top: 1.25rem;
+  color: var(--cs-meta) !important;
+  font-size: 0.8125rem !important;
+}
+
+/* Closing call to action + next case study */
+
+.cta {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--cs-gap);
+}
+
+.ctaCard {
+  padding: clamp(2rem, 5vw, 3.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.ctaCard h2 {
+  max-width: 12ch;
+  font-size: clamp(2.5rem, 5.4vw, 4.25rem);
+  font-weight: 560;
+  line-height: 1;
+  letter-spacing: -0.052em;
+}
+
+.ctaCard p {
+  max-width: 40ch;
+}
+
+.ctaCard :global(.button) {
+  margin-top: 0.75rem;
+}
+
+.nextCard {
+  min-height: 14rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--color-dark);
+  color: var(--color-dark-text);
+  transition: background var(--duration-fast);
+}
+
+.nextCard .meta {
+  color: #b7b7b0;
+}
+
+.nextCard strong {
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 560;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.nextCard svg {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: transform var(--duration-fast);
+}
+
+.nextCard:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.nextCard:hover {
+  background: #262624;
+}
+
+/* Responsive */
+
+@media (max-width: 64rem) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .stepList.cols4,
+  .stats.cols4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .heroBento {
+    max-width: 36rem;
+  }
+
+  .timeline {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Three-up grids become rows: title on the left, text on the right. */
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cardGrid > li {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    column-gap: 1.5rem;
+  }
+
+  .cardGrid > li > :not(h3) {
+    grid-column: 2;
+  }
+
+  .cardGrid > li > h3 {
+    grid-row: 1 / span 3;
+  }
+
+  .details {
+    margin-top: 0;
+  }
+
+  .details div:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+
+@media (max-width: 48rem) {
+  .hero {
+    min-height: auto;
+    padding-block: 1.5rem 3rem;
+  }
+
+  .heroBento {
+    max-width: none;
+  }
+
+  .statement,
+  .testimonial,
+  .cardGrid.cols2,
+  .stepList.cols4,
+  .cardGrid > li,
+  .pairGrid,
+  .stepList,
+  .band,
+  .stats,
+  .asideGrid,
+  .outcome,
+  .cta {
+    grid-template-columns: 1fr;
+  }
+
+  .cardGrid > li > :not(h3),
+  .cardGrid > li > h3 {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .details {
+    margin-top: 1rem;
+  }
+
+  .details div:first-child {
+    padding-top: 1rem;
+    border-top: 1px solid var(--cs-hairline);
+  }
+
+  .statement,
+  .ctaCard {
+    padding: 1.5rem;
+  }
+
+  .pairGrid > li {
+    min-height: auto;
+  }
+
+  .nextCard {
+    min-height: 9rem;
+  }
+}
+
+@media (max-width: 30rem) {
+  .timeline,
+  .heroBento {
+    grid-template-columns: 1fr;
+  }
+
+  .highlightCard,
+  .noteCard {
+    min-height: auto;
+  }
+
+  .factsCard div,
+  .evidence div {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .factsCard dd,
+  .evidence dd {
+    text-align: left;
+  }
+}
+
+/*
+ * Motion. One page-load sequence for the hero (status, kicker, headline, lead, actions, then the
+ * fact cards). Scroll reveals below it come from `components/motion/scroll-reveal.tsx`, driven by
+ * the `data-reveal` / `data-reveal-group` attributes these components set.
+ */
+@keyframes cs-load {
+  from { opacity: 0; translate: 0 1.25rem; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .heroCopy > *,
+  .heroBento > * {
+    animation: cs-load 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .heroCopy > :nth-child(2) { animation-delay: 60ms; }
+  .heroCopy > :nth-child(3) { animation-delay: 120ms; }
+  .heroCopy > :nth-child(4) { animation-delay: 200ms; }
+  .heroCopy > :nth-child(5) { animation-delay: 260ms; }
+  .heroBento > :nth-child(1) { animation-delay: 300ms; }
+  .heroBento > :nth-child(2) { animation-delay: 380ms; }
+  .heroBento > :nth-child(3) { animation-delay: 440ms; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profileLink,
+  .nextCard,
+  .nextCard svg {
+    transition: none;
+  }
+}

@@ -1,0 +1,659 @@
+/*
+ * Session setup loop — a simplified, dark recreation of MediSapience's study setup.
+ *
+ * Everything that the cursor touches is absolutely positioned in % of `.screen`, so the
+ * cursor keyframes can target the same coordinates at any width. Type and spacing use
+ * container units, which lets the whole screen scale like an image.
+ *
+ * One 12s timeline drives every element:
+ *   0–17%   cursor moves to Practice and clicks (Exam → Practice)
+ *   17–50%  cursor checks Internal Medicine, Pediatrics, General Surgery
+ *   50–62%  cursor presses Start session
+ *   62–86%  "Practice session ready" toast
+ *   86–100% reset to the initial state
+ */
+
+.figure {
+  margin: 0;
+  /* The screen's own font-size uses cqw, which resolves against this container. */
+  container-type: inline-size;
+  --loop: 12s;
+  --bg: #0b1220;
+  --side: #0f172a;
+  --panel: #121b30;
+  --raised: #182238;
+  --line: #24314d;
+  --text: #e6eaf2;
+  --muted: #8d97ab;
+  --blue: #2563eb;
+  --blue-soft: #13254d;
+  --amber: #f5b53d;
+}
+
+.figure figcaption {
+  margin-top: 0.75rem;
+  padding-inline: 0.25rem;
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+}
+
+.screen {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  container-type: inline-size;
+  border-radius: 1rem;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1.05cqw;
+  line-height: 1.3;
+}
+
+.main,
+.columns,
+.modes,
+.content {
+  display: contents;
+}
+
+/* Sidebar */
+
+.sidebar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 17%;
+  padding: 2.4cqw 1.4cqw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1cqw;
+  border-right: 1px solid var(--line);
+  background: var(--side);
+}
+
+.logo {
+  margin-bottom: 1.6cqw;
+  display: flex;
+  align-items: center;
+  gap: 0.7cqw;
+  font-size: 1.25em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.logo span {
+  width: 1.9cqw;
+  height: 1.9cqw;
+  border-radius: 0.5cqw;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.user {
+  margin-bottom: 1.2cqw;
+  padding: 1cqw;
+  display: flex;
+  align-items: center;
+  gap: 0.8cqw;
+  border-radius: 0.8cqw;
+  background: #131d33;
+}
+
+.avatar {
+  width: 2.2cqw;
+  height: 2.2cqw;
+  flex: none;
+  border: 1px solid #2c4a8a;
+  border-radius: 50%;
+  background: #172a52;
+}
+
+.userLines {
+  flex: 1;
+  display: grid;
+  gap: 0.45cqw;
+}
+
+.userLines i {
+  height: 0.6cqw;
+  border-radius: 999px;
+  background: #2a3650;
+}
+
+.userLines i + i {
+  width: 75%;
+  background: #1f2a40;
+}
+
+.navItem {
+  height: 2.6cqw;
+  border-radius: 0.6cqw;
+  background: linear-gradient(90deg, #1e293b 0 12%, transparent 12% 18%, #1e293b 18% 70%, transparent 70%);
+  background-size: 100% 0.9cqw;
+  background-position: 0.9cqw center;
+  background-repeat: no-repeat;
+}
+
+.navActive {
+  background-color: var(--blue);
+  background-image: linear-gradient(90deg, #dbe6ff 0 12%, transparent 12% 18%, #dbe6ff 18% 62%, transparent 62%);
+}
+
+/* Header + step labels */
+
+.greeting {
+  position: absolute;
+  top: 6%;
+  left: 21%;
+  display: grid;
+  gap: 0.4cqw;
+}
+
+.greeting strong {
+  font-size: 2.3em;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.greeting span {
+  color: var(--muted);
+  font-size: 1.15em;
+}
+
+/* `.screen` prefix: outrank host-page rules like `.card p` so the mock keeps its own type. */
+.screen .step {
+  position: absolute;
+  top: 19.5%;
+  display: flex;
+  align-items: center;
+  gap: 0.7cqw;
+  font-size: 1.15em;
+  font-weight: 650;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.screen .modes > .step {
+  left: 21%;
+}
+
+.screen .content > .step {
+  left: 53%;
+}
+
+.step i {
+  width: 1.6cqw;
+  height: 1.6cqw;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--blue);
+  font-size: 0.8em;
+  font-style: normal;
+}
+
+/* Mode cards */
+
+.mode {
+  position: absolute;
+  left: 21%;
+  width: 29%;
+  height: 14%;
+  padding: 0 1.5cqw;
+  display: flex;
+  align-items: center;
+  gap: 1.2cqw;
+  border: 1px solid var(--line);
+  border-radius: 1cqw;
+  background: var(--panel);
+}
+
+.mode strong {
+  display: block;
+  font-size: 1.2em;
+}
+
+.mode span {
+  color: var(--muted);
+  font-size: 0.95em;
+}
+
+.modeIcon {
+  flex: none;
+  width: 2.8cqw;
+  height: 2.8cqw;
+  display: grid;
+  place-items: center;
+  border-radius: 0.7cqw;
+  background: #1e293b;
+  color: #cfd8ea;
+}
+
+.modeIcon svg {
+  width: 55%;
+  height: 55%;
+}
+
+.modeExam {
+  top: 25%;
+  animation: exam-selected var(--loop) infinite;
+}
+
+.modePractice {
+  top: 42%;
+  animation: practice-selected var(--loop) infinite;
+}
+
+.modeExam .modeIcon {
+  animation: exam-icon var(--loop) infinite;
+}
+
+.modePractice .modeIcon {
+  animation: practice-icon var(--loop) infinite;
+}
+
+.timer {
+  position: absolute;
+  top: 59%;
+  left: 21%;
+  width: 29%;
+  height: 9%;
+  padding: 0 1.5cqw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--line);
+  border-radius: 1cqw;
+  background: var(--panel);
+  color: var(--muted);
+}
+
+.timer b {
+  padding: 0.4cqw 1.2cqw;
+  border: 1px solid var(--line);
+  border-radius: 0.5cqw;
+  color: var(--text);
+}
+
+.start {
+  position: absolute;
+  top: 74%;
+  left: 21%;
+  width: 29%;
+  height: 8%;
+  display: grid;
+  place-items: center;
+  border-radius: 1cqw;
+  font-size: 1.2em;
+  font-weight: 700;
+  animation: start-button var(--loop) infinite;
+}
+
+.screen .warning {
+  position: absolute;
+  top: 85%;
+  left: 21%;
+  width: 29%;
+  padding: 1cqw 1.5cqw;
+  border: 1px solid #5a3b0e;
+  border-radius: 1cqw;
+  background: #22180a;
+  color: var(--amber);
+  font-size: 1em;
+  line-height: 1.3;
+  animation: warning var(--loop) infinite;
+}
+
+/* Content panel */
+
+.panel {
+  position: absolute;
+  top: 25%;
+  left: 53%;
+  width: 43%;
+  height: 68%;
+  border: 1px solid var(--line);
+  border-radius: 1.2cqw;
+  background: var(--panel);
+}
+
+.search {
+  position: absolute;
+  top: 6%;
+  left: 4%;
+  right: 4%;
+  height: 11%;
+  padding: 0 1.4cqw;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 0.8cqw;
+  background: var(--bg);
+  color: var(--muted);
+  gap: 0.8cqw;
+}
+
+.search svg {
+  width: 1.3cqw;
+  height: 1.3cqw;
+  flex: none;
+}
+
+.rows {
+  position: absolute;
+  top: 22%;
+  left: 4%;
+  right: 4%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rows li {
+  /* 11% of the panel: 68% of the screen height, which is 62.5cqw at 16:10. */
+  height: 4.675cqw;
+  display: flex;
+  align-items: center;
+  gap: 1cqw;
+  border-radius: 0.6cqw;
+}
+
+.rows strong {
+  flex: 1;
+  font-size: 1.1em;
+}
+
+.rows small {
+  color: var(--muted);
+  font-size: 0.9em;
+}
+
+.chevron {
+  width: 0.6cqw;
+  height: 0.6cqw;
+  margin-inline: 0.5cqw 0.3cqw;
+  border-top: 1.5px solid var(--muted);
+  border-right: 1.5px solid var(--muted);
+  transform: rotate(45deg);
+}
+
+.check {
+  position: relative;
+  width: 1.4cqw;
+  height: 1.4cqw;
+  flex: none;
+  border: 1.5px solid #3a4866;
+  border-radius: 0.35cqw;
+}
+
+/* Tick mark: shares the checkbox timing so it appears the moment the box fills. */
+.check::after {
+  content: "";
+  position: absolute;
+  left: 32%;
+  top: 12%;
+  width: 30%;
+  height: 55%;
+  border-right: 0.22cqw solid #fff;
+  border-bottom: 0.22cqw solid #fff;
+  transform: rotate(45deg);
+  opacity: 0;
+}
+
+.pick1 .check::after { animation: mark-1 var(--loop) infinite; }
+.pick2 .check::after { animation: mark-2 var(--loop) infinite; }
+.pick3 .check::after { animation: mark-3 var(--loop) infinite; }
+
+.pick1 .check { animation: check-1 var(--loop) infinite; }
+.pick2 .check { animation: check-2 var(--loop) infinite; }
+.pick3 .check { animation: check-3 var(--loop) infinite; }
+.pick1 { animation: row-1 var(--loop) infinite; }
+.pick2 { animation: row-2 var(--loop) infinite; }
+.pick3 { animation: row-3 var(--loop) infinite; }
+
+.footer {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: 5%;
+  padding-top: 1.2cqw;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4cqw;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.counter {
+  position: relative;
+  width: 0.9cqw;
+  height: 1.4cqw;
+}
+
+.counter b {
+  position: absolute;
+  inset: 0;
+  color: var(--text);
+  opacity: 0;
+}
+
+.count0 { animation: count-0 var(--loop) infinite; }
+.count1 { animation: count-1 var(--loop) infinite; }
+.count2 { animation: count-2 var(--loop) infinite; }
+.count3 { animation: count-3 var(--loop) infinite; }
+
+/* Toast + cursor */
+
+.toast {
+  position: absolute;
+  top: 5%;
+  right: 4%;
+  padding: 1cqw 1.6cqw;
+  display: flex;
+  align-items: center;
+  gap: 0.8cqw;
+  border: 1px solid #1f5135;
+  border-radius: 0.9cqw;
+  background: #0f2a1d;
+  color: #b8f0cc;
+  font-size: 1.1em;
+  font-weight: 650;
+  opacity: 0;
+  animation: toast var(--loop) infinite;
+}
+
+.toast span {
+  width: 1cqw;
+  height: 1cqw;
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+.cursor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  animation: cursor-path var(--loop) infinite;
+}
+
+.cursor svg {
+  width: 2.6cqw;
+  height: 2.6cqw;
+  margin: -0.3cqw 0 0 -0.5cqw;
+  filter: drop-shadow(0 0.3cqw 0.4cqw rgb(0 0 0 / 0.45));
+  transform-origin: 20% 10%;
+  animation: cursor-click var(--loop) infinite;
+}
+
+/* Keyframes */
+
+@keyframes cursor-path {
+  0% { transform: translate(82%, 96%); opacity: 0; }
+  5% { transform: translate(74%, 88%); opacity: 1; }
+  14%, 17% { transform: translate(35.5%, 49%); }
+  26%, 29% { transform: translate(57.4%, 66.2%); }
+  36%, 39% { transform: translate(57.4%, 73.7%); }
+  46%, 49% { transform: translate(57.4%, 43.7%); }
+  58%, 80% { transform: translate(35.5%, 78%); opacity: 1; }
+  86%, 100% { transform: translate(82%, 96%); opacity: 0; }
+}
+
+@keyframes cursor-click {
+  0%, 15%, 16.5%, 27%, 28.5%, 37%, 38.5%, 47%, 48.5%, 59%, 60.5%, 100% { transform: scale(1); }
+  15.8%, 27.8%, 37.8%, 47.8%, 59.8% { transform: scale(0.82); }
+}
+
+@keyframes exam-selected {
+  0%, 16%, 96%, 100% { border-color: var(--blue); background: var(--blue-soft); }
+  16.8%, 95% { border-color: var(--line); background: var(--panel); }
+}
+
+@keyframes practice-selected {
+  0%, 16%, 96%, 100% { border-color: var(--line); background: var(--panel); }
+  16.8%, 95% { border-color: var(--blue); background: var(--blue-soft); }
+}
+
+@keyframes exam-icon {
+  0%, 16%, 96%, 100% { background: var(--blue); }
+  16.8%, 95% { background: #1e293b; }
+}
+
+@keyframes practice-icon {
+  0%, 16%, 96%, 100% { background: #1e293b; }
+  16.8%, 95% { background: var(--blue); }
+}
+
+@keyframes check-1 {
+  0%, 28%, 95%, 100% { background: transparent; border-color: #3a4866; }
+  28.8%, 94% { background: var(--blue); border-color: var(--blue); }
+}
+
+@keyframes check-2 {
+  0%, 38%, 95%, 100% { background: transparent; border-color: #3a4866; }
+  38.8%, 94% { background: var(--blue); border-color: var(--blue); }
+}
+
+@keyframes check-3 {
+  0%, 48%, 95%, 100% { background: transparent; border-color: #3a4866; }
+  48.8%, 94% { background: var(--blue); border-color: var(--blue); }
+}
+
+@keyframes mark-1 {
+  0%, 28%, 95%, 100% { opacity: 0; }
+  28.8%, 94% { opacity: 1; }
+}
+
+@keyframes mark-2 {
+  0%, 38%, 95%, 100% { opacity: 0; }
+  38.8%, 94% { opacity: 1; }
+}
+
+@keyframes mark-3 {
+  0%, 48%, 95%, 100% { opacity: 0; }
+  48.8%, 94% { opacity: 1; }
+}
+
+@keyframes row-1 {
+  0%, 28%, 95%, 100% { background: transparent; }
+  28.8%, 94% { background: var(--raised); }
+}
+
+@keyframes row-2 {
+  0%, 38%, 95%, 100% { background: transparent; }
+  38.8%, 94% { background: var(--raised); }
+}
+
+@keyframes row-3 {
+  0%, 48%, 95%, 100% { background: transparent; }
+  48.8%, 94% { background: var(--raised); }
+}
+
+@keyframes count-0 {
+  0%, 28%, 95.5%, 100% { opacity: 1; }
+  28.4%, 95% { opacity: 0; }
+}
+
+@keyframes count-1 {
+  0%, 28%, 38.4%, 100% { opacity: 0; }
+  28.4%, 38% { opacity: 1; }
+}
+
+@keyframes count-2 {
+  0%, 38%, 48.4%, 100% { opacity: 0; }
+  38.4%, 48% { opacity: 1; }
+}
+
+@keyframes count-3 {
+  0%, 48%, 95%, 100% { opacity: 0; }
+  48.4%, 94.6% { opacity: 1; }
+}
+
+@keyframes start-button {
+  0%, 28%, 95%, 100% { background: #1a2438; color: #a3adbf; transform: scale(1); }
+  28.8%, 59.5%, 61%, 94% { background: var(--blue); color: #fff; transform: scale(1); }
+  60.2% { background: #1d4ed8; color: #fff; transform: scale(0.97); }
+}
+
+@keyframes warning {
+  0%, 28%, 96%, 100% { opacity: 1; }
+  28.8%, 95% { opacity: 0; }
+}
+
+@keyframes toast {
+  0%, 61%, 87%, 100% { opacity: 0; transform: translateY(-0.8cqw); }
+  63%, 85% { opacity: 1; transform: translateY(0); }
+}
+
+/* Reduced motion: show the finished setup, no cursor. */
+@media (prefers-reduced-motion: reduce) {
+  .screen *,
+  .cursor {
+    animation: none !important;
+  }
+
+  .cursor {
+    display: none;
+  }
+
+  .modePractice,
+  .pick1 .check,
+  .pick2 .check,
+  .pick3 .check {
+    border-color: var(--blue);
+    background: var(--blue-soft);
+  }
+
+  .pick1 .check,
+  .pick2 .check,
+  .pick3 .check,
+  .modePractice .modeIcon {
+    background: var(--blue);
+  }
+
+  .pick1,
+  .pick2,
+  .pick3 {
+    background: var(--raised);
+  }
+
+  .pick1 .check::after,
+  .pick2 .check::after,
+  .pick3 .check::after {
+    opacity: 1;
+  }
+
+  .start {
+    background: var(--blue);
+    color: #fff;
+  }
+
+  .warning,
+  .count0,
+  .count1,
+  .count2 {
+    opacity: 0;
+  }
+
+  .count3,
+  .toast {
+    opacity: 1;
+  }
+}

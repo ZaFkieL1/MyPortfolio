@@ -1,158 +1,136 @@
-import Link from "next/link";
-import { ArrowDownIcon, ArrowUpRightIcon } from "@/components/icons";
-import { Footer } from "@/components/layout/footer";
-import { PreviewBanner } from "@/components/layout/preview-banner";
-import { Navbar } from "@/components/navigation/navbar";
-import { ProductVisual } from "@/components/product/product-visual";
-import { ButtonLink } from "@/components/ui/button-link";
-import { FeaturedProject } from "@/components/work/featured-project";
-import { portfolioContent } from "@/content/portfolio";
 import { TestimonialGroup } from "@/components/content/testimonial-group";
+import { CaseSection, CaseStudyShell } from "@/components/case-study/bento";
+import { HomeHero } from "@/components/home/home-hero";
+import styles from "@/components/home/home.module.css";
+import { ProjectCard } from "@/components/home/project-card";
+import { portfolioContent } from "@/content/portfolio";
+
+// Published by MediSapience on medisapience.com and approved for this portfolio.
+const medisapienceResults = [
+  { value: "20,641+", label: "Answer attempts" },
+  { value: "310+", label: "Subscribers" },
+  { value: "41%", label: "Premium subscribers who passed" },
+];
 
 export default function Home() {
   const { person, hero, projects, services, process, technology } = portfolioContent;
 
   return (
-    <>
-      <Navbar />
-      <PreviewBanner />
-      <main id="main-content">
-        <section className="hero container" aria-labelledby="hero-title">
-          <div className="hero__copy">
-            <div className="availability"><span />{person.availability}</div>
-            <h1 id="hero-title">{hero.statement}</h1>
-            <p>{hero.supporting}</p>
-            <div className="hero__actions">
-              <ButtonLink href="#work" variant="primary">
-                View my work <ArrowDownIcon />
-              </ButtonLink>
-              <ButtonLink href="#contact" variant="secondary">
-                Start a project <ArrowUpRightIcon />
-              </ButtonLink>
-            </div>
-          </div>
-          <div className="hero__proof">
-            <ProductVisual project="medisapience" compact />
-            <Link className="hero-proof-card" href="/work/cem-nicaragua">
-              <span>CEM Digital</span>
-              <strong>Institutional site + product platform</strong>
-              <ArrowUpRightIcon />
-            </Link>
-          </div>
-        </section>
-
-        <section className="proof-strip" aria-label="Product proof">
-          <div className="container proof-strip__inner">
-            <p>Built for real organizations</p>
-            <div><span>MediSapience</span><i /> <span>CEM Nicaragua</span></div>
-            <p>Production systems</p>
-          </div>
-        </section>
-
-        <section id="work" className="work-section container" aria-labelledby="work-title">
-          <div className="section-heading section-heading--wide">
-            <h2 id="work-title">Selected work.</h2>
-            <p>Two real platforms, shown at the scale and depth that product work deserves.</p>
-          </div>
-          <div className="featured-projects">
-            {projects.map((project, index) => (
-              <FeaturedProject key={project.slug} project={project} reverse={index % 2 === 1} />
-            ))}
-          </div>
-        </section>
-
-        <section className="impact-strip" aria-label="Working principles">
-          <div className="container impact-strip__grid">
-            <article><strong>Production</strong><span>Built to operate beyond launch day</span></article>
-            <article><strong>Full-stack</strong><span>One view across product and engineering</span></article>
-            <article><strong>End to end</strong><span>From requirements through delivery</span></article>
-          </div>
-        </section>
-
-        <section id="services" className="services-section container" aria-labelledby="services-title">
-          <div className="section-heading">
-            <h2 id="services-title">What I build.</h2>
-            <p>Focused product engineering for software that has a real job to do.</p>
-          </div>
-          <div className="service-list">
-            {services.map((service, index) => (
-              <article key={service.title} className="service-item">
-                <span>0{index + 1}</span>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
-                <ArrowUpRightIcon />
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="process" className="process-section" aria-labelledby="process-title">
-          <div className="container">
-            <div className="section-heading section-heading--inverse">
-              <h2 id="process-title">From idea to production.</h2>
-              <p>A direct path from business context to software people can use and teams can run.</p>
-            </div>
-            <ol className="process-list">
-              {process.map((step, index) => (
-                <li key={step.title}>
-                  <span>0{index + 1}</span>
-                  <h3>{step.title}</h3>
-                  <p>{step.description}</p>
-                </li>
+    <CaseStudyShell
+      hero={
+        <HomeHero
+          availability={person.availability}
+          statement={hero.statement}
+          supporting={hero.supporting}
+          system={hero.system}
+          figures={medisapienceResults}
+          figuresSource="MediSapience, in production. Figures published on medisapience.com."
+        />
+      }
+    >
+      {/* Open layouts on the warm canvas: hairlines and space do the grouping, not boxes. */}
+      <div className={styles.marquee} aria-hidden="true">
+        <div className={styles.marqueeTrack}>
+          {[0, 1].map((copy) => (
+            <div key={copy} className={styles.marqueeGroup}>
+              {services.map((service) => (
+                <span key={service.title}>{service.title}<i /></span>
               ))}
-            </ol>
-          </div>
-        </section>
-
-        <section className="technology-section container" aria-labelledby="technology-title">
-          <div className="section-heading">
-            <h2 id="technology-title">Tools matched to the product.</h2>
-            <p>The stack supports the work; it is not the work.</p>
-          </div>
-          <div className="technology-list">
-            {technology.map((group) => (
-              <article key={group.label}>
-                <h3>{group.label}</h3>
-                <p>{group.items.join(" · ")}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="about" className="about-section container" aria-labelledby="about-title">
-          <div className="about-portrait" aria-label="Portrait placeholder for Henry Gonzalez">
-            <span>Portrait pending</span>
-            <strong>HG</strong>
-            <p>Nicaragua → Worldwide</p>
-          </div>
-          <div className="about-copy">
-            <h2 id="about-title">Hey, I’m Henry.</h2>
-            <p className="lead-copy">{person.bio}</p>
-            <p>I work comfortably across product decisions and implementation detail, helping turn complex workflows into software that feels clear and dependable.</p>
-            <dl>
-              <div><dt>Based in</dt><dd>{person.location}</dd></div>
-              <div><dt>Working with</dt><dd>International and remote teams</dd></div>
-              <div><dt>Focus</dt><dd>Products, platforms, and custom software</dd></div>
-            </dl>
-          </div>
-        </section>
-
-        <TestimonialGroup testimonials={portfolioContent.testimonials} />
-
-        <section id="contact" className="contact-section" aria-labelledby="contact-title">
-          <div className="container contact-section__inner">
-            <h2 id="contact-title"><span>Have a product in mind?</span> Let’s turn the real workflow into a product.</h2>
-            <div className="contact-section__bottom">
-              <p>Share the problem, the people involved, and what a useful first release needs to achieve.</p>
-              <ButtonLink href={`mailto:${person.email}`} variant="inverse">
-                Start a conversation <ArrowUpRightIcon />
-              </ButtonLink>
             </div>
-            <span className="contact-placeholder">Preview email: {person.email} · replace before launch</span>
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </>
+          ))}
+        </div>
+      </div>
+
+      <CaseSection
+        className={styles.spacious}
+        id="work-title"
+        anchor="work"
+        title="Selected work."
+        lead="Two real platforms, shown at the scale and depth that product work deserves."
+      >
+        <div className={styles.projects} data-reveal-group>
+          {projects.map((project) => <ProjectCard key={project.slug} project={project} />)}
+        </div>
+      </CaseSection>
+
+      <CaseSection
+        className={styles.spacious}
+        id="services-title"
+        anchor="services"
+        title="What I build."
+        lead="Focused product engineering for software that has a real job to do."
+      >
+        <ul className={styles.lineGrid} data-reveal-group>
+          {services.map((service) => (
+            <li key={service.title}>
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+            </li>
+          ))}
+        </ul>
+      </CaseSection>
+
+      <CaseSection
+        className={styles.spacious}
+        id="process-title"
+        anchor="process"
+        title="From idea to production."
+        lead="A direct path from business context to software people can use and teams can run."
+      >
+        <ol className={styles.steps} data-reveal-group>
+          {process.map((step, index) => (
+            <li key={step.title}>
+              <span className={styles.stepNumber}>{index + 1}</span>
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
+            </li>
+          ))}
+        </ol>
+      </CaseSection>
+
+      <CaseSection
+        className={styles.spacious}
+        id="technology-title"
+        title="Tools matched to the product."
+        lead="The stack supports the work; it is not the work."
+      >
+        <dl className={styles.rows} data-reveal-group>
+          {technology.map((group) => (
+            <div key={group.label}>
+              <dt>{group.label}</dt>
+              <dd>
+                <ul>
+                  {group.items.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </CaseSection>
+
+      <section id="about" className={`${styles.spacious} ${styles.about}`} aria-labelledby="about-title">
+        <div className={styles.portrait} aria-label="Portrait placeholder for Henry Gonzalez" data-reveal="settle">
+          <span>Portrait pending</span>
+          <strong>{person.mark}</strong>
+          <p>Nicaragua → Worldwide</p>
+        </div>
+        <div className={styles.aboutCopy}>
+          <h2 id="about-title" data-split>Hey, I’m Henry.</h2>
+          <p className={styles.aboutLead} data-reveal>{person.bio}</p>
+          <p data-reveal>
+            I work comfortably across product decisions and implementation detail, helping turn complex
+            workflows into software that feels clear and dependable.
+          </p>
+          <dl className={styles.aboutFacts} data-reveal-group>
+            <div><dt>Based in</dt><dd>{person.location}</dd></div>
+            <div><dt>Working with</dt><dd>International and remote teams</dd></div>
+            <div><dt>Focus</dt><dd>Products, platforms, and custom software</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <TestimonialGroup testimonials={portfolioContent.testimonials} />
+
+    </CaseStudyShell>
   );
 }

@@ -233,6 +233,35 @@ export const portfolioContent = {
     statement: "I build digital products businesses can depend on.",
     supporting:
       "Full-stack product engineering for SaaS platforms, internal tools, and custom web applications—from requirements to production.",
+    // The hero diagram: what a client brings in, the engineering in the middle, what ships.
+    system: {
+      inputs: [
+        { icon: "idea", title: "Your idea", detail: "Goals and constraints" },
+        { icon: "workflow", title: "Workflows", detail: "How your team works" },
+        { icon: "data", title: "Your data", detail: "Records, rules, systems" },
+      ],
+      hub: {
+        title: "Product engineering",
+        stages: ["Design", "Frontend", "Backend", "Deploy"],
+      },
+      outputs: [
+        { icon: "browser", title: "Web application", detail: "Fast, accessible, typed" },
+        { icon: "dashboard", title: "Internal tools", detail: "Dashboards and admin" },
+        { icon: "plug", title: "APIs & integrations", detail: "Connected to your stack" },
+      ],
+    },
+  },
+  // The closing call to action, rendered inside the site footer on every page.
+  contact: {
+    title: "Have a product in mind?",
+    titleMuted: "Let’s turn the real workflow into a product.",
+    body: "Share the problem, the people involved, and what a useful first release needs to achieve.",
+    action: "Start a conversation",
+    steps: [
+      { title: "Share the problem", detail: "The workflow, the people, the goal" },
+      { title: "Scope a first release", detail: "What it must do on day one" },
+      { title: "Ship and improve", detail: "In production, then iterate" },
+    ],
   },
   services: [
     {

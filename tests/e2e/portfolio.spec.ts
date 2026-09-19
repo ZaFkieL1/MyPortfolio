@@ -48,6 +48,16 @@ test("mobile menu supports open, close, and escape", async ({ page, isMobile }) 
   await expect(trigger).toBeFocused();
 });
 
+test("brand mark returns to the top of the home page from a scrolled case study", async ({ page }) => {
+  await page.goto("/work/medisapience");
+  await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
+  await page.getByRole("link", { name: /, home$/ }).click();
+  await page.waitForURL((url) => url.pathname === "/");
+  await expect.poll(() => page.evaluate(() => window.scrollY), { timeout: 3_000 }).toBe(0);
+  await page.waitForTimeout(800);
+  expect(await page.evaluate(() => window.scrollY)).toBe(0);
+});
+
 test("MediSapience diagrams render and remain keyboard accessible on mobile", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/work/medisapience");

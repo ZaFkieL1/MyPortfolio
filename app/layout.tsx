@@ -44,7 +44,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={geist.variable}>
+    // Next 16 only forces instant scroll-to-top on route changes when this attribute is present;
+    // without it, the global `scroll-behavior: smooth` leaves navigation mid-page.
+    <html lang="en" className={geist.variable} data-scroll-behavior="smooth">
       <body>
         <a className="skip-link" href="#main-content">Skip to content</a>
         {children}

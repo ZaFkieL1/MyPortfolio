@@ -315,11 +315,48 @@ test("essential content reflows at 200 and 400 percent equivalents", async ({ pa
   }
 });
 
+/**
+ * A full-page screenshot fires whether or not the page has finished drawing, and
+ * `next/image` only fetches what has been near the viewport. On a long page of captures
+ * that produced a review file showing correctly-sized but entirely blank frames — worse
+ * than no screenshot, because it looks like a layout bug that is not there. Walk the page
+ * so every image is requested, then wait for them to actually decode.
+ */
+async function settleImages(page: import("@playwright/test").Page) {
+  await page.evaluate(async () => {
+    const step = window.innerHeight;
+    for (let y = 0; y < document.body.scrollHeight; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    window.scrollTo(0, 0);
+  });
+  await page
+    .waitForFunction(
+      () => [...document.querySelectorAll("img")].every((img) => img.complete && img.naturalWidth > 0),
+      undefined,
+      { timeout: 30_000 },
+    )
+    .catch(() => {});
+  // One more frame so the reveal transitions have settled where motion is allowed.
+  await page.waitForTimeout(400);
+}
+
 test("capture final review surfaces", async ({ page }, testInfo) => {
-  test.setTimeout(120_000);
+  // Twenty full-page captures, each waiting for its images to decode first.
+  test.setTimeout(420_000);
   test.skip(testInfo.project.name !== "desktop-chromium", "Capture once with explicit viewports");
   const reviewDirectory = path.join(process.cwd(), ".impeccable", "review");
   await mkdir(reviewDirectory, { recursive: true });
+
+  /*
+   * Capture the resting state. The reveals only run under
+   * `(prefers-reduced-motion: no-preference)`, so asking for reduced motion leaves every
+   * block at full opacity. Without it, walking the page to load its images and then
+   * scrolling back up reverses the ScrollTriggers, and the review file shows correctly
+   * sized but empty frames.
+   */
+  await page.emulateMedia({ reducedMotion: "reduce" });
 
   for (const viewport of [
     { name: "desktop", width: 1440, height: 1000 },
@@ -328,6 +365,7 @@ test("capture final review surfaces", async ({ page }, testInfo) => {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
     for (const route of allRoutes) {
       await page.goto(route.url);
+      await settleImages(page);
       // English keeps the existing filenames so the review set stays comparable;
       // Spanish is captured alongside it with a suffix.
       const base = route.path === "/" ? viewport.name : `${route.path.split("/").at(-1)}-${viewport.name}`;

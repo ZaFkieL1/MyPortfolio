@@ -235,33 +235,43 @@ const otherProjects: SideProject[] = [
       "Una plataforma para instituciones de crédito en Nicaragua que cierra todo el ciclo del préstamo en un solo sistema: solicitud, aprobación, desembolso, plan de cuotas, ruta de cobro, mora, reestructuración y castigo.",
       "Por detrás están las sesiones de caja, la contabilidad, la conciliación bancaria, la clasificación de cartera y una bitácora de auditoría — con aprobación de cuatro ojos en las operaciones que mueven dinero, y permisos que varían por institución, sucursal, rol y campo.",
     ],
-    note: "Es un proyecto personal. Los repositorios son privados y todavía no hay un despliegue público.",
+    note: "Es un proyecto personal. Los repositorios son privados y todavía no hay un despliegue público. Las capturas de abajo son de la app en funcionamiento sobre una financiera de demostración sembrada — prestatarios, clientes y saldos inventados, no una cartera real.",
     technologies: ["Django", "Django REST Framework", "PostgreSQL", "Next.js", "React", "TypeScript", "Tailwind CSS"],
     screenshots: [
       {
         src: "/work/credora-solicitudes.png",
-        alt: "Bandeja de solicitudes de Credora: solicitudes de préstamo enviadas con su producto, monto, sucursal y estado de revisión.",
-        caption: "Las solicitudes llegan a una sola bandeja y llevan su producto, requisitos y garantías por toda la revisión.",
+        alt:
+          "La bandeja de Credora: la cartera desglosada por estado de la solicitud —borrador, enviada, en revisión, aprobada, devuelta, desembolsada, rechazada y cancelada—, con el monto que espera una decisión al lado y las últimas solicitudes abajo.",
+        caption:
+          "Cada solicitud cae en una sola bandeja, contada por el estado en el que realmente está.",
       },
       {
         src: "/work/credora-prestamos.png",
-        alt: "Detalle de un préstamo en Credora, con el monto desembolsado y el plan de cuotas generado.",
-        caption: "La aprobación y el desembolso generan el plan de cuotas sobre el que corre todo el ciclo de cobro.",
+        alt:
+          "Un préstamo desembolsado de Credora: plazo, tasa mensual, cómo y cuándo se entregó, quién lo entregó y contra qué solicitud, y luego el plan de pagos completo con interés, capital y total de cada una de las diez cuotas.",
+        caption:
+          "El desembolso genera el plan de pagos sobre el que corre después todo el ciclo de cobro.",
       },
       {
         src: "/work/credora-cobranza.png",
-        alt: "Ruta de cobro de un día en Credora: clientes por visitar, cuotas por vencer y mora.",
-        caption: "La ruta de cobro se arma con lo que realmente está por vencer, por zona y por oficial.",
+        alt:
+          "La cartera vencida de Credora: tres préstamos con sus días de mora, la zona, la fecha de la próxima cuota y el monto adeudado con la mora incluida.",
+        caption:
+          "La ruta de cobro se arma con lo que de verdad está vencido, por zona y por días de mora.",
       },
       {
         src: "/work/credora-caja.png",
-        alt: "Una sesión de caja de Credora con sus movimientos y el saldo de cierre.",
-        caption: "Los pagos caen en una sesión de caja abierta que hay que cuadrar antes de cerrarla.",
+        alt:
+          "Una sesión de caja abierta en Credora: apertura, cobros en efectivo, desembolsos en efectivo, devoluciones y egresos que suman lo que debería haber en la caja, los movimientos de esa sesión, y las cajas cerradas con su diferencia contada.",
+        caption:
+          "El efectivo cae en una sesión abierta que tiene que cuadrar antes de poder cerrarse.",
       },
       {
         src: "/work/credora-cartera.png",
-        alt: "Clasificación de cartera de Credora por rango de mora en un cierre de periodo.",
-        caption: "El cierre de periodo clasifica la cartera en rangos de mora para provisión y reportes.",
+        alt:
+          "El cierre de periodo de Credora: cartera, mora, cartera en riesgo y provisión requerida, y luego los préstamos y saldos clasificados en las categorías A, B y D con la provisión que carga cada una.",
+        caption:
+          "Cerrar una fecha clasifica cada préstamo y fija la provisión sobre la que se arman los reportes.",
       },
     ],
   },

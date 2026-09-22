@@ -228,33 +228,43 @@ const otherProjects: SideProject[] = [
       "A platform for lending institutions in Nicaragua that closes the whole loan cycle in one system: application, approval, disbursement, instalment plan, collection route, arrears, restructuring and write-off.",
       "Behind that sit cash sessions, accounting, bank reconciliation, portfolio classification and an audit trail — with maker-checker approval on the operations that move money, and permissions that vary by institution, branch, role and field.",
     ],
-    note: "A personal project. The repositories are private and there is no public deployment yet.",
+    note: "A personal project. The repositories are private and there is no public deployment yet. The captures below are of the running app on a seeded demonstration institution — invented lenders, customers and balances, not a real book.",
     technologies: ["Django", "Django REST Framework", "PostgreSQL", "Next.js", "React", "TypeScript", "Tailwind CSS"],
     screenshots: [
       {
         src: "/work/credora-solicitudes.png",
-        alt: "Credora's application inbox: submitted loan applications with their product, amount, branch and review state.",
-        caption: "Applications arrive in one inbox and carry their product, requirements and guarantees through review.",
+        alt:
+          "Credora's inbox: the portfolio broken down by application state — draft, sent, under review, approved, returned, disbursed, rejected and cancelled — with the amount awaiting a decision beside it and the latest applications below.",
+        caption:
+          "Every application lands in one inbox, counted by the state it is actually in.",
       },
       {
         src: "/work/credora-prestamos.png",
-        alt: "A Credora loan detail showing the disbursed amount and the generated instalment plan.",
-        caption: "Approval and disbursement generate the instalment plan the whole collection cycle runs on.",
+        alt:
+          "A disbursed Credora loan: term, monthly rate, how and when it was handed over, who handed it over and against which application, then the full instalment plan with interest, capital and total for each of the ten instalments.",
+        caption:
+          "Disbursement generates the instalment plan the whole collection cycle then runs on.",
       },
       {
         src: "/work/credora-cobranza.png",
-        alt: "Credora's collection route for a day: customers to visit, instalments due and arrears.",
-        caption: "The collection route is built from what is actually due, by zone and by officer.",
+        alt:
+          "Credora's overdue portfolio: three loans with their days past due, zone, next instalment date and the amount owed including arrears.",
+        caption:
+          "The collection route is built from what is actually overdue, by zone and by days late.",
       },
       {
         src: "/work/credora-caja.png",
-        alt: "A Credora cash session with its movements and closing balance.",
-        caption: "Payments land in an open cash session that has to be reconciled before it closes.",
+        alt:
+          "An open Credora cash session: opening float, cash collections, cash disbursements, returns and expenses adding up to what the drawer should hold, the movements of that session, and closed sessions with their counted difference.",
+        caption:
+          "Cash lands in an open session that has to add up before it can be closed.",
       },
       {
         src: "/work/credora-cartera.png",
-        alt: "Credora's portfolio classification by arrears bucket at a period close.",
-        caption: "Period close classifies the portfolio into arrears buckets for provisioning and reporting.",
+        alt:
+          "Credora's period close: portfolio, arrears, portfolio at risk and required provision, then the loans and balances classified into categories A, B and D with the provision each one carries.",
+        caption:
+          "Closing a date classifies every loan and fixes the provision the reports are built on.",
       },
     ],
   },

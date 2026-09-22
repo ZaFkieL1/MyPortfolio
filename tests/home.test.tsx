@@ -91,10 +91,12 @@ describe("Home page", () => {
     expect(within(work).getAllByRole("link", { name: /source code/i })).toHaveLength(1);
 
     // "View screenshots" is gated on captures existing in public/work, so it can never
-    // open an empty page. Kiseki no Oto has them; Credora's are still pending.
+    // open an empty page. Both described projects have them now.
     const screenshotLinks = within(work).getAllByRole("link", { name: /view screenshots/i });
-    expect(screenshotLinks).toHaveLength(1);
-    expect(screenshotLinks[0]).toHaveAttribute("href", "/en/work/kiseki-no-oto");
+    expect(screenshotLinks.map((link) => link.getAttribute("href"))).toEqual([
+      "/en/work/credora",
+      "/en/work/kiseki-no-oto",
+    ]);
   });
 
   it("introduces Henry without an image slot to fill", async () => {
@@ -155,9 +157,8 @@ describe("Home page in Spanish", () => {
     for (const link of within(work).getAllByRole("link", { name: /ver el caso de estudio/i })) {
       expect(link.getAttribute("href")).toMatch(/^\/es\/work\//);
     }
-    expect(within(work).getByRole("link", { name: /ver capturas/i })).toHaveAttribute(
-      "href",
-      "/es/work/kiseki-no-oto",
-    );
+    expect(
+      within(work).getAllByRole("link", { name: /ver capturas/i }).map((l) => l.getAttribute("href")),
+    ).toEqual(["/es/work/credora", "/es/work/kiseki-no-oto"]);
   });
 });

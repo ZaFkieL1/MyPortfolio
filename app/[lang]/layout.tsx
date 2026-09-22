@@ -71,7 +71,9 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
   const ui = getUi(locale);
 
   return (
-    <html lang={htmlLang[locale]} className={geist.variable}>
+    // Next 16 only forces instant scroll-to-top on route changes when this attribute is present;
+    // without it, the global `scroll-behavior: smooth` leaves navigation mid-page.
+    <html lang={htmlLang[locale]} className={geist.variable} data-scroll-behavior="smooth">
       <body>
         <a className="skip-link" href="#main-content">{ui.skipToContent}</a>
         {children}

@@ -182,6 +182,32 @@ test("the Spanish mobile menu is labelled in Spanish", async ({ page, isMobile }
   await expect(page.getByRole("dialog", { name: "Menú del sitio" })).toBeHidden();
 });
 
+/*
+ * The brand mark goes home, and has to land at the top. `scroll-behavior: smooth` is
+ * global, and Next 16 only forces the instant scroll-to-top on navigation when the root
+ * layout carries `data-scroll-behavior="smooth"`; without it the home page arrives
+ * mid-article. Checked in both languages, because the mark links to the home page of its
+ * own locale and is named in that language.
+ */
+for (const [locale, homeName] of [
+  ["en", /, home$/],
+  ["es", /, inicio$/],
+] as const) {
+  test(`the ${locale} brand mark returns to the top of the home page from a scrolled case study`, async ({
+    page,
+  }) => {
+    await page.goto(`/${locale}/work/medisapience`);
+    await page.evaluate(() =>
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }),
+    );
+    await page.getByRole("link", { name: homeName }).click();
+    await page.waitForURL((url) => url.pathname === `/${locale}`);
+    await expect.poll(() => page.evaluate(() => window.scrollY), { timeout: 3_000 }).toBe(0);
+    await page.waitForTimeout(800);
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
+  });
+}
+
 test("MediSapience diagrams render and remain keyboard accessible on mobile", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/en/work/medisapience");

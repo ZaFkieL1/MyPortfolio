@@ -162,15 +162,19 @@ describe("CEM Digital case-study narrative", () => {
     );
   });
 
-  it("labels every pending result instead of inventing one", async () => {
+  it("publishes only what CEM has published, and never a pending placeholder", async () => {
     await renderPage(CemPage);
 
-    const evidence = screen.getByLabelText("Evidence and content status");
-    expect(within(evidence).getByText("Students and usage in the app").nextElementSibling).toHaveTextContent(
-      "Pending client approval",
-    );
-    expect(within(evidence).getByText(/published on cemnicaragua\.com/i)).toBeVisible();
+    // The one figure CEM publishes itself, with its source named.
+    expect(screen.getByText(/more than 500 doctors have been trained/i)).toBeVisible();
+    expect(screen.getByText(/figure published by CEM on cemnicaragua\.com/i)).toBeVisible();
+
+    // The content-status table is gone: the page states what is true and stays quiet
+    // about the rest, rather than advertising what is still unapproved.
+    expect(screen.queryByLabelText("Evidence and content status")).toBeNull();
+    expect(screen.queryByText(/pending/i)).toBeNull();
     expect(screen.queryByLabelText("Published results")).toBeNull();
+
     // No quote is approved, so the testimonial section is omitted rather than filled.
     expect(screen.queryByText(/placeholder text/i)).toBeNull();
     expect(screen.queryByText(/lorem ipsum/i)).toBeNull();
@@ -233,10 +237,10 @@ describe("case studies in Spanish", () => {
     ).toBeVisible();
     expect(screen.getByRole("heading", { name: /cuatro herramientas fuera, una que se queda/i })).toBeVisible();
 
-    const evidence = screen.getByLabelText("Evidencia y estado del contenido");
-    expect(
-      within(evidence).getByText("Estudiantes y uso en la app").nextElementSibling,
-    ).toHaveTextContent("Pendiente de aprobación del cliente");
+    expect(screen.getByText(/CEM ha formado a más de 500 médicos/i)).toBeVisible();
+    expect(screen.getByText(/cifra publicada por CEM en cemnicaragua\.com/i)).toBeVisible();
+    expect(screen.queryByLabelText("Evidencia y estado del contenido")).toBeNull();
+    expect(screen.queryByText(/pendiente/i)).toBeNull();
     expect(screen.queryByLabelText("Resultados publicados")).toBeNull();
     // Still no approved quote, in either language.
     expect(screen.queryByRole("heading", { name: /lo dice el cliente/i })).toBeNull();

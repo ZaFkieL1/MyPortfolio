@@ -453,9 +453,9 @@ export function OutcomeGrid({
   source?: string;
   stats?: Array<{ value: string; label: string }>;
   evidence?: Array<[label: string, status: string]>;
-  /** Accessible names for the two lists, supplied in the page's language. */
-  statsLabel: string;
-  evidenceLabel: string;
+  /** Accessible name for each list, in the page's language; pass it with the list it names. */
+  statsLabel?: string;
+  evidenceLabel?: string;
 }) {
   return (
     <div className={styles.outcome} data-reveal-group>

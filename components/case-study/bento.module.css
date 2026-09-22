@@ -691,6 +691,36 @@
   gap: var(--cs-gap);
 }
 
+/*
+ * Both the figures and the evidence list are optional. When the result card is the only
+ * block in the section it takes the whole width, instead of sitting in the left column
+ * beside the hole where a second block used to be.
+ */
+.outcome:has(> .outcomeCard:only-child) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/*
+ * Alone, the card becomes a band: the result on the left, the detail and its source on
+ * the right. Stacked, the two measures would leave most of the row empty.
+ */
+.outcome:has(> .outcomeCard:only-child) .outcomeCard {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.outcome:has(> .outcomeCard:only-child) .outcomeCard > * {
+  flex: 1 1 0;
+}
+
+@media (max-width: 64rem) {
+  .outcome:has(> .outcomeCard:only-child) .outcomeCard {
+    flex-direction: column;
+    gap: 2rem;
+  }
+}
+
 .outcomeCard {
   padding: clamp(1.5rem, 3vw, 2.5rem);
   display: flex;

@@ -341,14 +341,9 @@ const outcome = {
   title: "What changed for CEM",
   lead: "Classroom, Forms, Drive and WhatsApp retired. Only Zoom remains, one tap from the app.",
   body:
-    "Students follow a course from one installable app. The team publishes, schedules and grades from the same place.",
-  // Nothing here is a claim of ours: each row states what is published or still pending.
-  evidence: [
-    ["Doctors trained by CEM", "More than 500, published on cemnicaragua.com"],
-    ["Students and usage in the app", "Pending client approval"],
-    ["Production screenshots", "Pending client approval"],
-    ["Client testimonial", "Pending"],
-  ] as Array<[string, string]>,
+    "Students follow a course from one installable app. The team publishes, schedules and grades from the same place. More than 500 doctors have been trained by CEM.",
+  // The one figure CEM publishes itself; usage inside the app is still theirs to release.
+  source: "Figure published by CEM on cemnicaragua.com.",
 };
 
 const closing = {

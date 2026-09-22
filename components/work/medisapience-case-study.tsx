@@ -209,7 +209,6 @@ export function MedisapienceCaseStudy({ locale }: { locale: Locale }) {
           source={outcome.source}
           stats={results.map((metric) => ({ value: metric.value, label: metric.label }))}
           statsLabel={ui.publishedResultsLabel}
-          evidenceLabel={ui.evidenceLabel}
         />
       </CaseSection>
 

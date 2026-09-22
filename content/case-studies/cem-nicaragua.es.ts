@@ -387,14 +387,9 @@ const outcome = {
   title: "Qué cambió para CEM",
   lead: "Classroom, Forms, Drive y WhatsApp quedaron fuera. Solo permanece Zoom, a un toque de la app.",
   body:
-    "Los estudiantes siguen un curso desde una sola app instalable. El equipo publica, programa y califica desde el mismo lugar.",
-  // Nada de esto es una afirmación nuestra: cada fila dice qué está publicado y qué sigue pendiente.
-  evidence: [
-    ["Médicos formados por CEM", "Más de 500, publicado en cemnicaragua.com"],
-    ["Estudiantes y uso en la app", "Pendiente de aprobación del cliente"],
-    ["Capturas de producción", "Pendiente de aprobación del cliente"],
-    ["Testimonio del cliente", "Pendiente"],
-  ] as Array<[string, string]>,
+    "Los estudiantes siguen un curso desde una sola app instalable. El equipo publica, programa y califica desde el mismo lugar. CEM ha formado a más de 500 médicos.",
+  // La única cifra que CEM publica por su cuenta; el uso dentro de la app le toca a ella.
+  source: "Cifra publicada por CEM en cemnicaragua.com.",
 };
 
 const closing = {

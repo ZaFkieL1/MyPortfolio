@@ -219,13 +219,7 @@ export function CemCaseStudy({ locale }: { locale: Locale }) {
       </CaseSection>
 
       <CaseSection id="cem-outcome" title={outcome.title}>
-        <OutcomeGrid
-          lead={outcome.lead}
-          body={outcome.body}
-          evidence={outcome.evidence}
-          statsLabel={ui.publishedResultsLabel}
-          evidenceLabel={ui.evidenceLabel}
-        />
+        <OutcomeGrid lead={outcome.lead} body={outcome.body} source={outcome.source} />
       </CaseSection>
 
       {/* CEM has approved no quote, so the section is omitted rather than filled. */}

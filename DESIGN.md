@@ -273,7 +273,7 @@ Every case study follows the same recipe so visitors learn the structure once. B
 10. **How the product grew** — `Timeline` (last card = now, dark) + `ListCard` of what shipped after launch.
 11. **How it's tested** — `AsideGrid` with a `StatGrid` and a `ListCard` of covered areas.
 12. **How I worked** — three-up `CardGrid`.
-13. **Outcome** — `OutcomeGrid`: one verified result in lime beside the evidence list with every pending item labelled.
+13. **Outcome** — `OutcomeGrid`: one verified result in lime, with its source named underneath. It can also carry a list of published figures, or an evidence list that labels what is still pending; both are optional, and neither case study currently shows a pending list.
 14. **Closing** — `StatementCard` with the technology chips.
 15. **CTA** — `CaseCta`: contact card beside the dark "next case study" card.
 
@@ -295,7 +295,7 @@ Skip a section rather than fill it with weak content. Every heading is a plain s
 | `BandCard` | One full-width title/explanation row |
 | `ChipList`, `ListCard` | Chips; a labelled chip card |
 | `StatGrid`, `AsideGrid` | Measured values; narrow + wide pairing |
-| `OutcomeGrid` | Verified result + pending evidence |
+| `OutcomeGrid` | Verified result + optional figures or pending-evidence list |
 | `CaseCta` | Contact + next case study |
 | `Card`, `bento` | One-off blocks and the kit's class names |
 

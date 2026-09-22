@@ -2,12 +2,12 @@
 
 Tasks 1.1–1.9 remain production-launch blockers. By explicit user direction, they do not block a non-indexable local/preview implementation that completes tasks 1.10–1.11.
 
-- [ ] 1.1 Complete the Personal/Brand REQUIRED rows in CONTENT_REQUIREMENTS.md and verify name, title, email, location, availability, LinkedIn, and GitHub have explicit approved values.
+- [x] 1.1 Complete the Personal/Brand REQUIRED rows in CONTENT_REQUIREMENTS.md and verify name, title, email, location, availability, LinkedIn, and GitHub have explicit approved values.
 - [ ] 1.2 Complete MediSapience core facts and narrative records and verify the public name, product category, audience, exact role, team boundary, dates, status, confidentiality constraints, challenge, solution, features, engineering decisions, architecture, results, and stack are internally consistent.
 - [ ] 1.3 Complete CEM core facts and narrative records and verify the public CEM Nicaragua/CEM Digital naming, site/application boundary, exact role, dates, status, confidentiality constraints, features, engineering decisions, architecture, results, and stack are internally consistent.
 - [ ] 1.4 Build provenance records for every candidate metric and verify each has a value, unit, definition, period/as-of date, source, rounding/display rule, and publication permission; exclude incomplete metrics.
-- [ ] 1.5 Capture and prepare project media and verify every shipped candidate has an authentic master, responsive crop plan, intrinsic dimensions, caption/alt intent, redaction review, and publication permission.
-- [ ] 1.6 Collect zero to three exact testimonial records and verify attribution and permission; record an explicit launch decision to omit the section if none qualify.
+- [ ] 1.5 *(MediSapience: two approved captures shipped. CEM: pending.)* Capture and prepare project media and verify every shipped candidate has an authentic master, responsive crop plan, intrinsic dimensions, caption/alt intent, redaction review, and publication permission.
+- [ ] 1.6 *(MediSapience: approved and published. CEM: omitted by decision until a quote is approved.)* Collect zero to three exact testimonial records and verify attribution and permission; record an explicit launch decision to omit the section if none qualify.
 - [ ] 1.7 Approve final English Home/CTA/case-study copy and verify it follows the editorial rules, contains no unsupported absolute, and distinguishes Henry's work from team/client work.
 - [ ] 1.8 Resolve final contact destination, domain/deployment target, indexing policy, and analytics include/omit decision; verify unresolved analytics defaults to omitted rather than selecting a provider implicitly.
 - [ ] 1.9 Run the CONTENT_REQUIREMENTS.md launch content gate and verify no REQUIRED item remains unresolved before high-fidelity page work starts.
@@ -26,11 +26,11 @@ Tasks 1.1–1.9 remain production-launch blockers. By explicit user direction, t
 ## 3. Typed content architecture
 
 - [x] 3.1 Define shared project, screenshot, metric, testimonial, navigation, and contact content contracts and verify the type checker rejects missing required public fields.
-- [ ] 3.2 Implement site identity/navigation/services/process/technology/About/Footer content modules from approved records and verify no factual copy is embedded in layout primitives.
+- [x] 3.2 Implement site identity/navigation/services/process/technology/About/Footer content modules from approved records and verify no factual copy is embedded in layout primitives.
 - [x] 3.3 Implement MediSapience and CEM project content modules and verify required sections are present while optional testimonial/architecture/live-link fields can be absent safely.
 - [x] 3.4 Implement metric validation that excludes records without provenance/approval and verify an incomplete metric cannot reach the rendered display collection.
 - [x] 3.5 Implement conditional testimonial content as an approved zero-to-three collection and verify zero, one, two, and three records produce the intended layout inputs without filler.
-- [ ] 3.6 Run type checks and content validation and verify all production content records pass without placeholders or confidential fixture data.
+- [x] 3.6 Run type checks and content validation and verify all production content records pass without placeholders or confidential fixture data.
 
 ## 4. Design tokens and global behavior
 
@@ -48,7 +48,7 @@ Tasks 1.1–1.9 remain production-launch blockers. By explicit user direction, t
 - [x] 5.3 Implement SkipLink and the sticky desktop/tablet Navbar and verify Home/Work/Services/Process/About/Contact destinations and active indicators are meaningful without color alone.
 - [x] 5.4 Implement the labeled mobile Menu/Close interaction and verify focus entry/trap/return, Escape, background inertness, scroll lock, and expanded state in browser tests.
 - [x] 5.5 Verify sticky navigation does not hide anchored headings at 320, 390, 768, 1024, and 1440 px.
-- [ ] 5.6 Implement FinalCTA and Footer with the verified contact record and verify every primary/secondary email/social link resolves to the approved destination.
+- [x] 5.6 Implement FinalCTA and Footer with the verified contact record and verify every primary/secondary email/social link resolves to the approved destination.
 
 ## 6. Evidence and media components
 
@@ -67,8 +67,8 @@ Tasks 1.1–1.9 remain production-launch blockers. By explicit user direction, t
 - [x] 7.4 Implement the impact section conditionally and verify approved metrics/factual outcomes render while an empty approved collection removes the section without a visual gap.
 - [x] 7.5 Implement the four Services panels and verify descriptions are buyer-oriented, no panel implies a link when static, and no decorative technology icon grid is introduced.
 - [x] 7.6 Implement the four-step Process and verify reading/keyboard order remains Understand, Design, Build, Ship & Improve at every viewport.
-- [ ] 7.7 Implement the curated Technology section and verify it appears after Work/Process, contains only approved grouped names, and has no logos, ratings, bars, or marquee.
-- [ ] 7.8 Implement About and verify approved portrait/location/availability/social content is concise and appears after product evidence.
+- [x] 7.7 Implement the curated Technology section and verify it appears after Work/Process, contains only approved grouped names, and has no logos, ratings, bars, or marquee.
+- [x] 7.8 Implement About and verify approved location/social content is concise and appears after product evidence. *(Portrait dropped at the owner’s request: About is open canvas — a note plus standing facts in a margin — with no image slot to fill. Availability stays in the hero pill and footer rather than repeating here.)*
 - [x] 7.9 Implement testimonials for zero/one/two/three approved records and verify no automatic carousel, filler, or empty shell exists.
 - [x] 7.10 Compose Home in the required narrative order and verify headings, landmarks, anchors, featured-project links, Final CTA, and Footer through browser tests.
 - [x] 7.11 Conduct the 3/10/30-second comprehension review with the built Home and verify offer, real-product proof, and end-to-end capability are understood in that order; record any copy/hierarchy correction.
@@ -78,8 +78,8 @@ Tasks 1.1–1.9 remain production-launch blockers. By explicit user direction, t
 - [ ] 8.1 Implement CaseStudyHero and Product Image patterns and verify project name/category/summary/role/facts and flagship media use approved content and sequential headings.
 - [ ] 8.2 Implement Overview, Client/Context, Challenge, and Solution section variants and verify readable line lengths, honest scope, and graceful absence of optional media.
 - [ ] 8.3 Implement FeatureChapter alternating media variants and verify 3–6 approved workflows can render with consistent semantic order and responsive crops.
-- [ ] 8.4 Implement EngineeringDecision and verify every entry supports context, constraint, decision, trade-off, and outcome without requiring a card.
-- [ ] 8.5 Implement ArchitectureDiagram with equivalent text and verify the diagram remains understandable at 320 px, zoom/reflow, print/static, and reduced motion.
+- [x] 8.4 Implement EngineeringDecision and verify every entry supports context, constraint, decision, trade-off, and outcome without requiring a card.
+- [x] 8.5 Implement ArchitectureDiagram with equivalent text and verify the diagram remains understandable at 320 px, zoom/reflow, print/static, and reduced motion.
 - [x] 8.6 Implement ResultsSection, Technology, conditional Testimonial, live-product/contact fallback CTA, and NextCaseStudy and verify optional omissions never render blank sections.
 - [x] 8.7 Add shared case-study accessibility/navigation/content-completeness tests and verify both project records satisfy required fields and cross-links.
 
@@ -87,7 +87,7 @@ Tasks 1.1–1.9 remain production-launch blockers. By explicit user direction, t
 
 - [ ] 9.1 Compose MediSapience Hero, flagship image, Overview, Context, Challenge, and Solution from the approved record and verify no unapproved medical/client detail is exposed.
 - [ ] 9.2 Add approved MediSapience feature chapters and verify each screenshot/caption/alt communicates a real workflow and uses the correct responsive crop.
-- [ ] 9.3 Add approved engineering decisions and architecture and verify every system boundary/technology/claim is publishable and consistent with Henry's role.
+- [x] 9.3 Add approved engineering decisions and architecture and verify every system boundary/technology/claim is publishable and consistent with Henry's role.
 - [ ] 9.4 Add verified MediSapience results, technology/quality notes, optional testimonial, and live/contact CTA and verify every metric/link/quote passes provenance checks.
 - [ ] 9.5 Add unique MediSapience title, description, canonical, and social image and verify metadata contains no unverified metric or sensitive UI.
 - [ ] 9.6 Run MediSapience route, content, privacy, link, responsive, reduced-motion, keyboard, and automated accessibility checks and verify all P0 scenarios pass.
@@ -96,7 +96,7 @@ Tasks 1.1–1.9 remain production-launch blockers. By explicit user direction, t
 
 - [ ] 10.1 Compose CEM Hero, flagship image, Overview, Context, Challenge, and Solution from the approved naming/scope record and verify institutional site and application boundaries are clear.
 - [ ] 10.2 Add approved CEM feature chapters and verify each screenshot/caption/alt communicates a real workflow without exposing learner/staff data.
-- [ ] 10.3 Add approved engineering decisions and architecture and verify every system boundary/technology/claim is publishable and consistent with Henry's role.
+- [x] 10.3 Add approved engineering decisions and architecture and verify every system boundary/technology/claim is publishable and consistent with Henry's role.
 - [ ] 10.4 Add verified CEM results, technology/quality notes, optional testimonial, and public/contact CTA and verify every metric/link/quote passes provenance checks.
 - [ ] 10.5 Add unique CEM title, description, canonical, and social image and verify metadata uses the approved CEM Nicaragua/CEM Digital naming.
 - [ ] 10.6 Run CEM route, content, privacy, link, responsive, reduced-motion, keyboard, and automated accessibility checks and verify all P0 scenarios pass.
@@ -123,9 +123,9 @@ Tasks 1.1–1.9 remain production-launch blockers. By explicit user direction, t
 
 ## 13. SEO, performance, and optional analytics
 
-- [ ] 13.1 Implement route-specific title, description, canonical, OpenGraph/Twitter metadata, and approved social images and verify each public route produces unique accurate output.
+- [ ] 13.1 Implement route-specific title, description, canonical, OpenGraph/Twitter metadata, and approved social images and verify each public route produces unique accurate output. *(Canonical URLs and per-route OpenGraph `url` now derive from `content/site.ts`; blocked only on the final domain and per-route social images.)*
 - [x] 13.2 Implement sitemap and robots behavior from the final domain/environment decision and verify public routes are included while designated preview/private routes are not indexable.
-- [ ] 13.3 Add only fully verified Person/WebSite structured data if approved and verify it contains no fake reviews, ratings, organization, or profile fields.
+- [x] 13.3 Add only fully verified Person/WebSite structured data if approved and verify it contains no fake reviews, ratings, organization, or profile fields.
 - [ ] 13.4 Audit image intrinsic sizes, responsive sizes/formats, loading, and priority and verify only justified Hero media is eager/priority and CLS remains ≤0.1.
 - [x] 13.5 Audit font and client JavaScript output and verify one font family ships and essential editorial content remains server-rendered.
 - [ ] 13.6 Measure the agreed representative mobile profile and verify LCP ≤2.5 s, INP ≤200 ms, and CLS ≤0.1 or block release with the measured failing evidence.

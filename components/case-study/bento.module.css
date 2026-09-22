@@ -554,6 +554,83 @@
   font-size: 0.8125rem;
 }
 
+/* Phone shots: a sequence of tall captures across the width of a card. */
+
+.phones {
+  margin: 0;
+}
+
+/* Framed on its own card, the row keeps the section rhythm Screenshot sets. */
+.phones.shot {
+  margin: var(--cs-gap) 0 0;
+}
+
+/*
+ * One equal column per shot, however many there are — `grid-auto-flow: column`
+ * counts them so the row never needs to know. `minmax(0, 1fr)` is what keeps a
+ * tall image from pushing the track wider than its share.
+ */
+.phoneRow {
+  display: grid;
+  grid-auto-flow: column;
+  /*
+   * Capped tracks, centred as a group: a row of two sits together instead of
+   * being pushed to opposite edges by two half-width columns.
+   */
+  grid-auto-columns: minmax(0, 20rem);
+  justify-content: center;
+  gap: clamp(0.75rem, 2.5vw, 1.75rem);
+  align-items: start;
+}
+
+/*
+ * A phone capture is 9:20, so every pixel of extra width costs more than twice
+ * that in height. Capped and centred, a row of two does not balloon to twice
+ * the size of a row of three — and `sizes` below can name one real width.
+ */
+.phone {
+  width: 100%;
+  max-width: 20rem;
+}
+
+/* Too narrow for a filmstrip: two up, and a lone third centred under them. */
+@media (max-width: 36rem) {
+  .phoneRow {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .phoneRow > :last-child:nth-child(odd):not(:only-child) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 0.375rem);
+  }
+}
+
+.phone img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--cs-radius-inner);
+  border: 1px solid var(--cs-hairline);
+}
+
+.phone span {
+  margin-top: 0.625rem;
+  display: block;
+  color: var(--cs-quiet);
+  font-size: 0.75rem;
+  font-weight: 620;
+  letter-spacing: 0.02em;
+}
+
+.phones figcaption {
+  margin-top: 1rem;
+  padding-inline: 0.25rem;
+  color: var(--cs-quiet);
+  font-size: 0.8125rem;
+}
+
 /* Stats: a measured value with its context. */
 
 .stats {
@@ -728,6 +805,17 @@
   text-wrap: pretty;
 }
 
+/* The rest of a long testimonial, under the highlighted line. */
+.testimonialQuote blockquote p.quoteBody {
+  max-width: 58ch;
+  margin-top: 1.5rem;
+  color: var(--cs-quiet);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
 .person {
   margin-top: 2rem;
   display: flex;
@@ -783,12 +871,6 @@
 .profileLink:hover {
   background: #0a66c2;
   color: #fff;
-}
-
-.quoteNote {
-  margin-top: 1.25rem;
-  color: var(--cs-meta) !important;
-  font-size: 0.8125rem !important;
 }
 
 /* Closing call to action + next case study */

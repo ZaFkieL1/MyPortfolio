@@ -15,6 +15,7 @@ import {
   ListCard,
   OutcomeGrid,
   PairGrid,
+  PhoneShots,
   StatementCard,
   StatementLead,
   StatGrid,
@@ -23,250 +24,97 @@ import {
   Timeline,
   VisualCard,
   bento,
-  type GridItem,
 } from "@/components/case-study/bento";
 import { ButtonLink } from "@/components/ui/button-link";
+import { localePath, type Locale } from "@/content/i18n";
+import { getCemCaseStudy, getProject } from "@/content/portfolio";
+import type { ShotRecord } from "@/content/case-studies/types";
+import { getUi } from "@/content/ui";
 import styles from "./cem-case-study.module.css";
-import { DailyQuestionAnimation } from "./daily-question-animation";
+import cemAdmin from "./media/cem-admin.webp";
+import cemAdminQuestion from "./media/cem-admin-question.webp";
+import cemAdminSimulators from "./media/cem-admin-simulators.webp";
+import cemFeed from "./media/cem-feed.webp";
+import cemQuestionReleased from "./media/cem-question-released.webp";
+import cemQuestionWaiting from "./media/cem-question-waiting.webp";
+import cemSimulatorBrief from "./media/cem-simulator-brief.webp";
+import cemSimulatorRunning from "./media/cem-simulator-running.webp";
 
-const goals = [
-  { title: "One place to look", body: "Announcements, questions, exams and recordings in one app, on the phone students already carry." },
-  { title: "Keep the teacher's rhythm", body: "A question every day and the answer at a set hour, as on WhatsApp — without posting it by hand." },
-  { title: "Exams that open on time", body: "Simulators written in advance that appear at the hour the team chose, with the timer already set." },
-];
+/** Every capture, keyed the way the content module names it in its `ShotRecord`s. */
+const images = {
+  feed: cemFeed,
+  waiting: cemQuestionWaiting,
+  released: cemQuestionReleased,
+  brief: cemSimulatorBrief,
+  running: cemSimulatorRunning,
+  panel: cemAdmin,
+  question: cemAdminQuestion,
+  simulators: cemAdminSimulators,
+};
 
-// Before → after, as described by CEM. Zoom stays: the live class is now one tap away.
-const tools = [
-  { before: "Google Classroom", job: "Announcements", after: "Announcement feed with push" },
-  { before: "WhatsApp", job: "Reminders and daily questions", after: "Question of the day, answer on schedule" },
-  { before: "Microsoft Forms", job: "Quizzes and exams", after: "Timed simulators inside the app" },
-  { before: "Google Drive", job: "Files and recorded classes", after: "Course repository with video preview" },
-];
+/** Pairs a content record with its image, so no component holds copy of its own. */
+const withImages = (shots: readonly ShotRecord[]) =>
+  shots.map((shot) => ({
+    src: images[shot.key as keyof typeof images],
+    alt: shot.alt,
+    label: shot.label,
+  }));
 
-const day = [
-  {
-    label: "Morning",
-    title: "The teacher posts the question",
-    body: "The correct option is marked when it is written, and the teacher picks when it unlocks. 6:00 PM unless they change it.",
-  },
-  {
-    label: "During the day",
-    title: "Students vote from the feed",
-    body: "One vote each. Until the release, a countdown shows when their result arrives.",
-  },
-  {
-    label: "At the chosen hour",
-    title: "The answer releases itself",
-    body: "Everyone sees if they were right, and those who voted get a push. No one has to be online to post it.",
-  },
-];
+export function CemCaseStudy({ locale }: { locale: Locale }) {
+  const project = getProject(locale, "cem-nicaragua");
+  const content = getCemCaseStudy(locale);
+  const {
+    hero, sections, labels, phoneFrame, heroShots, simulatorShots, simulatorShotsCaption,
+    teamShots, teamShotsCaption, brief, tools, release, outcome, closing, cta,
+  } = content;
+  const ui = getUi(locale).caseStudy;
 
-const release = [
-  { time: "8:00 AM", event: "Question published, release set for 6:00 PM" },
-  { time: "11:46 AM", event: "María votes — “Your result unlocks in 6h 14m”" },
-  { time: "6:00 PM", event: "The answer shows for everyone; voters get a push" },
-];
-
-const simulators: GridItem[] = [
-  {
-    title: "Scheduled opening",
-    body: "A simulator can be published with an opening time. Until then students cannot see it or start it, and they get a push when it opens.",
-  },
-  {
-    title: "A clock the server owns",
-    body: "Each attempt gets its deadline when it starts. The phone counts down against server time and submits at zero.",
-  },
-  {
-    title: "Nothing lost on a phone",
-    body: "Answers autosave as students go and when they leave the page, with a local draft that comes back on reload.",
-  },
-];
-
-const decisions: GridItem[] = [
-  {
-    title: "Time rules without trusting a scheduler",
-    details: [
-      { label: "Problem", value: "Answers and exams must appear at an exact hour, even if a background job runs late." },
-      { label: "Approach", value: "Release and opening times are stored in UTC and checked on every request. The scheduler only sends the notifications, and marks each one as sent." },
-    ],
-  },
-  {
-    title: "Publishing that stays fast",
-    details: [
-      { label: "Problem", value: "Sending pushes inside the publish request made posting to a large course slow and error-prone." },
-      { label: "Approach", value: "Publishing writes a job to a durable queue. It is sent after the save commits, and a sweep retries anything left behind." },
-    ],
-  },
-  {
-    title: "Recorded classes without a big server",
-    details: [
-      { label: "Problem", value: "Class recordings are large files; routing them through the API would tie it up." },
-      { label: "Approach", value: "The browser uploads straight to Cloudflare R2 in parts, with signed URLs. Every upload is audited." },
-    ],
-  },
-];
-
-const operations: GridItem[] = [
-  {
-    title: "Quizzes from a Word file",
-    body: "Upload a .docx where the highlighted option is the right one. It comes back as a draft to review before publishing.",
-  },
-  {
-    title: "Results per question",
-    body: "Success rate for each question, how the options split, who has not started, and a CSV export that opens in Excel.",
-  },
-  {
-    title: "A second chance, on purpose",
-    body: "Staff can reopen an attempt with extra minutes when a student lost their connection.",
-  },
-  {
-    title: "Permissions per course",
-    body: "Instructors publish announcements and schedules; each course gets its own folder, and students only see the folders they were given.",
-  },
-];
-
-const reminders = [
-  { value: "30 · 10 · 0 min", label: "Push reminders before each live class; the last one opens Zoom" },
-  { value: "15 s", label: "Grace for answers sent as the exam timer reaches zero" },
-];
-
-const milestones = [
-  { date: "Jan 2026", title: "In production", body: "Courses, users and announcements, a week after the first commit." },
-  { date: "Mar 2026", title: "Question of the day", body: "Polls with a correct answer and a scheduled release." },
-  { date: "May 2026", title: "An app on the phone", body: "Direct uploads to R2, install as an app, onboarding and push." },
-  { date: "Aug 2026", title: "Simulators in the app", body: "Timed exams, attempt history and filters replaced external forms." },
-];
-
-const afterLaunch = [
-  "Password reset by email", "Question of the day", "Scheduled answers", "Direct uploads to R2",
-  "Install as an app", "Onboarding", "Schedule redesign", "Search", "Sign-in with email codes",
-  "Simulators in the app", "Attempt history", "Durable push queue",
-];
-
-const testedAreas = [
-  "Exam timer", "Autosave and recovery", "Double submit", "Scheduled opening", "Word import",
-  "Results and export", "Notifications", "Offline mode", "Submitting from a phone",
-];
-
-const method = [
-  { title: "Built around how CEM teaches", body: "The daily question and the 6:00 PM answer were the teacher's habit. The app keeps it and does the posting." },
-  { title: "Tested the way students use it", body: "End-to-end tests run the whole stack on a phone profile, in Managua time and Spanish." },
-  { title: "Comments that explain the why", body: "Fixes record the incident behind them, so the next person can change the code safely." },
-];
-
-const evidence: Array<[string, string]> = [
-  ["Doctors trained by CEM", "More than 500, published on cemnicaragua.com"],
-  ["Students and usage in the app", "Pending client approval"],
-  ["Production screenshots", "Pending client approval"],
-  ["Client testimonial", "Pending"],
-];
-
-const technology = [
-  "Next.js 16", "React 19", "TypeScript", "Tailwind CSS 4", "PWA + Web Push", "Django 6",
-  "Django REST Framework", "PostgreSQL", "Cloudflare R2", "Resend", "Vercel", "Railway", "Playwright",
-];
-
-const releaseChart = String.raw`
-flowchart TB
-  A[Teacher publishes question and release time] --> B[Server resolves the next 6:00 PM in Managua, stored in UTC]
-  B --> C[Students vote, one vote each]
-  C --> D{Request after the release time?}
-  D -->|No| E[Hide the correct option and show a countdown]
-  D -->|Yes| F[Return the correct option and the student's result]
-  G[Scheduler, every minute] --> H[Push results to voters, once]
-`;
-
-const architectureChart = String.raw`
-flowchart LR
-  subgraph Phone[Student and staff phone]
-    PWA[Next.js 16 + React 19 PWA]
-    SW[Service worker: offline + push]
-  end
-
-  VERCEL[Vercel delivery]
-  subgraph Railway[Railway]
-    API[Django 6 + DRF]
-    CRON[Scheduler, every minute]
-  end
-
-  DB[(PostgreSQL)]
-  R2[(Cloudflare R2)]
-  PUSH[Web Push]
-  MAIL[Resend email codes]
-  ZOOM[Zoom live class]
-
-  VERCEL --> PWA
-  PWA <-->|Token auth| API
-  PWA -->|Direct multipart upload| R2
-  R2 -->|Signed URLs| PWA
-  API <--> DB
-  API --> R2
-  API --> MAIL
-  CRON <--> DB
-  CRON --> PUSH
-  API --> PUSH
-  PUSH --> SW
-  SW -->|Class reminder tap| ZOOM
-`;
-
-export function CemCaseStudy() {
   return (
-    <CaseStudyShell>
+    <CaseStudyShell locale={locale}>
       <CaseHero
-        status="Live product"
-        kicker="CEM Nicaragua case study"
-        title="One app for a medical course that ran on five platforms."
-        lead={
-          <>
-            CEM Nicaragua trains doctors online. Announcements, daily questions, timed exams and
-            recorded classes now live in one app on the student&apos;s phone — and the live class
-            is one tap away.
-          </>
-        }
+        status={hero.status}
+        kicker={hero.kicker}
+        title={hero.title}
+        lead={hero.lead}
         actions={
           <>
-            <ButtonLink href="/#contact" variant="primary">
-              Discuss a similar product <ArrowUpRightIcon />
+            <ButtonLink href={localePath(locale, hero.action.href)} variant="primary">
+              {hero.action.label} <ArrowUpRightIcon />
             </ButtonLink>
-            <GhostLink href="#cem-architecture">See the architecture</GhostLink>
+            <GhostLink href={hero.architectureLink.href}>{hero.architectureLink.label}</GhostLink>
           </>
         }
         facts={[
-          { label: "Client", value: "CEM Nicaragua" },
-          { label: "Timeline", value: "2026" },
-          { label: "Role", value: "Full-stack product engineering" },
+          ...hero.facts,
           {
-            label: "Website",
-            value: <a href="https://www.cemnicaragua.com" target="_blank" rel="noopener noreferrer">cemnicaragua.com ↗</a>,
+            label: ui.websiteLabel,
+            value: (
+              <a href={hero.website.href} target="_blank" rel="noopener noreferrer">
+                {hero.website.label} ↗
+              </a>
+            ),
           },
         ]}
-        highlight={{ label: "In production", value: "Jan 2026" }}
-        note={{ label: "Built with", value: "Next.js PWA, Django, PostgreSQL, Cloudflare R2" }}
+        highlight={hero.highlight}
+        note={hero.note}
       />
 
       <VisualCard>
-        <DailyQuestionAnimation caption="Illustrative product UI — a simplified, animated recreation of the CEM Digital mobile app, not a production screenshot." />
+        <PhoneShots {...phoneFrame} caption={hero.visualCaption} shots={withImages(heroShots)} />
       </VisualCard>
 
       <CaseSection id="cem-brief">
-        <StatementCard id="cem-brief" title="A course spread across five apps">
-          <StatementLead>
-            CEM Nicaragua — Cursos Especializados de Medicina — runs online courses for doctors,
-            taught live over Zoom.
-          </StatementLead>
-          <p>
-            Each course lived in five places: Classroom for announcements, Microsoft Forms for
-            exams, Drive for files and recordings, Zoom for the class and WhatsApp for reminders
-            and questions through the day. Several logins, several bills, five places to check.
-          </p>
+        <StatementCard id="cem-brief" title={brief.title}>
+          <StatementLead>{brief.lead}</StatementLead>
+          <p>{brief.body}</p>
         </StatementCard>
-        <CardGrid items={goals} />
+        <CardGrid items={content.goals} />
       </CaseSection>
 
-      <CaseSection id="cem-tools" title="Four tools retired, one kept" lead="Zoom still hosts the class. Everything around it moved into CEM Digital.">
+      <CaseSection id="cem-tools" title={tools.title} lead={tools.lead}>
         <Card className={styles.toolMap}>
-          <ul className={styles.toolRows} aria-label="Tools replaced by CEM Digital">
-            {tools.map((tool) => (
+          <ul className={styles.toolRows} aria-label={tools.listLabel}>
+            {tools.retired.map((tool) => (
               <li key={tool.before}>
                 <span className={styles.before}>
                   <s>{tool.before}</s>
@@ -278,38 +126,29 @@ export function CemCaseStudy() {
             ))}
             <li className={styles.kept}>
               <span className={styles.before}>
-                Zoom
-                <small>Live classes</small>
+                {tools.kept.before}
+                <small>{tools.kept.job}</small>
               </span>
               <span className={styles.arrow} aria-hidden="true">→</span>
-              <strong>Kept — the announcement carries a Join class button, and the reminder opens the meeting</strong>
+              <strong>{tools.kept.after}</strong>
             </li>
           </ul>
         </Card>
       </CaseSection>
 
-      <CaseSection id="cem-sides" title="One app, two sides of the course">
-        <PairGrid
-          items={[
-            { title: "For students", tint: "sky", chips: ["Read announcements", "Join the live class", "Answer the daily question", "Sit timed simulators", "Watch recordings", "Get reminders"] },
-            { title: "For the CEM team", tint: "peach", chips: ["Publish to a course", "Schedule the answer", "Import quizzes from Word", "Schedule exam openings", "Upload classes and files", "Enrol students"] },
-          ]}
-        />
+      <CaseSection id="cem-sides" title={sections.sides.title}>
+        <PairGrid items={content.sides} />
       </CaseSection>
 
-      <CaseSection id="cem-loop" title="The daily question, kept and automated" lead="The rhythm the teacher had on WhatsApp, without posting the answer by hand.">
-        <StepList items={day} />
+      <CaseSection id="cem-loop" title={sections.loop.title} lead={sections.loop.lead}>
+        <StepList items={content.day} />
         <Card tint="sky" className={styles.releaseCard}>
           <div>
-            <h3>The answer is on time, even if nothing runs</h3>
-            <p>
-              The release time is saved with the question. Every time a phone asks for it, the
-              server compares that time with now — so the answer appears at 6:00&nbsp;PM even if the
-              scheduler is late. The scheduler only sends the notification.
-            </p>
+            <h3>{release.title}</h3>
+            <p>{release.body}</p>
           </div>
-          <ol className={styles.releaseTimeline} aria-label="An example day">
-            {release.map((item) => (
+          <ol className={styles.releaseTimeline} aria-label={release.timelineLabel}>
+            {release.timeline.map((item) => (
               <li key={item.time}>
                 <strong>{item.time}</strong>
                 <span>{item.event}</span>
@@ -317,121 +156,106 @@ export function CemCaseStudy() {
             ))}
           </ol>
         </Card>
-        <BandCard title="Everything else goes through the same feed" tint="peach">
-          Class links, recordings, files and new simulators are announcements too, each with a push
-          to the students of that course.
+        <BandCard title={content.feedBand.title} tint="peach">
+          {content.feedBand.body}
         </BandCard>
       </CaseSection>
 
-      <CaseSection id="cem-simulators" title="Exams that open on their own" lead="Microsoft Forms became timed simulators the team schedules in advance.">
-        <CardGrid items={simulators} />
-      </CaseSection>
-
-      <CaseSection id="cem-decisions" title="The technical work behind a punctual course" lead="Three decisions made the timing and the files dependable.">
-        <CardGrid items={decisions} />
-        <DiagramCard className={styles.flowCard}>
-          <MermaidDiagram
-            title="Scheduled answer release"
-            description="A daily question keeps its answer hidden until the release time, checked on every request."
-            chart={releaseChart}
-            steps={[
-              "The teacher publishes the question with its correct option and a release time.",
-              "The server resolves the next occurrence of that time in Managua and stores it in UTC.",
-              "Students vote once each.",
-              "Before the release time, the API hides the correct option and the client shows a countdown.",
-              "After it, the API returns the correct option and whether each student was right.",
-              "A scheduler that runs every minute pushes the results to voters once.",
-            ]}
-          />
-        </DiagramCard>
-      </CaseSection>
-
-      <CaseSection id="cem-operations" title="Tools for the team that runs it" lead="Writing, grading and support happen in the app, not in spreadsheets.">
-        <CardGrid items={operations} tint="peach" columns={2} />
-      </CaseSection>
-
-      <CaseSection anchor="cem-architecture" id="cem-architecture-title" title="A phone app on a small, dependable stack" lead="The app installs from the browser; the API, database and files each do one job.">
-        <DiagramCard>
-          <MermaidDiagram
-            title="CEM Digital system architecture"
-            description="Production boundaries from the audited frontend, backend, storage and deployment setup."
-            chart={architectureChart}
-            steps={[
-              "Vercel delivers the Next.js and React app, which students install to their home screen as a PWA.",
-              "A service worker keeps the app usable offline and receives push notifications.",
-              "The Django REST API on Railway authenticates each request and stores courses, announcements, questions and attempts in PostgreSQL.",
-              "Files and class recordings upload directly from the browser to Cloudflare R2 and play back through signed URLs.",
-              "A scheduler that runs every minute sends class reminders, released results and simulator openings as Web Push.",
-              "Tapping the last class reminder opens the Zoom meeting directly.",
-              "Resend delivers the email codes used to activate accounts and reset passwords.",
-            ]}
-          />
-        </DiagramCard>
-        <StatGrid items={reminders} />
-      </CaseSection>
-
-      <CaseSection id="cem-evolution" title="How the product grew" lead="The first release replaced the announcements. The rest followed, course by course.">
-        <Timeline items={milestones} />
-        <ListCard title="Added after launch, in order" items={afterLaunch} ordered />
-      </CaseSection>
-
-      <CaseSection id="cem-quality" title="How it's tested" lead="Exams and their timing have the most tests, because that is where a bug costs a student.">
-        <AsideGrid>
-          <StatGrid
-            items={[
-              { value: "93", label: "Backend tests across five modules" },
-              { value: "37", label: "End-to-end browser tests, desktop and phone" },
-            ]}
-          />
-          <ListCard title="Covered areas" items={testedAreas} />
-        </AsideGrid>
-      </CaseSection>
-
-      <CaseSection id="cem-method" title="How I worked">
-        <CardGrid items={method} />
-      </CaseSection>
-
-      <CaseSection id="cem-outcome" title="What changed for CEM">
-        <OutcomeGrid
-          lead="Classroom, Forms, Drive and WhatsApp retired. Only Zoom remains, one tap from the app."
-          body="Students follow a course from one installable app. The team publishes, schedules and grades from the same place."
-          evidence={evidence}
+      <CaseSection id="cem-simulators" title={sections.simulators.title} lead={sections.simulators.lead}>
+        <CardGrid items={content.simulators} />
+        <PhoneShots
+          {...phoneFrame}
+          framed
+          caption={simulatorShotsCaption}
+          shots={withImages(simulatorShots)}
         />
       </CaseSection>
 
-      <Testimonial
-        id="cem-testimonial"
-        title="From the client."
-        intro="What it was like to move CEM's courses into one app."
-        quote="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-        name="CEM Nicaragua"
-        role="Cursos Especializados de Medicina"
-        initials="CEM"
-        note="Placeholder text — the client's quote is pending approval."
-      />
+      <CaseSection id="cem-decisions" title={sections.decisions.title} lead={sections.decisions.lead}>
+        <CardGrid items={content.decisions} />
+        <DiagramCard className={styles.flowCard}>
+          <MermaidDiagram
+            title={content.releaseDiagram.title}
+            description={content.releaseDiagram.description}
+            chart={content.releaseDiagram.chart}
+            steps={content.releaseDiagram.steps}
+            diagramLabel={ui.diagramLabel(content.releaseDiagram.title)}
+          />
+        </DiagramCard>
+      </CaseSection>
+
+      <CaseSection id="cem-operations" title={sections.operations.title} lead={sections.operations.lead}>
+        <CardGrid items={content.operations} tint="peach" columns={2} />
+        <PhoneShots {...phoneFrame} framed caption={teamShotsCaption} shots={withImages(teamShots)} />
+      </CaseSection>
+
+      <CaseSection anchor="cem-architecture" id="cem-architecture-title" title={sections.architecture.title} lead={sections.architecture.lead}>
+        <DiagramCard>
+          <MermaidDiagram
+            title={content.architectureDiagram.title}
+            description={content.architectureDiagram.description}
+            chart={content.architectureDiagram.chart}
+            steps={content.architectureDiagram.steps}
+            diagramLabel={ui.diagramLabel(content.architectureDiagram.title)}
+          />
+        </DiagramCard>
+        <StatGrid items={content.reminders} />
+      </CaseSection>
+
+      <CaseSection id="cem-evolution" title={sections.evolution.title} lead={sections.evolution.lead}>
+        <Timeline items={content.milestones} />
+        <ListCard title={labels.addedAfterLaunch} items={content.afterLaunch} ordered />
+      </CaseSection>
+
+      <CaseSection id="cem-quality" title={sections.quality.title} lead={sections.quality.lead}>
+        <AsideGrid>
+          <StatGrid items={content.quality.stats} />
+          <ListCard title={labels.coveredAreas} items={content.quality.testedAreas} />
+        </AsideGrid>
+      </CaseSection>
+
+      <CaseSection id="cem-method" title={sections.method.title}>
+        <CardGrid items={content.method} />
+      </CaseSection>
+
+      <CaseSection id="cem-outcome" title={outcome.title}>
+        <OutcomeGrid
+          lead={outcome.lead}
+          body={outcome.body}
+          evidence={outcome.evidence}
+          statsLabel={ui.publishedResultsLabel}
+          evidenceLabel={ui.evidenceLabel}
+        />
+      </CaseSection>
+
+      {/* CEM has approved no quote, so the section is omitted rather than filled. */}
+      {project.testimonial && project.testimonialSection && (
+        <Testimonial
+          id="cem-testimonial"
+          title={project.testimonialSection.title}
+          intro={project.testimonialSection.intro}
+          highlight={project.testimonial.highlight}
+          quote={project.testimonial.quote}
+          name={project.testimonial.name}
+          role={project.testimonial.role}
+          initials={project.testimonial.initials}
+          profile={project.testimonial.profile}
+        />
+      )}
 
       <CaseSection id="cem-closing">
-        <StatementCard
-          id="cem-closing"
-          title="A course is easier to follow from one place"
-          intro={
-            <p>
-              Announcements, questions, simulators and files share one feed, one login and one
-              set of notifications.
-            </p>
-          }
-        >
-          <h3 className={bento.label}>Technology</h3>
-          <ChipList items={technology} muted />
+        <StatementCard id="cem-closing" title={closing.title} intro={<p>{closing.intro}</p>}>
+          <h3 className={bento.label}>{labels.technology}</h3>
+          <ChipList items={closing.technology} muted />
         </StatementCard>
       </CaseSection>
 
       <CaseCta
         id="cem-contact"
-        title="Running your courses on too many tools?"
-        body="I build web apps that bring what students see and the work behind it into one place."
-        action={{ label: "Let's talk about your project", href: "/#contact" }}
-        next={{ title: "MediSapience", href: "/work/medisapience" }}
+        title={cta.title}
+        body={cta.body}
+        action={{ label: cta.action.label, href: localePath(locale, cta.action.href) }}
+        next={{ label: ui.nextCaseStudy, title: cta.next.title, href: localePath(locale, cta.next.href) }}
       />
     </CaseStudyShell>
   );

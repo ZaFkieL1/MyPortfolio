@@ -1,32 +1,26 @@
+import type { UiStrings } from "@/content/ui";
 import styles from "./session-setup-animation.module.css";
 
-const specialties = [
-  { name: "General Surgery", count: "1 subject" },
-  { name: "Obstetrics & Gynecology", count: "6 subjects" },
-  { name: "Community Medicine", count: "1 subject" },
-  { name: "Internal Medicine", count: "5 subjects" },
-  { name: "Pediatrics", count: "1 subject" },
-];
-
-// Rows the cursor checks, in order. Each index maps to a `.pick-N` keyframe timing in CSS.
-const picks: Record<string, number> = {
-  "Internal Medicine": 1,
-  Pediatrics: 2,
-  "General Surgery": 3,
-};
+type Strings = UiStrings["illustration"]["sessionSetup"];
 
 /**
  * A simplified, looping recreation of MediSapience's session setup screen.
  * Pure CSS keyframes on one shared 12s timeline: no client JS, and the reduced-motion
  * fallback shows the finished state (Practice mode, three topics, session ready).
  */
-export function SessionSetupAnimation({ caption }: { caption: string }) {
+export function SessionSetupAnimation({
+  caption,
+  strings,
+}: {
+  caption: string;
+  strings: Strings;
+}) {
   return (
     <figure className={styles.figure}>
       <div
         className={styles.screen}
         role="img"
-        aria-label="Animated, simplified recreation of the MediSapience session setup: the student picks Practice mode, selects three specialties and starts the session."
+        aria-label={strings.alt}
       >
         <div className={styles.sidebar} aria-hidden="true">
           <div className={styles.logo}><span />MediSapience</div>
@@ -43,13 +37,13 @@ export function SessionSetupAnimation({ caption }: { caption: string }) {
 
         <div className={styles.main} aria-hidden="true">
           <div className={styles.greeting}>
-            <strong>Set up your session</strong>
-            <span>Pick a mode and the topics to study.</span>
+            <strong>{strings.heading}</strong>
+            <span>{strings.subheading}</span>
           </div>
 
           <div className={styles.columns}>
             <div className={styles.modes}>
-              <p className={styles.step}><i>1</i>Choose a mode</p>
+              <p className={styles.step}><i>1</i>{strings.stepMode}</p>
               <div className={`${styles.mode} ${styles.modeExam}`}>
                 <b className={styles.modeIcon}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -58,8 +52,8 @@ export function SessionSetupAnimation({ caption }: { caption: string }) {
                   </svg>
                 </b>
                 <div>
-                  <strong>Exam mode</strong>
-                  <span>Timed. Results at the end.</span>
+                  <strong>{strings.examMode}</strong>
+                  <span>{strings.examModeDetail}</span>
                 </div>
               </div>
               <div className={`${styles.mode} ${styles.modePractice}`}>
@@ -69,42 +63,39 @@ export function SessionSetupAnimation({ caption }: { caption: string }) {
                   </svg>
                 </b>
                 <div>
-                  <strong>Practice mode</strong>
-                  <span>No timer. Feedback as you go.</span>
+                  <strong>{strings.practiceMode}</strong>
+                  <span>{strings.practiceModeDetail}</span>
                 </div>
               </div>
               <div className={styles.timer}>
-                <span>Time limit (min)</span>
+                <span>{strings.timeLimit}</span>
                 <b>60</b>
               </div>
               <div className={styles.start}>
-                <span className={styles.startLabel}>Start session <span aria-hidden="true">→</span></span>
+                <span className={styles.startLabel}>{strings.startSession} <span aria-hidden="true">→</span></span>
               </div>
-              <p className={styles.warning}>Select at least one topic.</p>
+              <p className={styles.warning}>{strings.selectTopicWarning}</p>
             </div>
 
             <div className={styles.content}>
-              <p className={styles.step}><i>2</i>Customize the content</p>
+              <p className={styles.step}><i>2</i>{strings.stepContent}</p>
               <div className={styles.panel}>
                 <div className={styles.search}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <circle cx="11" cy="11" r="6.5" />
                     <path d="m16 16 4 4" />
                   </svg>
-                  Search specialty, subject or topic…
+                  {strings.searchPlaceholder}
                 </div>
                 <ul className={styles.rows}>
-                  {specialties.map((row) => {
-                    const pick = picks[row.name];
-                    return (
-                      <li key={row.name} className={pick ? styles[`pick${pick}`] : undefined}>
+                  {strings.specialties.map((row) => (
+                      <li key={row.name} className={row.pick ? styles[`pick${row.pick}`] : undefined}>
                         <span className={styles.chevron} />
                         <span className={styles.check} />
                         <strong>{row.name}</strong>
                         <small>{row.count}</small>
                       </li>
-                    );
-                  })}
+                  ))}
                 </ul>
                 <div className={styles.footer}>
                   <span className={styles.counter}>
@@ -113,7 +104,7 @@ export function SessionSetupAnimation({ caption }: { caption: string }) {
                     <b className={styles.count2}>2</b>
                     <b className={styles.count3}>3</b>
                   </span>
-                  topics selected
+                  {strings.topicsSelected}
                 </div>
               </div>
             </div>
@@ -121,7 +112,7 @@ export function SessionSetupAnimation({ caption }: { caption: string }) {
         </div>
 
         <div className={styles.toast} aria-hidden="true">
-          <span />Practice session ready
+          <span />{strings.ready}
         </div>
 
         <div className={styles.cursor} aria-hidden="true">

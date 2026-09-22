@@ -18,7 +18,9 @@ describe("launch readiness gate", () => {
     }
 
     expect(output).toMatch(/Mock readiness/);
-    expect(output).toMatch(/Placeholder domain/);
     expect(output).toMatch(/Illustrative media/);
+    // The placeholder contact address is gone; nothing may reintroduce it.
+    expect(output).not.toMatch(/Placeholder domain/);
+    expect(output).not.toMatch(/Lorem ipsum/);
   });
 });

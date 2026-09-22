@@ -1,0 +1,113 @@
+/* A described project's own page. Lighter than a case-study hero: no card behind it,
+   no status pill, no facts bento — this page exists to show the captures. */
+
+.head {
+  padding-block: clamp(3rem, 7vw, 6rem) clamp(2rem, 4vw, 3rem);
+  display: grid;
+  gap: 1.25rem;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  color: var(--cs-meta);
+  font-size: 0.8125rem;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+}
+
+.name {
+  max-width: 16ch;
+  /* DESIGN.md typography.headline. */
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 610;
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+}
+
+.lead {
+  max-width: 58ch;
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.lead p {
+  color: var(--cs-quiet);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.lead .note {
+  color: var(--cs-meta);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.actions {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.75rem;
+}
+
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  font-weight: 650;
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-strong);
+  text-underline-offset: 0.3em;
+}
+
+.ghost:hover {
+  text-decoration-color: currentColor;
+}
+
+.ghost svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.shots {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2rem);
+}
+
+.shot {
+  margin: 0;
+  padding: clamp(1rem, 2vw, 1.25rem);
+  display: grid;
+  gap: 1rem;
+}
+
+/* A fixed frame ratio reserves the space before the file loads, so a capture dropped in
+   later can never shift the page. */
+.frame {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: var(--cs-radius-inner);
+  background: var(--cs-canvas, #f3f3f0);
+}
+
+.frame img {
+  object-fit: cover;
+}
+
+.shot figcaption {
+  padding-inline: clamp(0.25rem, 1vw, 0.75rem);
+  color: var(--cs-quiet);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 48rem) {
+  .actions {
+    gap: 0.75rem 1.25rem;
+  }
+}

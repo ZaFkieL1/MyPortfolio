@@ -5,6 +5,7 @@ import { ArrowUpRightIcon, LinkedInIcon } from "@/components/icons";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/navigation/navbar";
 import { ButtonLink } from "@/components/ui/button-link";
+import type { Locale } from "@/content/i18n";
 import styles from "./bento.module.css";
 
 /*
@@ -43,15 +44,24 @@ export const bento = styles;
  * Page chrome + canvas. `hero` renders full-bleed, edge to edge and under the sticky navigation,
  * before the framed content.
  */
-export function CaseStudyShell({ children, hero }: { children: ReactNode; hero?: ReactNode }) {
+export function CaseStudyShell({
+  children,
+  hero,
+  locale,
+}: {
+  children: ReactNode;
+  hero?: ReactNode;
+  /** The chrome needs the language too: the navbar, its switcher and the footer speak it. */
+  locale: Locale;
+}) {
   return (
     <>
-      <Navbar />
+      <Navbar locale={locale} />
       <main id="main-content" className={cx("case-study", styles.page, hero ? styles.pageWithHero : null)}>
         {hero}
         <div className={styles.frame}>{children}</div>
       </main>
-      <Footer />
+      <Footer locale={locale} />
     </>
   );
 }
@@ -377,6 +387,54 @@ export function Screenshot({
 }
 
 /**
+ * A row of phone screenshots, each labelled, under one caption for the group.
+ * Sized from the static import, so the row reserves its space before the images
+ * arrive. Use it where a single wide screenshot would waste the width — a phone
+ * capture is tall and narrow, and three of them read as a sequence.
+ */
+export function PhoneShots({
+  shots,
+  width,
+  height,
+  caption,
+  framed = false,
+  sizes = "(max-width: 40rem) 45vw, 20rem",
+}: {
+  shots: Array<{ src: StaticImageData | string; alt: string; label: string }>;
+  /** The frame every shot in the row shares; stated so the row reserves its space. */
+  width: number;
+  height: number;
+  caption?: string;
+  /** Put the row on its own card. Leave off inside a `VisualCard`, which already frames it. */
+  framed?: boolean;
+  sizes?: string;
+}) {
+  return (
+    <figure
+      className={framed ? cx(styles.card, styles.shot, styles.phones) : styles.phones}
+      data-reveal={framed ? "settle" : undefined}
+    >
+      <div className={styles.phoneRow} data-reveal-group>
+        {shots.map((shot) => (
+          <div key={shot.label} className={styles.phone}>
+            <Image
+              src={shot.src}
+              width={width}
+              height={height}
+              quality={90}
+              sizes={sizes}
+              alt={shot.alt}
+            />
+            <span>{shot.label}</span>
+          </div>
+        ))}
+      </div>
+      {caption ? <figcaption>{caption}</figcaption> : null}
+    </figure>
+  );
+}
+
+/**
  * The outcome: one verified result on lime, beside either the client-approved figures (`stats`)
  * or, while those are pending, the evidence list with every missing item labelled.
  * Only publish figures the client has made public or approved, and name the source.
@@ -387,12 +445,17 @@ export function OutcomeGrid({
   source,
   stats,
   evidence,
+  statsLabel,
+  evidenceLabel,
 }: {
   lead: string;
   body: ReactNode;
   source?: string;
   stats?: Array<{ value: string; label: string }>;
   evidence?: Array<[label: string, status: string]>;
+  /** Accessible names for the two lists, supplied in the page's language. */
+  statsLabel: string;
+  evidenceLabel: string;
 }) {
   return (
     <div className={styles.outcome} data-reveal-group>
@@ -404,7 +467,7 @@ export function OutcomeGrid({
         </div>
       </div>
       {stats ? (
-        <dl className={cx(styles.stats, styles.outcomeStats)} aria-label="Published results">
+        <dl className={cx(styles.stats, styles.outcomeStats)} aria-label={statsLabel}>
           {stats.map((item) => (
             <div key={item.label} className={styles.card}>
               <dt>{item.label}</dt>
@@ -414,7 +477,7 @@ export function OutcomeGrid({
         </dl>
       ) : null}
       {evidence ? (
-        <dl className={cx(styles.card, styles.evidence)} aria-label="Evidence and content status">
+        <dl className={cx(styles.card, styles.evidence)} aria-label={evidenceLabel}>
           {evidence.map(([label, status]) => (
             <div key={label}><dt>{label}</dt><dd>{status}</dd></div>
           ))}
@@ -426,28 +489,29 @@ export function OutcomeGrid({
 
 /**
  * A client quote as its own section: heading and context on the left, the quote and the person
- * on the right, with an optional link to their public profile.
+ * on the right, with an optional link to their public profile. A long testimonial passes its
+ * strongest line as `highlight` (set large) and the rest as `quote` (set as body text).
  */
 export function Testimonial({
   id,
   title,
   intro,
+  highlight,
   quote,
   name,
   role,
   initials,
   profile,
-  note,
 }: {
   id: string;
   title: string;
   intro: string;
+  highlight?: string;
   quote: string;
   name: string;
   role: string;
   initials: string;
   profile?: { href: string; label: string };
-  note?: string;
 }) {
   return (
     <section className={styles.section} aria-labelledby={id}>
@@ -459,7 +523,8 @@ export function Testimonial({
         <figure className={styles.testimonialQuote}>
           <span className={styles.quoteMark} aria-hidden="true">“</span>
           <blockquote>
-            <p>{quote}</p>
+            {highlight ? <p>{highlight}</p> : null}
+            <p className={highlight ? styles.quoteBody : undefined}>{quote}</p>
           </blockquote>
           <figcaption className={styles.person}>
             <span className={styles.avatar} aria-hidden="true">{initials}</span>
@@ -473,7 +538,6 @@ export function Testimonial({
               </a>
             ) : null}
           </figcaption>
-          {note ? <p className={styles.quoteNote}>{note}</p> : null}
         </figure>
       </div>
     </section>
@@ -492,7 +556,8 @@ export function CaseCta({
   title: string;
   body: string;
   action: { label: string; href: string };
-  next: { title: string; href: string };
+  /** The card's own label; "Next case study" only where there is one. */
+  next: { title: string; href: string; label?: string };
 }) {
   return (
     <section className={cx(styles.section, styles.cta)} aria-labelledby={id} data-reveal-group>
@@ -504,7 +569,7 @@ export function CaseCta({
         </ButtonLink>
       </div>
       <Link href={next.href} className={cx(styles.card, styles.nextCard)}>
-        <span className={styles.meta}>Next case study</span>
+        <span className={styles.meta}>{next.label}</span>
         <strong>{next.title}</strong>
         <ArrowUpRightIcon />
       </Link>

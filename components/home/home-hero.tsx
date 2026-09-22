@@ -17,12 +17,13 @@ import {
 } from "@/components/icons";
 import { parseCount } from "@/components/motion/scroll-reveal";
 import { ButtonLink } from "@/components/ui/button-link";
-import type { portfolioContent } from "@/content/portfolio";
+import type { HeroContent } from "@/content/portfolio";
+import type { UiStrings } from "@/content/ui";
 import styles from "./home-hero.module.css";
 
 gsap.registerPlugin(MotionPathPlugin, SplitText, useGSAP);
 
-type System = (typeof portfolioContent)["hero"]["system"];
+type System = HeroContent["system"];
 type Node = System["inputs"][number] | System["outputs"][number];
 
 const icons: Record<Node["icon"], ComponentType<SVGProps<SVGSVGElement>>> = {
@@ -56,6 +57,8 @@ type HomeHeroProps = {
   /** Published, approved figures shown along the bottom of the hero. */
   figures: { value: string; label: string }[];
   figuresSource: string;
+  /** Button text and the two list names; the diagram's own words come from `system`. */
+  labels: UiStrings["hero"];
 };
 
 function SystemNode({ node, side, index }: { node: Node; side: "input" | "output"; index: number }) {
@@ -79,7 +82,15 @@ function SystemNode({ node, side, index }: { node: Node; side: "input" | "output
  * and thin wires that carry small pulses through the hub. Real figures close the first screen.
  * Reduced motion shows the finished diagram with no pulses.
  */
-export function HomeHero({ availability, statement, supporting, system, figures, figuresSource }: HomeHeroProps) {
+export function HomeHero({
+  availability,
+  statement,
+  supporting,
+  system,
+  figures,
+  figuresSource,
+  labels,
+}: HomeHeroProps) {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -200,10 +211,10 @@ export function HomeHero({ availability, statement, supporting, system, figures,
             <p className={styles.supporting}>{supporting}</p>
             <div className={styles.actions}>
               <ButtonLink href="#work" variant="primary">
-                View my work <ArrowDownIcon />
+                {labels.viewWork} <ArrowDownIcon />
               </ButtonLink>
               <a className={styles.ghost} href="#contact">
-                Start a project <ArrowUpRightIcon />
+                {labels.startProject} <ArrowUpRightIcon />
               </a>
             </div>
           </div>
@@ -235,7 +246,7 @@ export function HomeHero({ availability, statement, supporting, system, figures,
             ))}
           </svg>
 
-          <ul className={`${styles.nodes} ${styles.inputs}`} aria-label="What you bring">
+          <ul className={`${styles.nodes} ${styles.inputs}`} aria-label={labels.inputsLabel}>
             {system.inputs.map((node, index) => (
               <SystemNode key={node.title} node={node} side="input" index={index} />
             ))}
@@ -258,7 +269,7 @@ export function HomeHero({ availability, statement, supporting, system, figures,
 
           <span className={styles.drop} aria-hidden="true"><i data-hero-drop /></span>
 
-          <ul className={`${styles.nodes} ${styles.outputs}`} aria-label="What ships">
+          <ul className={`${styles.nodes} ${styles.outputs}`} aria-label={labels.outputsLabel}>
             {system.outputs.map((node, index) => (
               <SystemNode key={node.title} node={node} side="output" index={index} />
             ))}

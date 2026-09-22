@@ -304,6 +304,19 @@ section[id] {
   transform: scaleX(1);
 }
 
+/*
+ * The right-hand cluster: language switcher, the CTA, and the menu button on small
+ * screens. Pinned to the last column because the links in column 2 are hidden on mobile,
+ * and without this the cluster would slide left into the gap they leave.
+ */
+.navbar__actions {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .navbar__cta,
 .mobile-menu__cta {
   min-height: 2.75rem;
@@ -1274,8 +1287,8 @@ section[id] {
     display: none;
   }
 
+  /* The switcher stays; only the CTA collapses into the menu. */
   .navbar__menu-button {
-    grid-column: 3;
     display: grid;
   }
 

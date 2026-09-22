@@ -35,11 +35,12 @@ describe("evidence components", () => {
   );
 
   it("renders zero to three testimonials without a filler shell", () => {
-    const { container, rerender } = render(<TestimonialGroup testimonials={[]} />);
+    const { container, rerender } = render(<TestimonialGroup testimonials={[]} title="What clients say." />);
     expect(container).toBeEmptyDOMElement();
 
     rerender(
       <TestimonialGroup
+        title="What clients say."
         testimonials={[{ quote: "Clear and reliable.", name: "Client", role: "Director", approved: true }]}
       />,
     );

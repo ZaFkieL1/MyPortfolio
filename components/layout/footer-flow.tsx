@@ -14,7 +14,7 @@ type Step = { title: string; detail: string };
  * The footer's three working steps on one dashed line. A single pulse travels along it on a
  * slow loop, the one quiet echo of the home hero's diagram. Reduced motion: no pulse.
  */
-export function FooterFlow({ steps }: { steps: readonly Step[] }) {
+export function FooterFlow({ steps, label }: { steps: readonly Step[]; label: string }) {
   const root = useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -44,7 +44,7 @@ export function FooterFlow({ steps }: { steps: readonly Step[] }) {
       <span className={styles.flowLine} aria-hidden="true">
         <i data-footer-pulse />
       </span>
-      <ol aria-label="How a project starts">
+      <ol aria-label={label}>
         {steps.map((step, index) => (
           <li key={step.title}>
             <span className={styles.flowIndex} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>

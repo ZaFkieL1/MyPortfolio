@@ -1,26 +1,31 @@
+import type { UiStrings } from "@/content/ui";
+
 type ProductVisualProps = {
   project: "medisapience" | "cem-nicaragua";
   caption?: string;
   compact?: boolean;
+  /** Every word on the illustrated screen, in the page's language. */
+  strings: UiStrings["illustration"]["productVisual"];
 };
 
 function Bar({ width }: { width: string }) {
   return <span className="ui-bar" style={{ width }} />;
 }
 
-export function ProductVisual({ project, caption, compact = false }: ProductVisualProps) {
+export function ProductVisual({ project, caption, compact = false, strings }: ProductVisualProps) {
   const medical = project === "medisapience";
   const title = medical ? "MediSapience" : "CEM Digital";
+  const panels = medical ? strings.medical : strings.education;
 
   return (
     <figure className={`product-visual product-visual--${medical ? "medical" : "education"} ${compact ? "product-visual--compact" : ""}`.trim()}>
-      <div className="product-window" role="img" aria-label={`Illustrative product UI for ${title}`}>
+      <div className="product-window" role="img" aria-label={strings.alt(title)}>
         <div className="product-window__chrome">
           <span />
           <span />
           <span />
           <p>{title}</p>
-          <span className="product-window__status">Preview</span>
+          <span className="product-window__status">{strings.preview}</span>
         </div>
         <div className="product-window__body">
           <aside className="product-sidebar">
@@ -32,30 +37,30 @@ export function ProductVisual({ project, caption, compact = false }: ProductVisu
           <div className="product-canvas">
             <div className="product-canvas__heading">
               <div>
-                <span>{medical ? "Learning overview" : "Program overview"}</span>
-                <strong>{medical ? "Clinical foundations" : "Active courses"}</strong>
+                <span>{panels.overview}</span>
+                <strong>{panels.overviewValue}</strong>
               </div>
-              <i>{medical ? "Continue" : "Manage"}</i>
+              <i>{panels.action}</i>
             </div>
             <div className="product-canvas__grid">
               <div className="product-main-panel">
                 <div className="product-main-panel__meta">
-                  <span>{medical ? "Current module" : "This week"}</span>
-                  <span>{medical ? "In progress" : "Scheduled"}</span>
+                  <span>{panels.panelMeta}</span>
+                  <span>{panels.panelState}</span>
                 </div>
-                <strong>{medical ? "Applied assessment" : "Program activity"}</strong>
-                <p>{medical ? "Review material and continue your assessment workflow." : "Courses, schedules, and notices in one operational view."}</p>
+                <strong>{panels.panelTitle}</strong>
+                <p>{panels.panelBody}</p>
                 <div className="product-progress"><span /></div>
               </div>
               <div className="product-stat-panel">
-                <span>{medical ? "Learning paths" : "Resources"}</span>
-                <strong>{medical ? "Active" : "Ready"}</strong>
+                <span>{panels.statLabel}</span>
+                <strong>{panels.statValue}</strong>
                 <div className="product-spark" aria-hidden="true">
                   <i /><i /><i /><i /><i />
                 </div>
               </div>
               <div className="product-list-panel">
-                <span>{medical ? "Recent activity" : "Upcoming schedule"}</span>
+                <span>{panels.listLabel}</span>
                 {[0, 1, 2].map((item) => (
                   <div key={item}><i /><Bar width={`${76 - item * 13}%`} /></div>
                 ))}
@@ -64,7 +69,7 @@ export function ProductVisual({ project, caption, compact = false }: ProductVisu
           </div>
         </div>
       </div>
-      <figcaption>{caption ?? `Illustrative product UI — replace with an approved ${title} capture.`}</figcaption>
+      <figcaption>{caption ?? strings.fallbackCaption(title)}</figcaption>
     </figure>
   );
 }

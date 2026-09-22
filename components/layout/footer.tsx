@@ -2,15 +2,18 @@ import Link from "next/link";
 import { ArrowRightIcon, ArrowUpRightIcon } from "@/components/icons";
 import { FooterFlow } from "@/components/layout/footer-flow";
 import { ButtonLink } from "@/components/ui/button-link";
-import { portfolioContent } from "@/content/portfolio";
+import { localePath, type Locale } from "@/content/i18n";
+import { getPortfolioContent } from "@/content/portfolio";
+import { getUi } from "@/content/ui";
 import styles from "./footer.module.css";
 
 /**
  * Site footer with the closing call to action, on every page. A quiet echo of the home hero:
  * the same light canvas and dashed guides, one line of steps instead of a diagram.
  */
-export function Footer() {
-  const { person, contact } = portfolioContent;
+export function Footer({ locale }: { locale: Locale }) {
+  const { person, contact } = getPortfolioContent(locale);
+  const ui = getUi(locale);
 
   return (
     <footer id="contact" className={`site-footer ${styles.footer}`} aria-labelledby="contact-title">
@@ -30,14 +33,14 @@ export function Footer() {
               <ButtonLink href={`mailto:${person.email}`} variant="primary">
                 {contact.action} <ArrowUpRightIcon />
               </ButtonLink>
-              <Link className={styles.ghost} href="/#work">
-                View my work <ArrowRightIcon />
+              <Link className={styles.ghost} href={localePath(locale, "/#work")}>
+                {ui.footer.viewWork} <ArrowRightIcon />
               </Link>
             </div>
           </div>
         </div>
 
-        <FooterFlow steps={contact.steps} />
+        <FooterFlow steps={contact.steps} label={ui.footer.stepsLabel} />
 
         <div className={styles.base}>
           <div className={styles.bar}>
@@ -47,14 +50,21 @@ export function Footer() {
                 <strong>{person.name}</strong> © {new Date().getFullYear()}
               </span>
             </p>
-            <p>{person.location} · Available worldwide</p>
+            <p>{person.location} · {ui.footer.availableWorldwide}</p>
             <ul className={styles.links}>
-              <li><span aria-label="LinkedIn URL pending">LinkedIn pending</span></li>
-              <li><span aria-label="GitHub URL pending">GitHub pending</span></li>
-              <li><Link href={`mailto:${person.email}`}>Email preview</Link></li>
+              {person.linkedin && (
+                <li>
+                  <a href={person.linkedin} target="_blank" rel="noopener noreferrer me">LinkedIn</a>
+                </li>
+              )}
+              {person.github && (
+                <li>
+                  <a href={person.github} target="_blank" rel="noopener noreferrer me">GitHub</a>
+                </li>
+              )}
+              <li><Link href={`mailto:${person.email}`}>{person.email}</Link></li>
             </ul>
           </div>
-          <p className={styles.note}>Preview email: {person.email} · replace before launch</p>
         </div>
       </div>
     </footer>

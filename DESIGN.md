@@ -206,7 +206,9 @@ Product media uses gently rounded 24 px corners. Navigation and standard panels 
 
 ### Navigation
 
-The sticky navigation is a compact floating capsule-like panel, not a hidden-on-scroll control. Desktop shows four links and one CTA; mobile replaces them with a 44 px menu trigger and a full-screen, focus-trapped dialog. Active case-study routes mark Work, Escape closes the menu, and focus returns to the trigger.
+The sticky navigation is a compact floating capsule-like panel, not a hidden-on-scroll control. Desktop shows five links and one CTA; mobile replaces them with a 44 px menu trigger and a full-screen, focus-trapped dialog. Active case-study routes mark Work, Escape closes the menu, and focus returns to the trigger.
+
+**Language switcher.** A two-segment pill (`EN` / `ES`) sits in the right-hand cluster, between the links and the CTA, at the same pill radius and control height as the CTA but drawn as a hairline over the secondary field — so the dark CTA remains the only heavy element on that side. The active language is the filled segment. Both segments are real links to the same page in the other language, so the control works before hydration and mirrors the page's `hreflang` pair; the current one keeps `aria-current="true"` and a default cursor rather than being removed. It is the one control that never collapses into the mobile menu: it is how a visitor leaves a language they cannot read, so it stays beside the menu trigger at every width.
 
 ### Featured Project
 
@@ -238,11 +240,13 @@ Motion is built on **GSAP** (`gsap` + `@gsap/react`, installed with pnpm): Scrol
 1. **Hero stage** — full-bleed and the full viewport (`#0d0e0d`), running under the navigation (`--chrome-height`), lime spotlight, availability pill, the statement at `clamp(2.75rem, 6.2vw, 6.25rem)` / 600 / −0.055em, lead, lime primary + outlined ghost action, and a fan of real product screens (two screenshots behind, the animated setup in front). Below 64 rem the fan collapses to the front card.
 2. **Proof** — open on the canvas: a short statement beside three large client-published figures that count up, each under a dark hairline; source named.
 3. **Marquee** — service names with lime dots.
-4. **Selected work** — one wide `ProjectCard` per project (the only cards below the hero): story left, media right in a dark window with parallax.
-5. **What I build** — open two-column list divided by hairlines. **Process** — four numbered steps on a shared rule. **Tools** — label/stack rows divided by hairlines.
-6. **About** — dark monogram card beside open text. **Contact** — the dark stage again as a rounded panel, split-line headline, lime button.
+4. **Selected work** — one shelf of four cards numbered 01–04, never two sections. Every card shares the same grammar: meta row (index left, category right), name, summary, muted chips, then an action row under a hairline. **Scale carries the rank.** 01–02 are the case studies: full width, `ProjectCard`, story left and media right in a dark window with parallax, chips for status/platform/year, and two actions — the case study and the live product’s hostname. 03–04 are described-only (`OtherProjects`): the same bento card at half width in a two-up row, name on the documented **title** step, chips carrying status plus the stack, the live site beside the category in the meta row (added to it, never replacing it), and an action row in the featured cards’ own link treatment — **View screenshots ↗** and **Source code ↗**. Either action renders only when it has somewhere real to go; a project with neither shows the reason instead. They carry no media because neither has an approved capture — a card half the width, not a different species, and the parallax media belongs only to the two with product evidence. The section head stands alone with no lead.
 
-Below the hero, **spacing and hairlines do the grouping, not boxes**: home sections sit 96–160 px apart (`.spacious`) with larger section heads (`clamp(2.4rem, 4.8vw, 4rem)`). Reserve cards for things that are objects (projects, the portrait, the contact panel).
+   **Described-project pages** (`/work/credora`, `/work/kiseki-no-oto`, from `components/work/side-project-page.tsx`) are not case studies and never borrow the case-study hero: an open header (index · category · status, the headline step, the same description, primary/ghost actions), the captures as 16:10 framed cards that each say what they prove, a short “How it is built” statement, and a `CaseCta` whose next card reads **Next project**.
+5. **What I build** — open two-column list divided by hairlines. **Process** — four numbered steps on a shared rule. **Tools** — label/stack rows divided by hairlines.
+6. **About** — no card and no portrait: the section head alone (no lead — the name carries it), a first-person note in a wide column, and the standing facts (location, how he works, focus, profiles) as hairline rows in a narrow right margin, 7fr/4fr; 2×2 on tablet, stacked on phone. **Contact** — the dark stage again as a rounded panel, split-line headline, lime button.
+
+Below the hero, **spacing and hairlines do the grouping, not boxes**: home sections sit 96–160 px apart (`.spacious`) with larger section heads (`clamp(2.4rem, 4.8vw, 4rem)`). Reserve cards for things that are objects (projects, the contact panel) — a person is not one, which is why About is open canvas.
 
 ## Case study (bento)
 
@@ -281,7 +285,7 @@ Skip a section rather than fill it with weak content. Every heading is a plain s
 |---|---|
 | `CaseStudyShell` | Navbar, canvas, optional full-bleed `hero`, frame, footer |
 | `CaseHero`, `GhostLink` | First viewport |
-| `VisualCard`, `Screenshot`, `DiagramCard` | Media on cards (settle reveal) |
+| `VisualCard`, `Screenshot`, `PhoneShots`, `DiagramCard` | Media on cards (settle reveal) |
 | `CaseSection` | Section with the standard head (h2 id + optional lead) |
 | `StatementCard`, `StatementLead` | Heading-in-card openings and closings |
 | `CardGrid` | Three-up cards; `details` for problem/approach; `tint` |
@@ -297,9 +301,10 @@ Skip a section rather than fill it with weak content. Every heading is a plain s
 
 ### Media rules
 
-- Screenshots are WebP, imported statically from `components/work/media/` (hashed filename, immutable cache) and rendered at quality 90 (`next.config.ts` → `images.qualities`). Capture at 2× device pixels for sharp text.
+- Screenshots are WebP, imported statically from `components/work/media/` (hashed filename, immutable cache) and rendered at quality 90 (`next.config.ts` → `images.qualities`). Capture desktop at 2× device pixels and phone at 3×, for sharp text.
+- A wide capture goes in a `Screenshot`. A phone capture is tall and narrow, so a single one wastes the width: put two or three in a `PhoneShots` row instead, where they read as a sequence. Every shot in a row shares one frame, stated once as `width`/`height` — the static import alone does not size them under jsdom.
 - Crop out personal data (names, emails, account menus) before committing. Caption what the screen proves, not what it is.
-- Illustrations and animated recreations keep the words "Illustrative product UI" in their caption until real, approved captures replace them.
+- Illustrations and animated recreations keep the words "Illustrative product UI" in their caption until real, approved captures replace them. A real capture taken on seeded data says so instead — name the app and the data, never imply live customer activity.
 
 ## Do's and Don'ts
 

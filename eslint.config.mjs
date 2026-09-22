@@ -14,6 +14,10 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     ".agents/**",
     ".codex/**",
+    // Nested checkouts and their build output are not this project's source:
+    // a git worktree under .claude/ otherwise contributed tens of thousands of findings.
+    "**/node_modules/**",
+    ".claude/**",
   ]),
 ]);
 

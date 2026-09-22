@@ -278,11 +278,6 @@
   gap: 1rem;
 }
 
-.note {
-  color: var(--color-text-muted);
-  font-size: 0.75rem;
-}
-
 @media (max-width: 64rem) {
   .cta {
     grid-template-columns: 1fr;

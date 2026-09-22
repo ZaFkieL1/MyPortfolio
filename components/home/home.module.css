@@ -115,37 +115,118 @@
   transform: translate(2px, -2px);
 }
 
-/* The media window crops a slightly oversized image that drifts as the card scrolls by. */
-.projectMedia {
-  position: relative;
-  min-height: 24rem;
-  overflow: hidden;
-  border-radius: var(--cs-radius-inner);
-  background: #0d0e0d;
+/* The case study and the live product, side by side: the second is the proof. */
+.projectActions {
+  margin-top: auto;
+  padding-top: 1.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.75rem;
 }
 
-.projectMedia > div {
-  position: absolute;
-  inset: -12% 0;
+.projectActions .projectLink {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.projectLive {
+  color: var(--cs-meta);
+  font-size: 0.9375rem;
+  font-weight: 550;
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+
+.projectLive:hover {
+  color: var(--cs-ink);
+}
+
+/* Positions 03 and 04: the same bento card as the featured pair, half the width and
+   one step down the type ramp. Same meta row, same chips, same hairline action row —
+   scale carries the rank, so the shelf never splits into two sections. */
+
+.others {
+  margin: clamp(1.5rem, 3vw, 2rem) 0 0;
+  padding: 0;
   display: grid;
-  place-items: center;
-  padding: clamp(1rem, 3vw, 2rem);
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1.5rem, 3vw, 2rem);
+  list-style: none;
 }
 
-.projectMedia img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 0.75rem;
-  box-shadow: 0 24px 48px -16px rgb(0 0 0 / 0.55);
+.other {
+  /* Matches the featured card's effective inset: its own padding plus .projectCopy's. */
+  padding: clamp(1.75rem, 3vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.projectMediaLight {
-  background: var(--cs-canvas);
+.other h3 {
+  margin-top: 0.5rem;
+  font-size: clamp(1.8rem, 3vw, 3rem) !important;
+  font-weight: 590 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.035em !important;
 }
 
-.projectMediaLight :global(.product-visual) {
-  width: 100%;
+.other p {
+  max-width: 46ch;
+  color: var(--cs-quiet);
+  line-height: 1.6;
+}
+
+.otherKind {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.875rem;
+}
+
+.otherKind a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.2rem;
+  color: var(--cs-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-strong);
+  text-underline-offset: 0.3em;
+}
+
+.otherKind a:hover {
+  text-decoration-color: currentColor;
+}
+
+.otherKind svg {
+  width: 0.7rem;
+  height: 0.7rem;
+  align-self: center;
+}
+
+.otherStack {
+  margin-top: 0.25rem;
+}
+
+/* Where to see it sits under a hairline, mirroring the featured cards' action row. */
+.otherFoot {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  display: grid;
+  gap: 0.875rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.otherFoot .projectActions {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.other .otherNote {
+  max-width: none;
+  color: var(--cs-meta);
+  font-size: 0.8125rem;
+  line-height: 1.5;
 }
 
 /* Generous rhythm between home sections, and a larger section head. */
@@ -161,7 +242,7 @@
   letter-spacing: -0.05em !important;
 }
 
-.spacious > div:first-child:not(.portrait) {
+.spacious > div:first-child {
   margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
 }
 
@@ -271,68 +352,48 @@
   font-size: 1.0625rem;
 }
 
-/* About: the monogram card beside open text. */
+/* About: a first-person note in the wide column, standing facts in the margin.
+   No card and no portrait — below the hero, only objects (projects, the contact
+   panel) earn a box, and a person is not one of them. */
 
 .about {
   display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
   align-items: start;
-  gap: 2.5rem clamp(2rem, 6vw, 6rem);
+  gap: 3rem clamp(3rem, 8vw, 7rem);
 }
 
-.portrait {
-  min-height: 24rem;
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-radius: var(--cs-radius-card);
-  background: var(--color-dark);
-  color: var(--color-dark-text);
-}
-
-.portrait span,
-.portrait p {
-  color: #b7b7b0;
-  font-size: 0.8125rem;
-}
-
-.portrait strong {
-  font-size: clamp(4rem, 9vw, 7rem);
-  font-weight: 600;
-  line-height: 0.85;
-  letter-spacing: -0.06em;
-}
-
-.aboutCopy {
-  padding-top: 0.5rem;
+.aboutNote {
   display: grid;
   gap: 1.25rem;
   align-content: start;
 }
 
-.aboutCopy p {
-  max-width: 58ch;
+.aboutNote p {
+  max-width: 62ch;
   color: var(--cs-quiet);
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
-.aboutCopy .aboutLead {
+/* The one place boldness is spent: the opening line carries the section
+   now that there is no image beside it. */
+.aboutNote .aboutLead {
   color: var(--cs-ink);
-  font-size: clamp(1.2rem, 1.8vw, 1.45rem);
-  line-height: 1.45;
-  letter-spacing: -0.015em;
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  line-height: 1.4;
+  letter-spacing: -0.02em;
 }
 
+/* The margin: one fact per row, each opened by the same hairline the rest of
+   the page uses to group without boxes. */
 .aboutFacts {
-  margin: 1.5rem 0 0;
+  margin: 0;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .aboutFacts div {
-  padding-top: 1rem;
+  padding-top: 0.875rem;
   border-top: 1px solid var(--color-border-strong);
 }
 
@@ -345,6 +406,17 @@
 .aboutFacts dd {
   margin: 0.35rem 0 0;
   font-weight: 550;
+}
+
+.aboutLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+}
+
+.aboutLinks a {
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
 }
 
 /* Responsive */
@@ -363,6 +435,14 @@
   .projectMedia {
     min-height: 18rem;
   }
+
+  .aboutFacts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .others {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 48rem) {
@@ -371,10 +451,6 @@
   .steps,
   .rows > div {
     grid-template-columns: 1fr;
-  }
-
-  .portrait {
-    min-height: 14rem;
   }
 }
 

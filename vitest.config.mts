@@ -9,7 +9,10 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
-    exclude: ["tests/e2e/**", "node_modules/**"],
+    // Only this repo's suites: `node_modules/**` alone still swept nested installs
+    // (e.g. a git worktree under `.claude/`), pulling in thousands of vendor tests.
+    include: ["tests/**/*.test.{ts,tsx}"],
+    exclude: ["tests/e2e/**", "**/node_modules/**"],
     setupFiles: ["./tests/setup.ts"],
   },
 });

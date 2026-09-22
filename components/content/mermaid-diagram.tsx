@@ -9,6 +9,8 @@ type MermaidDiagramProps = {
   chart: string;
   steps: string[];
   tone?: "light" | "dark";
+  /** Accessible name for the scrollable rendered figure, in the page's language. */
+  diagramLabel?: string;
 };
 
 export function MermaidDiagram({
@@ -17,6 +19,7 @@ export function MermaidDiagram({
   chart,
   steps,
   tone = "light",
+  diagramLabel,
 }: MermaidDiagramProps) {
   const diagramId = useId().replaceAll(":", "");
   const diagramRef = useRef<HTMLDivElement>(null);
@@ -69,7 +72,7 @@ export function MermaidDiagram({
       className={`${styles.figure} ${tone === "dark" ? styles.dark : ""}`}
     >
       <div
-        aria-label={`${title} visual diagram`}
+        aria-label={diagramLabel ?? title}
         className={`${styles.scrollRegion} ${rendered ? styles.rendered : ""}`}
         role="region"
         tabIndex={0}

@@ -247,6 +247,14 @@ Status definitions:
 **Why rejected:** Starter visuals are irrelevant; improvisation would recreate inconsistency the planning phase exists to prevent.  
 **Status:** Confirmed.
 
+## D-031 — Bilingual publication (English and Spanish)
+
+**Decision:** Publish the whole site in English and Spanish under `/{locale}` route prefixes, both prerendered. A visitor arriving without a prefix is redirected by `proxy.ts` to the language their browser asks for, falling back to English; a deliberate choice in the navbar switcher is stored in a `NEXT_LOCALE` cookie and outranks that negotiation afterwards.  
+**Rationale:** Both clients and both case studies are Nicaraguan, and the products themselves are Spanish-language; an English-only portfolio asks its most likely readers to work in their second language. Prefixed routes keep each version separately indexable and cross-linked with `hreflang`, which a client-side toggle cannot do.  
+**Alternatives considered:** English-only; a client-side toggle over one set of routes; keeping English at the bare root with Spanish under `/es`.  
+**Why rejected:** A client-side toggle ships both languages to the browser, leaves one URL for two documents and gives search engines nothing to index. Keeping English at the root makes the two languages structurally unequal and leaves the home page's canonical ambiguous; a prefix for both is symmetric, and the redirect preserves any old unprefixed link.  
+**Status:** Confirmed.
+
 ## Decisions still requiring content/user approval before implementation
 
 - Final Hero headline and supporting copy.

@@ -2,9 +2,10 @@
   "status": "mock",
   "indexable": false,
   "notes": [
-    "Personal email and social URLs are placeholders.",
-    "Case-study narratives require client review.",
-    "Product visuals are original illustrations, not screenshots.",
-    "Metrics are intentionally omitted; the MediSapience testimonial is placeholder text pending client approval."
+    "The production domain is not set: NEXT_PUBLIC_SITE_URL still falls back to localhost, so canonical URLs and the sitemap are not final.",
+    "CEM Digital narrative, usage figures and screenshots require client review; no CEM metric or testimonial is published.",
+    "CEM Digital product visuals are original illustrations, not screenshots.",
+    "Core Web Vitals have not been measured on the agreed mobile profile, and no manual screen-reader pass has been recorded.",
+    "Credora and Kiseki no Oto are described from their repositories and public sites; neither has approved screenshots or client-approved figures."
   ]
 }

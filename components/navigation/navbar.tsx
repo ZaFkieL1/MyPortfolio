@@ -3,19 +3,23 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { portfolioContent } from "@/content/portfolio";
+import { localePath, stripLocale, type Locale } from "@/content/i18n";
+import { getPortfolioContent } from "@/content/portfolio";
+import { getUi } from "@/content/ui";
 import { ArrowUpRightIcon, CloseIcon, MenuIcon } from "@/components/icons";
+import { LanguageSwitcher } from "./language-switcher";
 
-const links = [
-  { href: "/#work", label: "Work" },
-  { href: "/#services", label: "Services" },
-  { href: "/#process", label: "Process" },
-  { href: "/#about", label: "About" },
-  { href: "/#contact", label: "Contact" },
-] as const;
-
-export function Navbar() {
+export function Navbar({ locale }: { locale: Locale }) {
   const pathname = usePathname();
+  const ui = getUi(locale);
+  const { person } = getPortfolioContent(locale);
+  const links = ui.nav.links;
+  // In-page anchors have to keep the language, or every menu item leaves the translation.
+  const home = localePath(locale, "/");
+  const contact = localePath(locale, "/#contact");
+  // `/es/work/credora` is still the work section, whatever the prefix.
+  const onWork = stripLocale(pathname ?? "/").startsWith("/work");
+
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -75,39 +79,48 @@ export function Navbar() {
 
   return (
     <header className="site-header">
-      <nav className="navbar" aria-label="Primary navigation">
-        <Link className="brand-mark" href="/" aria-label={`${portfolioContent.person.name}, home`}>
-          {portfolioContent.person.mark}
+      <nav className="navbar" aria-label={ui.nav.primaryLabel}>
+        <Link className="brand-mark" href={home} aria-label={ui.nav.home(person.name)}>
+          {person.mark}
         </Link>
 
-        <div className="navbar__links" aria-label="Main links">
+        <div className="navbar__links" aria-label={ui.nav.mainLinksLabel}>
           {links.map((link) => (
             <Link
-              key={link.href}
-              href={link.href}
-              aria-current={link.label === "Work" && pathname?.startsWith("/work") ? "page" : undefined}
+              key={link.key}
+              href={localePath(locale, link.href)}
+              aria-current={link.key === "work" && onWork ? "page" : undefined}
             >
               {link.label}
             </Link>
           ))}
         </div>
 
-        <Link className="navbar__cta" href="/#contact">
-          Start a project
-          <ArrowUpRightIcon />
-        </Link>
+        {/* The switcher stays visible at every width — it is how you leave a language you cannot read. */}
+        <div className="navbar__actions">
+          <LanguageSwitcher
+            locale={locale}
+            label={ui.language.label}
+            switchTo={ui.language.switchTo}
+          />
 
-        <button
-          ref={triggerRef}
-          className="navbar__menu-button"
-          type="button"
-          aria-label="Open menu"
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          onClick={() => setOpen(true)}
-        >
-          <MenuIcon />
-        </button>
+          <Link className="navbar__cta" href={contact}>
+            {ui.nav.cta}
+            <ArrowUpRightIcon />
+          </Link>
+
+          <button
+            ref={triggerRef}
+            className="navbar__menu-button"
+            type="button"
+            aria-label={ui.nav.openMenu}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen(true)}
+          >
+            <MenuIcon />
+          </button>
+        </div>
       </nav>
 
       {open ? (
@@ -116,17 +129,17 @@ export function Navbar() {
           className="mobile-menu"
           role="dialog"
           aria-modal="true"
-          aria-label="Site menu"
+          aria-label={ui.nav.menuLabel}
         >
           <div className="mobile-menu__top">
             <span className="brand-mark" aria-hidden="true">
-              {portfolioContent.person.mark}
+              {person.mark}
             </span>
             <button
               ref={closeRef}
               className="navbar__menu-button"
               type="button"
-              aria-label="Close menu"
+              aria-label={ui.nav.closeMenu}
               onClick={() => setOpen(false)}
             >
               <CloseIcon />
@@ -134,13 +147,17 @@ export function Navbar() {
           </div>
           <div className="mobile-menu__links">
             {links.map((link) => (
-              <Link key={link.href} href={link.href} onClick={() => setOpen(false)}>
+              <Link
+                key={link.key}
+                href={localePath(locale, link.href)}
+                onClick={() => setOpen(false)}
+              >
                 {link.label}
               </Link>
             ))}
           </div>
-          <Link className="mobile-menu__cta" href="/#contact" onClick={() => setOpen(false)}>
-            Start a project
+          <Link className="mobile-menu__cta" href={contact} onClick={() => setOpen(false)}>
+            {ui.nav.cta}
             <ArrowUpRightIcon />
           </Link>
         </div>
